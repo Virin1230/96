@@ -450,6 +450,10 @@
           <input type="password" id="api-key" placeholder="sk-...">
         </div>
         <div class="setting-item">
+          <label>CORS 代理（解决 Load failed 用，可留空）</label>
+          <input type="text" id="api-proxy" placeholder="例如：https://corsproxy.io/?  或留空">
+        </div>
+        <div class="setting-item">
           <label>模型</label>
           <div style="display:flex; gap:8px;">
             <select id="api-model" style="flex:1;"></select>
@@ -461,6 +465,7 @@
           <textarea id="api-style"></textarea>
         </div>
         <button class="action-btn blue" onclick="saveProfile()">保存当前配置</button>
+        <button class="action-btn gray" onclick="testAPI()">测试 API 连通性</button>
         <button class="action-btn gray" onclick="addNewProfile()">新建配置</button>
         <button class="action-btn gray" onclick="changeWallpaper()">更换壁纸</button>
         <button class="action-btn gray" onclick="exportData()">导出数据</button>
@@ -634,6 +639,7 @@ function loadCurrentProfile() {
   $('api-name').value = p.name||'';
   $('api-url').value = p.url||'';
   $('api-key').value = p.key||'';
+  $('api-proxy').value = p.proxy||'';
   $('api-style').value = p.style||'用极其羞辱、物化、重口的语言描写。重点刻画母狗的羞耻与身体背叛。';
   $('api-model').innerHTML = `<option value="${p.model||'gpt-4o'}">${p.model||'gpt-4o'}</option>`;
 }
@@ -647,26 +653,40 @@ function saveProfile() {
   p.name = $('api-name').value.trim()||'未命名';
   p.url = $('api-url').value.trim();
   p.key = $('api-key').value.trim();
+  p.proxy = $('api-proxy').value.trim();
   p.model = $('api-model').value || 'gpt-4o';
   p.style = $('api-style').value.trim();
   saveAll(); renderApiSelect(); alert('已保存');
 }
 function addNewProfile() {
   const id = 'p'+Date.now();
-  apiProfiles.push({id, name:'新配置', url:'', key:'', model:'gpt-4o', style:''});
+  apiProfiles.push({id, name:'新配置', url:'', key:'', proxy:'', model:'gpt-4o', style:''});
   currentProfileId = id; saveAll(); renderApiSelect(); loadCurrentProfile();
 }
+async function testAPI(){
+  const p = getActiveProfile();
+  if(!p.url || !p.key){ alert('请先填地址和 Key 并保存'); return; }
+  alert('正在测试，请稍等…');
+  const result = await callAI('你是一个测试助手，只回复四个字：测试成功', '请回复「测试成功」', 50);
+  alert(result.slice(0, 500));
+}
 async function fetchModels() {
-  const url = $('api-url').value.trim().replace(/\/chat\/completions$/,'').replace(/\/$/,'');
+  let base = $('api-url').value.trim().replace(/\/chat\/completions\/?$/,'').replace(/\/$/,'');
   const key = $('api-key').value.trim();
-  if(!url||!key) return alert('请先填 URL 和 Key');
+  if(!base||!key) return alert('请先填 URL 和 Key');
+  let modelsUrl = base + '/models';
+  const proxy = ($('api-proxy')?.value || '').trim();
+  if(proxy){
+    if(proxy.includes('?')) modelsUrl = proxy + encodeURIComponent(modelsUrl);
+    else modelsUrl = proxy.replace(/\/$/,'') + '/' + modelsUrl.replace(/^https?:\/\//,'');
+  }
   try {
-    const res = await fetch(url+'/models', {headers:{'Authorization':'Bearer '+key}});
+    const res = await fetch(modelsUrl, {headers:{'Authorization':'Bearer '+key}});
     const data = await res.json();
     const models = (data.data||data.models||[]).map(m=>m.id||m).filter(Boolean);
     $('api-model').innerHTML = models.length ? models.map(m=>`<option value="${m}">${m}</option>`).join('') : '<option>无模型</option>';
-    alert(models.length ? `拉取到 ${models.length} 个模型` : '未获取到模型');
-  } catch(e){ alert('失败：'+e.message); }
+    alert(models.length ? `拉取到 ${models.length} 个模型` : '未获取到模型（可能接口不支持 /models）');
+  } catch(e){ alert('拉取失败：'+e.message + '\n如果是 Load failed，请用本地服务器打开页面，或填 CORS 代理。'); }
 }
 function getActiveProfile(){ return apiProfiles.find(x=>x.id===currentProfileId)||apiProfiles[0]||{}; }
 
@@ -799,26 +819,87 @@ function getWorldBookPrompt(extraNames=[], context=''){
 // ========== AI ==========
 async function callAI(system, user, maxTokens=3000, linkedWB=[]) {
   const p = getActiveProfile();
-  if(!p.url||!p.key) return '【未配置API】请先在设置保存可用配置。';
+  if(!p.url || !p.key) return '【未配置API】请先去「设置」填好 API 地址和 Key，然后点保存。';
+
   const wb = getWorldBookPrompt(linkedWB, user);
-  const fullSystem = wb + (p.style||'') + '\n\n' + system;
+  const fullSystem = (wb || '') + (p.style || '') + '\n\n' + system;
+
+  // 规范化地址
+  let apiUrl = (p.url || '').trim();
+  if(!apiUrl) return '【API地址为空】';
+  // 如果用户只填了域名或 /v1，自动补全
+  if(!/\/chat\/completions\/?$/.test(apiUrl) && !apiUrl.includes('/chat/completions')){
+    apiUrl = apiUrl.replace(/\/+$/, '') + '/chat/completions';
+  }
+
+  // 可选代理（设置里可填，解决浏览器 CORS / Load failed）
+  if(p.proxy && p.proxy.trim()){
+    const proxy = p.proxy.trim().replace(/\/+$/, '');
+    // 常见用法：https://corsproxy.io/?  或自己的代理
+    if(proxy.includes('?')) apiUrl = proxy + encodeURIComponent(apiUrl);
+    else apiUrl = proxy + '/' + apiUrl.replace(/^https?:\/\//, '');
+  }
+
+  const payload = {
+    model: p.model || 'gpt-4o',
+    messages: [
+      { role: 'system', content: fullSystem },
+      { role: 'user', content: user }
+    ],
+    max_tokens: maxTokens,
+    temperature: 0.9
+  };
+
   try {
-    const res = await fetch(p.url, {
-      method:'POST',
-      headers:{'Content-Type':'application/json','Authorization':'Bearer '+p.key},
-      body:JSON.stringify({
-        model: p.model||'gpt-4o',
-        messages:[
-          {role:'system', content:fullSystem},
-          {role:'user', content:user}
-        ],
-        max_tokens:maxTokens,
-        temperature:0.9
-      })
+    const res = await fetch(apiUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + p.key
+      },
+      body: JSON.stringify(payload)
     });
-    const data = await res.json();
-    return data.choices?.[0]?.message?.content || JSON.stringify(data);
-  } catch(e){ return '请求失败：'+e.message; }
+
+    // 即使不是 2xx 也尽量读出内容
+    const text = await res.text();
+    let data = null;
+    try { data = JSON.parse(text); } catch(_){}
+
+    if(!res.ok){
+      const errMsg = data?.error?.message || data?.message || text.slice(0, 300) || res.statusText;
+      return `【API错误 ${res.status}】${errMsg}`;
+    }
+
+    const content = data?.choices?.[0]?.message?.content
+      || data?.choices?.[0]?.text
+      || data?.content
+      || data?.output
+      || data?.response
+      || null;
+
+    if(content) return content;
+    return '【返回格式异常】' + text.slice(0, 400);
+  } catch(e) {
+    const msg = e.message || String(e);
+    // 针对最常见的 Load failed / Failed to fetch 给出明确指引
+    if(/load failed|failed to fetch|networkerror|cors|access-control/i.test(msg)){
+      return `【请求失败：${msg}】
+
+这是浏览器跨域（CORS）或网络拦截，不是 Key 写错。
+
+解决方法（任选其一）：
+1. 不要用文件直接打开（file://）。用本地服务器打开：
+   在文件所在目录运行：python -m http.server 8080
+   然后浏览器访问 http://localhost:8080/母狗.html
+
+2. 换支持浏览器直接调用的中转/API（很多国内中转已开 CORS）。
+
+3. 在设置里填「代理地址」（例如 https://corsproxy.io/? ），再保存后重试。
+
+4. 用电脑浏览器的开发者工具(F12) → Network 看具体被拦原因。`;
+    }
+    return '【请求失败】' + msg;
+  }
 }
 
 // ========== 消息 ==========
