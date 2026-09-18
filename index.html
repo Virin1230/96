@@ -1,0 +1,1305 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>母狗的手机</title>
+<style>
+  :root {
+    --bg: #000; --card: #1c1c1e; --blue: #0095f6; --text: #f5f5f7; --muted: #8e8e93; --border: #38383a;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  body {
+    background:#111; color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","PingFang SC",sans-serif;
+    height:100vh; display:flex; justify-content:center; align-items:center; overflow:hidden;
+  }
+  .phone {
+    width:390px; height:844px; max-height:95vh; background:#000;
+    border-radius:44px; border:10px solid #1a1a1a; position:relative; overflow:hidden;
+    box-shadow:0 0 0 1px #333, 0 25px 80px rgba(0,0,0,.85);
+  }
+  .notch {
+    position:absolute; top:0; left:50%; transform:translateX(-50%);
+    width:126px; height:32px; background:#000; border-radius:0 0 20px 20px; z-index:200;
+  }
+  .screen { width:100%; height:100%; position:relative; overflow:hidden; background:#000; }
+
+  .home {
+    width:100%; height:100%;
+    background:var(--wallpaper, linear-gradient(165deg,#0f0c29,#302b63,#24243e));
+    background-size:cover; background-position:center;
+    padding:62px 20px 28px; display:none; flex-direction:column;
+  }
+  .home.show { display:flex; }
+  .time { text-align:center; font-size:52px; font-weight:200; margin-bottom:2px; }
+  .date { text-align:center; font-size:15px; color:rgba(255,255,255,.65); margin-bottom:32px; }
+  .apps { display:grid; grid-template-columns:repeat(4,1fr); gap:18px 8px; flex:1; align-content:start; }
+  .app { display:flex; flex-direction:column; align-items:center; gap:5px; cursor:pointer; }
+  .app-icon {
+    width:60px; height:60px; border-radius:16px;
+    display:flex; align-items:center; justify-content:center; font-size:26px;
+    box-shadow:0 4px 14px rgba(0,0,0,.3);
+  }
+  .app-name { font-size:11px; color:rgba(255,255,255,.92); text-align:center; }
+  .dock {
+    background:rgba(255,255,255,.13); backdrop-filter:blur(24px);
+    border-radius:28px; padding:12px 18px; display:flex; justify-content:space-around; margin-top:auto;
+  }
+  .dock .app-icon { width:52px; height:52px; font-size:22px; }
+
+  .page { position:absolute; inset:0; background:#000; display:none; flex-direction:column; }
+  .page.show { display:flex; }
+  .nav {
+    height:54px; padding:0 14px; display:flex; align-items:center; justify-content:space-between;
+    background:rgba(28,28,30,.94); backdrop-filter:blur(20px);
+    border-bottom:.5px solid var(--border); margin-top:32px; flex-shrink:0;
+  }
+  .nav-back, .nav-right { color:var(--blue); font-size:16px; background:none; border:none; cursor:pointer; }
+  .nav-title { font-weight:600; font-size:16px; }
+  .scroll { flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch; }
+
+  .conv-item {
+    display:flex; align-items:center; gap:12px; padding:12px 16px;
+    border-bottom:.5px solid #222; cursor:pointer;
+  }
+  .conv-item:active { background:#1a1a1a; }
+  .conv-av {
+    width:48px; height:48px; border-radius:50%;
+    background:linear-gradient(135deg,#3a1a1a,#5a2020);
+    display:flex; align-items:center; justify-content:center;
+    font-weight:700; color:#ff8a80; flex-shrink:0; font-size:18px;
+  }
+  .conv-info { flex:1; min-width:0; }
+  .conv-top { display:flex; justify-content:space-between; margin-bottom:3px; }
+  .conv-name { font-weight:600; font-size:15px; }
+  .conv-time { font-size:12px; color:var(--muted); }
+  .conv-last { font-size:13px; color:var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+
+  .msg-list { flex:1; overflow-y:auto; padding:12px; display:flex; flex-direction:column; gap:10px; }
+  .bubble-row { display:flex; gap:8px; max-width:85%; }
+  .bubble-row.him { align-self:flex-start; }
+  .bubble-row.me { align-self:flex-end; flex-direction:row-reverse; }
+  .b-av {
+    width:28px; height:28px; border-radius:50%; background:#2a2a2a;
+    display:flex; align-items:center; justify-content:center; font-size:11px; flex-shrink:0;
+  }
+  .bubble-row.him .b-av { color:#ff8a80; background:#3a1a1a; }
+  .bubble-row.me .b-av { color:#f8a; background:#3a2020; }
+  .b-text {
+    padding:9px 12px; border-radius:16px; font-size:14.5px; line-height:1.45; white-space:pre-wrap;
+  }
+  .bubble-row.him .b-text { background:#2c2c2e; border-bottom-left-radius:4px; }
+  .bubble-row.me .b-text { background:#3a1a1a; border-bottom-right-radius:4px; color:#f0c8c8; }
+  .shame .b-text { background:#2a1010!important; color:#ffab91!important; }
+  .task .b-text { background:#101428!important; border-left:3px solid #5c9eff; }
+  .opts { display:flex; flex-direction:column; gap:6px; margin:4px 0 4px 36px; }
+  .opt {
+    background:#1c1c1e; border:1px solid #333; color:#ddd;
+    padding:9px 12px; border-radius:10px; text-align:left; font-size:13.5px; cursor:pointer;
+  }
+  .input-bar {
+    padding:8px 12px; background:#1c1c1e; border-top:.5px solid var(--border);
+    display:none; gap:8px; flex-shrink:0;
+  }
+  .input-bar.show { display:flex; }
+  #chat-input {
+    flex:1; background:#2c2c2e; border:none; border-radius:18px;
+    padding:9px 14px; color:#fff; outline:none; font-size:16px;
+  }
+  #chat-send {
+    background:var(--blue); border:none; color:#fff;
+    width:36px; height:36px; border-radius:50%; font-size:16px; cursor:pointer;
+  }
+
+  .card { background:var(--card); border-radius:14px; padding:14px; margin-bottom:12px; }
+  .card h4 { color:#ff8a80; margin-bottom:6px; font-size:15px; }
+  .card p { font-size:13.5px; color:#bbb; line-height:1.5; }
+  .btn-row { display:flex; gap:8px; margin-top:10px; }
+  .btn {
+    flex:1; padding:9px 0; border-radius:10px; border:none; font-size:13.5px; cursor:pointer;
+  }
+  .btn-primary { background:#3a1515; color:#ff8a80; border:1px solid #c44; }
+  .btn-secondary { background:#2c2c2e; color:#aaa; }
+  .btn-danger { background:#3a1010; color:#ff6b6b; border:1px solid #c33; }
+
+  .setting-item { background:var(--card); padding:14px 16px; margin-bottom:1px; }
+  .setting-item label { display:block; font-size:12px; color:var(--muted); margin-bottom:6px; }
+  .setting-item input, .setting-item textarea, .setting-item select {
+    width:100%; background:#2c2c2e; border:none; border-radius:10px;
+    padding:10px 12px; color:#fff; font-size:16px; outline:none;
+  }
+  .setting-item textarea { height:90px; resize:none; }
+  input, textarea, select { font-size:16px !important; } /* 防止iOS输入时放大 */
+  #chat-input { font-size:16px !important; }
+  .action-btn {
+    margin:10px 16px 0; padding:12px; border-radius:12px; width:calc(100% - 32px);
+    font-size:15px; cursor:pointer; border:none;
+  }
+  .action-btn.blue { background:var(--blue); color:#fff; }
+  .action-btn.gray { background:#2c2c2e; color:#aaa; }
+  .action-btn.red { background:#3a1515; color:#ff8a80; border:1px solid #c44; }
+
+  .wb-item { background:var(--card); border-radius:12px; padding:12px; margin-bottom:10px; }
+  .wb-top { display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; }
+  .wb-name { font-weight:600; font-size:14px; }
+  .wb-group { font-size:11px; color:var(--muted); }
+  .wb-content { font-size:12.5px; color:#bbb; max-height:40px; overflow:hidden; margin-bottom:8px; }
+  .wb-actions { display:flex; gap:6px; flex-wrap:wrap; }
+  .wb-actions button {
+    font-size:11px; padding:4px 8px; border-radius:6px;
+    border:1px solid #444; background:#2c2c2e; color:#ccc; cursor:pointer;
+  }
+  .wb-actions .on { border-color:#30d158; color:#30d158; }
+
+  .contact-item {
+    display:flex; align-items:center; gap:12px; padding:10px 16px;
+    border-bottom:.5px solid #222;
+  }
+  .contact-av {
+    width:42px; height:42px; border-radius:50%;
+    background:#2c2c2e; display:flex; align-items:center; justify-content:center;
+    font-weight:600; color:#aaa;
+  }
+  .contact-name { font-weight:500; font-size:15px; }
+  .contact-remark { font-size:12px; color:var(--muted); }
+
+  .status-bar { display:flex; gap:6px; padding:8px 12px; background:#0d0d0d; font-size:11px; flex-wrap:wrap; }
+  .tag { background:#2c2c2e; border-radius:12px; padding:3px 9px; color:#aaa; }
+  .tag.hot { background:#3a1515; color:#ff8a80; }
+  .body-part { background:var(--card); border-radius:14px; padding:12px; margin-bottom:10px; display:flex; gap:12px; }
+  .part-img { width:64px; height:64px; border-radius:10px; background:#2c2c2e; object-fit:cover; flex-shrink:0; }
+  .part-name { font-weight:600; font-size:14px; color:#ff8a80; cursor:pointer; }
+  .part-status { font-size:12.5px; color:#bbb; margin:4px 0 8px; }
+  .part-actions button { font-size:11px; padding:3px 7px; border-radius:5px; border:1px solid #444; background:#2c2c2e; color:#ccc; margin-right:4px; cursor:pointer; }
+
+  .story-view { flex:1; overflow-y:auto; padding:16px; font-size:14.5px; line-height:1.7; white-space:pre-wrap; color:#ddd; }
+
+  .edit-section { padding:12px 16px; }
+  .edit-section label { display:block; font-size:12px; color:var(--muted); margin:10px 0 4px; }
+  .edit-section input, .edit-section textarea {
+    width:100%; background:#2c2c2e; border:none; border-radius:10px;
+    padding:10px 12px; color:#fff; font-size:16px; outline:none;
+  }
+  .edit-section textarea { height:100px; resize:none; }
+  .avatar-img { width:100%; height:100%; border-radius:inherit; object-fit:cover; display:block; }
+  .conv-av, .b-av, .contact-av { overflow:hidden; position:relative; }
+  .reply-bar { display:none; align-items:center; gap:8px; padding:6px 10px; background:#151515; border-top:.5px solid #2b2b2b; color:#aaa; font-size:12px; }
+  .reply-bar.show { display:flex; }
+  .reply-bar .reply-preview { flex:1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .reply-cancel { border:0; background:none; color:var(--blue); font-size:12px; cursor:pointer; }
+  .bubble-row { position:relative; }
+  .bubble-actions { display:none; position:absolute; top:-10px; z-index:5; }
+  .bubble-row.him .bubble-actions { left:34px; }
+  .bubble-row.me .bubble-actions { right:34px; }
+  .bubble-row.selected .bubble-actions { display:flex; }
+  .reply-btn, .del-btn { border:0; background:#333; color:#fff; border-radius:12px; padding:5px 9px; font-size:11px; cursor:pointer; box-shadow:0 3px 10px rgba(0,0,0,.35); margin-left:4px; }
+  .del-btn { background:#5a2020; color:#ff8a80; }
+  #chat-reply { border:0; background:#34c759; color:#fff; border-radius:50%; width:34px; height:34px; font-size:16px; cursor:pointer; flex:0 0 34px; opacity:.45; }
+  #chat-reply.ready { opacity:1; }
+  #chat-reply:disabled { cursor:default; }
+  .wb-toolbar { display:flex; gap:8px; margin-bottom:10px; }
+  .wb-filter { flex:1; background:#2c2c2e; border:0; border-radius:10px; padding:9px 11px; color:#fff; outline:none; font-size:16px !important; }
+  .wb-section { padding:10px 12px; background:#191919; border-radius:12px; margin-bottom:10px; }
+  .wb-section-title { font-size:12px; color:#aaa; margin-bottom:7px; }
+  .wb-switch { display:flex; align-items:center; justify-content:space-between; padding:7px 0; font-size:13px; color:#ddd; }
+  .wb-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+  .wb-grid input,.wb-grid select { width:100%; background:#2c2c2e; border:0; border-radius:8px; padding:8px; color:#fff; outline:none; }
+  .wish-card { border:1px solid #2b2b2b; border-radius:12px; padding:10px; margin-top:8px; background:#181818; }
+  .wish-meta { font-size:11px; color:#888; margin-top:5px; }
+
+  .quote { font-size:11px; color:#888; border-left:2px solid #555; padding-left:7px; margin-bottom:4px; }
+  .wb-keywords { font-size:11px; color:#777; margin-bottom:7px; }
+  .wb-meta { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:7px; }
+  .wb-pill { font-size:10px; color:#aaa; background:#292929; border-radius:10px; padding:3px 7px; }
+</style>
+</head>
+<body>
+<div class="phone">
+  <div class="notch"></div>
+  <div class="screen">
+
+    <!-- 桌面 -->
+    <div class="home show" id="home">
+      <div class="time" id="clock">22:16</div>
+      <div class="date" id="date">9月17日 周四</div>
+      <div class="apps">
+        <div class="app" onclick="openApp('messages')"><div class="app-icon" style="background:linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045);">💬</div><div class="app-name">消息</div></div>
+        <div class="app" onclick="openApp('contacts')"><div class="app-icon" style="background:linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);">👥</div><div class="app-name">通讯录</div></div>
+        <div class="app" onclick="openApp('offline')"><div class="app-icon" style="background:linear-gradient(135deg,#ff9500,#ff5e3a);">📍</div><div class="app-name">线下</div></div>
+        <div class="app" onclick="openApp('train')"><div class="app-icon" style="background:linear-gradient(135deg,#ff2d55,#c41e3a);">🔒</div><div class="app-name">调教</div></div>
+        <div class="app" onclick="openApp('worldbook')"><div class="app-icon" style="background:linear-gradient(135deg,#5856d6,#af52de);">📖</div><div class="app-name">世界书</div></div>
+        <div class="app" onclick="openApp('diary')"><div class="app-icon" style="background:linear-gradient(135deg,#af52de,#8e44ad);">📓</div><div class="app-name">日记</div></div>
+        <div class="app" onclick="openApp('rules')"><div class="app-icon" style="background:linear-gradient(135deg,#30d158,#34c759);">📝</div><div class="app-name">守则</div></div>
+        <div class="app" onclick="openApp('settings')"><div class="app-icon" style="background:linear-gradient(135deg,#8e8e93,#636366);">⚙️</div><div class="app-name">设置</div></div>
+      </div>
+      <div class="dock">
+        <div class="app" onclick="openApp('messages')"><div class="app-icon" style="background:linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045);">💬</div></div>
+        <div class="app" onclick="openApp('train')"><div class="app-icon" style="background:linear-gradient(135deg,#ff2d55,#c41e3a);">🔒</div></div>
+        <div class="app" onclick="openApp('offline')"><div class="app-icon" style="background:linear-gradient(135deg,#ff9500,#ff5e3a);">📍</div></div>
+        <div class="app" onclick="openApp('settings')"><div class="app-icon" style="background:linear-gradient(135deg,#8e8e93,#636366);">⚙️</div></div>
+      </div>
+    </div>
+
+    <!-- 消息列表 -->
+    <div class="page" id="page-messages">
+      <div class="nav">
+        <button class="nav-back" onclick="goHome()">‹ 桌面</button>
+        <div class="nav-title">消息</div>
+        <button class="nav-right" onclick="openApp('contacts')">通讯录</button>
+      </div>
+      <div class="scroll" id="conv-list"></div>
+    </div>
+
+    <!-- 聊天 -->
+    <div class="page" id="page-chat">
+      <div class="nav">
+        <button class="nav-back" onclick="openApp('messages')">‹ 返回</button>
+        <div class="nav-title" id="chat-title">聊天</div>
+        <button class="nav-right" onclick="openEditChar()">编辑</button>
+      </div>
+      <div class="msg-list" id="msg-list"></div>
+      <div class="reply-bar" id="reply-bar"><div class="reply-preview" id="reply-preview"></div><button class="reply-cancel" onclick="cancelReply()">取消</button></div>
+      <div class="input-bar" id="input-bar">
+        <input type="text" id="chat-input" placeholder="输入消息…">
+        <button id="chat-send">↑</button>
+        <button id="chat-reply" title="让对方回复" onclick="requestAIReply()" disabled>↩</button>
+      </div>
+    </div>
+
+    <!-- 编辑角色 -->
+    <div class="page" id="page-edit">
+      <div class="nav">
+        <button class="nav-back" onclick="openApp('chat')">‹ 返回</button>
+        <div class="nav-title">编辑角色</div>
+        <button class="nav-right" onclick="saveCharEdit()">保存</button>
+      </div>
+      <div class="scroll edit-section">
+        <label>显示名称 / 备注</label>
+        <input type="text" id="edit-name">
+        <label>头像文字（没有图片时显示）</label>
+        <input type="text" id="edit-avatar" maxlength="2">
+        <label>头像图片</label>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <div id="edit-avatar-preview" style="width:52px;height:52px;border-radius:50%;background:#2c2c2e;overflow:hidden;display:flex;align-items:center;justify-content:center;color:#aaa;"></div>
+          <button class="btn btn-secondary" style="flex:0;padding:8px 12px;" onclick="uploadChatAvatar()">选择图片</button>
+          <button class="btn btn-secondary" style="flex:0;padding:8px 12px;" onclick="clearChatAvatar()">移除</button>
+        </div>
+        <label>人设（AI 会严格遵守）</label>
+        <textarea id="edit-persona"></textarea>
+        <label>关联世界书（多选，用逗号分隔世界书名称）</label>
+        <input type="text" id="edit-wb" placeholder="例如：全局规则,苏晚专属">
+        <div style="margin-top:16px; font-size:12px; color:#888;">保存后立即生效，下次对话会读取人设 + 关联世界书。</div>
+      </div>
+    </div>
+
+    <!-- 通讯录 -->
+    <div class="page" id="page-contacts">
+      <div class="nav">
+        <button class="nav-back" onclick="openApp('messages')">‹ 返回</button>
+        <div class="nav-title">通讯录</div>
+        <button class="nav-right" onclick="refreshContacts()">刷新</button>
+      </div>
+      <div class="scroll" id="contact-list"></div>
+    </div>
+
+    <!-- 世界书 -->
+    <div class="page" id="page-worldbook">
+      <div class="nav">
+        <button class="nav-back" onclick="goHome()">‹ 桌面</button>
+        <div class="nav-title">世界书</div>
+        <button class="nav-right" onclick="addWorldBook()">＋ 添加</button>
+      </div>
+      <div class="scroll" style="padding:12px;"><div class="wb-toolbar"><input class="wb-filter" id="wb-filter" placeholder="搜索世界书 / 关键词" oninput="renderWorldBooks()"><button class="btn btn-secondary" style="flex:0;padding:0 12px;" onclick="showWBHelp()">说明</button></div><div id="wb-list"></div></div>
+    </div>
+
+    <!-- 世界书编辑 -->
+    <div class="page" id="page-wbedit">
+      <div class="nav">
+        <button class="nav-back" onclick="openApp('worldbook')">‹ 返回</button>
+        <div class="nav-title" id="wbedit-title">添加世界书</div>
+        <button class="nav-right" onclick="saveWBEdit()">保存</button>
+      </div>
+      <div class="scroll edit-section">
+        <label>条目名称</label>
+        <input type="text" id="wb-name" placeholder="例如：核心规则 / 苏晚设定">
+        <label>分组</label>
+        <input type="text" id="wb-group" placeholder="世界观 / 人物 / 地点 / 事件" value="默认">
+        <label>主关键词（逗号分隔）</label>
+        <input type="text" id="wb-keys" placeholder="关键词1,关键词2">
+        <label>次关键词（可留空）</label>
+        <input type="text" id="wb-sec" placeholder="更精确的触发词">
+        <label>条目内容（AI会严格参考）</label>
+        <textarea id="wb-content" style="height:140px;" placeholder="写入详细设定、规则、人物性格等…"></textarea>
+        <label>优先级（数字越小越优先，1-100）</label>
+        <input type="number" id="wb-priority" value="50" min="1" max="100">
+        <label>触发概率 0-100</label>
+        <input type="number" id="wb-prob" value="100" min="0" max="100">
+        <label>扫描深度</label>
+        <input type="number" id="wb-depth" value="6" min="1" max="20">
+        <div class="wb-switch" style="margin-top:12px;"><span>设为常驻（每次都注入）</span><input type="checkbox" id="wb-constant"></div>
+        <div class="wb-switch"><span>允许递归触发</span><input type="checkbox" id="wb-recursive" checked></div>
+        <div class="wb-switch"><span>启用此条目</span><input type="checkbox" id="wb-enabled" checked></div>
+      </div>
+    </div>
+
+    <!-- 线下 -->
+    <div class="page" id="page-offline">
+      <div class="nav">
+        <button class="nav-back" onclick="goHome()">‹ 桌面</button>
+        <div class="nav-title">线下任务</div>
+        <button class="nav-right" onclick="refreshTasks()">刷新</button>
+      </div>
+      <div class="scroll" style="padding:12px;" id="task-container"></div>
+      <div style="padding:10px 12px; border-top:.5px solid var(--border); display:flex; gap:8px;">
+        <button class="btn btn-secondary" style="flex:1;" onclick="wishTask()">许愿</button>
+        <button class="btn btn-secondary" style="flex:1;" onclick="showArchive()">存档</button>
+      </div>
+    </div>
+
+    <!-- 故事 -->
+    <div class="page" id="page-story">
+      <div class="nav">
+        <button class="nav-back" onclick="openApp('offline')">‹ 返回</button>
+        <div class="nav-title">任务进行中</div>
+        <button class="nav-right" id="save-story-btn" style="display:none;" onclick="saveCurrentStory()">存档</button>
+      </div>
+      <div class="story-view" id="story-content"></div>
+    </div>
+
+    <!-- 调教 -->
+    <div class="page" id="page-train">
+      <div class="nav">
+        <button class="nav-back" onclick="goHome()">‹ 桌面</button>
+        <div class="nav-title">调教母狗</div>
+        <div></div>
+      </div>
+      <div class="status-bar" id="train-status"></div>
+      <div class="scroll" style="padding:12px;" id="body-parts"></div>
+    </div>
+
+    <!-- 日记 -->
+    <div class="page" id="page-diary">
+      <div class="nav">
+        <button class="nav-back" onclick="goHome()">‹ 桌面</button>
+        <div class="nav-title">母狗日记</div>
+        <button class="nav-right" onclick="genDiary()">写新篇</button>
+      </div>
+      <div class="scroll" style="padding:12px;" id="diary-list"></div>
+    </div>
+
+    <!-- 守则 -->
+    <div class="page" id="page-rules">
+      <div class="nav">
+        <button class="nav-back" onclick="goHome()">‹ 桌面</button>
+        <div class="nav-title">母狗守则</div>
+        <button class="nav-right" onclick="addRuleVersion()">更新</button>
+      </div>
+      <div class="scroll" style="padding:12px;" id="rules-list"></div>
+    </div>
+
+    <!-- 设置 -->
+    <div class="page" id="page-settings">
+      <div class="nav">
+        <button class="nav-back" onclick="goHome()">‹ 桌面</button>
+        <div class="nav-title">设置</div>
+        <div></div>
+      </div>
+      <div class="scroll" style="padding-top:8px;">
+        <div class="setting-item">
+          <label>当前 API 配置</label>
+          <select id="api-profile-select" onchange="switchProfile()"></select>
+        </div>
+        <div class="setting-item">
+          <label>API 名称</label>
+          <input type="text" id="api-name" placeholder="例如：DeepSeek">
+        </div>
+        <div class="setting-item">
+          <label>API 地址</label>
+          <input type="text" id="api-url" placeholder="https://api.openai.com/v1/chat/completions">
+        </div>
+        <div class="setting-item">
+          <label>API Key</label>
+          <input type="password" id="api-key" placeholder="sk-...">
+        </div>
+        <div class="setting-item">
+          <label>模型</label>
+          <div style="display:flex; gap:8px;">
+            <select id="api-model" style="flex:1;"></select>
+            <button class="btn btn-secondary" style="flex:0 0 auto; padding:0 12px;" onclick="fetchModels()">拉取</button>
+          </div>
+        </div>
+        <div class="setting-item">
+          <label>文风 / 系统提示词</label>
+          <textarea id="api-style"></textarea>
+        </div>
+        <button class="action-btn blue" onclick="saveProfile()">保存当前配置</button>
+        <button class="action-btn gray" onclick="addNewProfile()">新建配置</button>
+        <button class="action-btn gray" onclick="changeWallpaper()">更换壁纸</button>
+        <button class="action-btn gray" onclick="exportData()">导出数据</button>
+        <button class="action-btn gray" onclick="importData()">导入数据</button>
+        <button class="action-btn red" onclick="clearAll()">全部清空</button>
+        <input type="file" id="import-file" accept=".json" style="display:none;" onchange="doImport(event)">
+        <input type="file" id="wallpaper-file" accept="image/*" style="display:none;" onchange="setWallpaper(event)">
+      </div>
+    </div>
+
+    <!-- 存档 -->
+    <div class="page" id="page-archive">
+      <div class="nav">
+        <button class="nav-back" onclick="openApp('offline')">‹ 返回</button>
+        <div class="nav-title">任务存档</div>
+        <div></div>
+      </div>
+      <div class="scroll" style="padding:12px;" id="archive-list"></div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+let cor=0, shame=0, body=0, obey=0;
+let mainFinished = false;
+let waiting = null;
+let currentChatId = null;
+let currentTasks = [];
+let currentStory = '', currentStoryTitle = '';
+let bodyData = {};
+let diaries = [];
+let ruleVersions = [];
+let offlineArchives = [];
+let worldBooks = [];
+let apiProfiles = [];
+let currentProfileId = null;
+let conversations = {};
+let contacts = [];
+let pendingRequests = [];
+let pendingReply = false;
+let wbScanDepth = 6;
+let wbMaxEntries = 12;
+
+const defaultParts = ['奶子','乳头','逼','阴蒂','嘴巴','舌头','屁股','后穴','大腿','全身'];
+const maleNames = ['学长-陈默','同事-小林','邻居-张叔','前桌-阿杰','健身房-教练','咖啡店-店员','网友-夜色','房东-王哥','陌生人-路过','学弟-小宇','公司-李哥','球友-大伟'];
+
+// 固定两个女舍友
+const fixedRoommates = [
+  {
+    id: 'suwan',
+    name: '苏晚',
+    remark: '苏晚',
+    avatar: '晚',
+    gender: 'female',
+    persona: `你是苏晚，和用户合租的女舍友。你完全不知道用户其实是被调教成肉便器的存在。你性格八卦、话多，喜欢跟用户分享看到的事。你暗恋学长「陈默」，但不知道陈默其实和用户有一腿。你雌竞意识极强，会偷偷在用户面前辱骂任何接近陈默的女生，还会把对陈默的意淫（意淫内容可以很露骨）发给用户看，把用户当树洞。说话自然、口语化、带点女生之间的亲密感。`
+  },
+  {
+    id: 'linke',
+    name: '林可',
+    remark: '林可',
+    avatar: '可',
+    gender: 'female',
+    persona: `你是林可，和用户合租的女舍友。你是重度恋爱脑，有一个青梅竹马男朋友「许野」。你偶尔会把许野带回家做爱（声音可能被用户听到）。你雌竞意识非常强，就算发现许野出轨，你也只会觉得是自己不够骚、不够会伺候，而不是怪男方。说话软、黏人、经常跟用户倾诉和许野的事，会主动分享一些亲密细节。`
+  }
+ ];
+
+const fixedMaleContacts = [
+  {
+    id:'xuye', name:'许野', remark:'许野', avatar:'野', gender:'male', relation:'舍友男友',
+    persona:'你是许野，苏晚的男朋友。你是一个普通大学男生，说话自然、简短，有自己的生活，不会凭空知道用户没有告诉你的事情。你和苏晚关系稳定，偶尔会提到她。'
+  },
+  {
+    id:'chenmo', name:'陈默', remark:'陈默', avatar:'默', gender:'male', relation:'舍友暗恋的学长',
+    persona:'你是陈默，苏晚暗恋的学长。你是普通大学学长，性格沉稳自然，说话简短。你知道苏晚对你有好感，但不会无缘无故知道用户和苏晚的私事。'
+  }
+];
+
+function loadAll() {
+  const s = localStorage.getItem('bitchPhoneV3');
+  if (s) {
+    try {
+      const d = JSON.parse(s);
+      cor=d.cor||0; shame=d.shame||0; body=d.body||0; obey=d.obey||0;
+      mainFinished=d.mainFinished||false; bodyData=d.bodyData||{};
+      diaries=d.diaries||[]; ruleVersions=d.ruleVersions||[];
+      offlineArchives=d.offlineArchives||[]; worldBooks=(d.worldBooks||[]).map(w=>({...w,keywords:Array.isArray(w.keywords)?w.keywords:[]}));
+      apiProfiles=d.apiProfiles||[]; currentProfileId=d.currentProfileId;
+      conversations=d.conversations||{}; contacts=d.contacts||[];
+      pendingRequests=d.pendingRequests||[];
+      if(d.myAvatar) localStorage.setItem('myAvatar',d.myAvatar);
+    } catch(e){}
+  }
+  if (Object.keys(bodyData).length===0) defaultParts.forEach(p=>bodyData[p]={status:'尚未记录',img:''});
+  if (ruleVersions.length===0) ruleVersions.push({time:Date.now(), content:getDefaultRules()});
+  if (apiProfiles.length===0) {
+    apiProfiles.push({id:'default', name:'默认', url:'', key:'', model:'gpt-4o', style:''});
+    currentProfileId='default';
+  }
+  // 确保主人和两个舍友存在
+  if (!conversations['master']) {
+    conversations['master'] = {name:'主人', remark:'主人', avatar:'主', messages:[], last:'点击开始', time:Date.now(), persona:'你是主人，正在调教已经彻底雌堕的母狗。语言支配、羞辱、偶尔抽查身体。'};
+  }
+  fixedRoommates.forEach(r => {
+    if (!conversations[r.id]) {
+      conversations[r.id] = {
+        name: r.name, remark: r.remark, avatar: r.avatar,
+        messages: [], last: '合租舍友', time: Date.now(),
+        persona: r.persona, gender: 'female'
+      };
+    }
+    if (!contacts.find(c => c.id === r.id)) {
+      contacts.push({id:r.id, name:r.name, remark:r.remark, gender:'female'});
+    }
+  });
+  fixedMaleContacts.forEach(r => {
+    if (!conversations[r.id]) {
+      conversations[r.id] = {name:r.name, remark:r.remark, avatar:r.avatar, messages:[], last:r.relation, time:Date.now(), persona:r.persona, gender:'male', relation:r.relation};
+    }
+    if (!contacts.find(c => c.id === r.id)) contacts.push({id:r.id,name:r.name,remark:r.remark,gender:'male',relation:r.relation});
+  });
+  if (localStorage.getItem('wallpaper')) {
+    document.documentElement.style.setProperty('--wallpaper', `url(${localStorage.getItem('wallpaper')})`);
+  }
+  renderApiSelect();
+  loadCurrentProfile();
+}
+function saveAll() {
+  localStorage.setItem('bitchPhoneV3', JSON.stringify({
+    cor,shame,body,obey,mainFinished,bodyData,diaries,ruleVersions,
+    offlineArchives,worldBooks,apiProfiles,currentProfileId,
+    conversations,contacts,pendingRequests
+  }));
+}
+
+function updateClock() {
+  const n = new Date();
+  $('clock').textContent = n.toTimeString().slice(0,5);
+  const days = ['日','一','二','三','四','五','六'];
+  $('date').textContent = `${n.getMonth()+1}月${n.getDate()}日 周${days[n.getDay()]}`;
+}
+setInterval(updateClock,1000); updateClock();
+
+function goHome() {
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('show'));
+  $('home').classList.add('show');
+}
+function openApp(name) {
+  $('home').classList.remove('show');
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('show'));
+  $(`page-${name}`).classList.add('show');
+  if(name==='messages') renderConvList();
+  if(name==='contacts') renderContacts();
+  if(name==='worldbook') renderWorldBooks();
+  if(name==='offline') renderTasks();
+  if(name==='train') renderBodyParts();
+  if(name==='diary') renderDiaries();
+  if(name==='rules') renderRules();
+  if(name==='settings'){ renderApiSelect(); loadCurrentProfile(); }
+}
+
+// ========== API ==========
+function renderApiSelect() {
+  const sel = $('api-profile-select');
+  sel.innerHTML = apiProfiles.map(p => `<option value="${p.id}" ${p.id===currentProfileId?'selected':''}>${p.name||'未命名'}</option>`).join('');
+}
+function loadCurrentProfile() {
+  const p = apiProfiles.find(x=>x.id===currentProfileId) || apiProfiles[0];
+  if(!p) return;
+  $('api-name').value = p.name||'';
+  $('api-url').value = p.url||'';
+  $('api-key').value = p.key||'';
+  $('api-style').value = p.style||'用极其羞辱、物化、重口的语言描写。重点刻画母狗的羞耻与身体背叛。';
+  $('api-model').innerHTML = `<option value="${p.model||'gpt-4o'}">${p.model||'gpt-4o'}</option>`;
+}
+function switchProfile() {
+  currentProfileId = $('api-profile-select').value;
+  loadCurrentProfile(); saveAll();
+}
+function saveProfile() {
+  let p = apiProfiles.find(x=>x.id===currentProfileId);
+  if(!p){ p={id:'p'+Date.now(), name:'新配置'}; apiProfiles.push(p); currentProfileId=p.id; }
+  p.name = $('api-name').value.trim()||'未命名';
+  p.url = $('api-url').value.trim();
+  p.key = $('api-key').value.trim();
+  p.model = $('api-model').value || 'gpt-4o';
+  p.style = $('api-style').value.trim();
+  saveAll(); renderApiSelect(); alert('已保存');
+}
+function addNewProfile() {
+  const id = 'p'+Date.now();
+  apiProfiles.push({id, name:'新配置', url:'', key:'', model:'gpt-4o', style:''});
+  currentProfileId = id; saveAll(); renderApiSelect(); loadCurrentProfile();
+}
+async function fetchModels() {
+  const url = $('api-url').value.trim().replace(/\/chat\/completions$/,'').replace(/\/$/,'');
+  const key = $('api-key').value.trim();
+  if(!url||!key) return alert('请先填 URL 和 Key');
+  try {
+    const res = await fetch(url+'/models', {headers:{'Authorization':'Bearer '+key}});
+    const data = await res.json();
+    const models = (data.data||data.models||[]).map(m=>m.id||m).filter(Boolean);
+    $('api-model').innerHTML = models.length ? models.map(m=>`<option value="${m}">${m}</option>`).join('') : '<option>无模型</option>';
+    alert(models.length ? `拉取到 ${models.length} 个模型` : '未获取到模型');
+  } catch(e){ alert('失败：'+e.message); }
+}
+function getActiveProfile(){ return apiProfiles.find(x=>x.id===currentProfileId)||apiProfiles[0]||{}; }
+
+// ========== 世界书（已修复添加） ==========
+function parseKeys(v){ return String(v||'').split(/[，,|\n]/).map(x=>x.trim()).filter(Boolean); }
+function wbNormalize(w){
+  return {...w, keywords:Array.isArray(w.keywords)?w.keywords:[], secondary:Array.isArray(w.secondary)?w.secondary:[], priority:Number(w.priority??50), constant:!!(w.constant||w.global), probability:Number(w.probability??100), scanDepth:Number(w.scanDepth??wbScanDepth), recursive:w.recursive!==false, sticky:Number(w.sticky||0), cooldown:Number(w.cooldown||0), delay:Number(w.delay||0)};
+}
+function renderWorldBooks(){
+  const box=$('wb-list'), filter=($('wb-filter')?.value||'').trim().toLowerCase();
+  worldBooks=worldBooks.map(wbNormalize);
+  let list=worldBooks.filter(w=>!filter || [w.name,w.group,w.content,...w.keywords].join(' ').toLowerCase().includes(filter));
+  if(!list.length){ box.innerHTML='<div style="text-align:center;color:#666;padding:40px;">暂无匹配条目<br>点击右上角「＋ 添加」</div>'; return; }
+  box.innerHTML=list.map(w=>{
+    const i=worldBooks.indexOf(w), keys=w.keywords.join('、'), sec=w.secondary.join('、');
+    return `<div class="wb-item"><div class="wb-top"><div><div class="wb-name">${escapeHtml(w.name)}</div><div class="wb-group">${escapeHtml(w.group||'默认')} · 优先级 ${w.priority}</div></div><div class="wb-meta"><span class="wb-pill">${w.enabled?'已启用':'已停用'}</span><span class="wb-pill">${w.constant?'常驻':'关键词'}</span>${w.probability<100?`<span class="wb-pill">${w.probability}%</span>`:''}</div></div>${keys?`<div class="wb-keywords">主关键词：${escapeHtml(keys)}</div>`:''}${sec?`<div class="wb-keywords">次关键词：${escapeHtml(sec)}</div>`:''}<div class="wb-content">${escapeHtml(w.content||'')}</div><div class="wb-meta"><span class="wb-pill">扫描 ${w.scanDepth} 轮</span>${w.recursive?'<span class="wb-pill">可递归</span>':'<span class="wb-pill">不递归</span>'}${w.sticky?`<span class="wb-pill">粘性 ${w.sticky}</span>`:''}</div><div class="wb-actions"><button class="${w.constant?'on':''}" onclick="toggleWBConstant(${i})">${w.constant?'常驻中':'设常驻'}</button><button class="${w.enabled?'on':''}" onclick="toggleEnable(${i})">${w.enabled?'已启用':'启用'}</button><button onclick="editWB(${i})">编辑</button><button onclick="delWB(${i})">删除</button></div></div>`;
+  }).join('');
+}
+let editingWBIndex = -1;
+function addWorldBook(){
+  editingWBIndex = -1;
+  $('wbedit-title').textContent = '添加世界书';
+  $('wb-name').value = '';
+  $('wb-group').value = '默认';
+  $('wb-keys').value = '';
+  $('wb-sec').value = '';
+  $('wb-content').value = '';
+  $('wb-priority').value = '50';
+  $('wb-prob').value = '100';
+  $('wb-depth').value = String(wbScanDepth);
+  $('wb-constant').checked = false;
+  $('wb-recursive').checked = true;
+  $('wb-enabled').checked = true;
+  openApp('wbedit');
+}
+function editWB(i){
+  const w = worldBooks[i]; if(!w) return;
+  editingWBIndex = i;
+  $('wbedit-title').textContent = '编辑世界书';
+  $('wb-name').value = w.name || '';
+  $('wb-group').value = w.group || '默认';
+  $('wb-keys').value = (w.keywords||[]).join(',');
+  $('wb-sec').value = (w.secondary||[]).join(',');
+  $('wb-content').value = w.content || '';
+  $('wb-priority').value = w.priority ?? 50;
+  $('wb-prob').value = w.probability ?? 100;
+  $('wb-depth').value = w.scanDepth ?? wbScanDepth;
+  $('wb-constant').checked = !!w.constant;
+  $('wb-recursive').checked = w.recursive !== false;
+  $('wb-enabled').checked = w.enabled !== false;
+  openApp('wbedit');
+}
+function saveWBEdit(){
+  const name = $('wb-name').value.trim();
+  if(!name){ alert('请填写条目名称'); return; }
+  const content = $('wb-content').value.trim();
+  if(!content){ alert('请填写条目内容'); return; }
+  const data = wbNormalize({
+    id: editingWBIndex>=0 ? (worldBooks[editingWBIndex].id||Date.now()) : Date.now(),
+    name,
+    group: $('wb-group').value.trim() || '默认',
+    keywords: parseKeys($('wb-keys').value),
+    secondary: parseKeys($('wb-sec').value),
+    content,
+    priority: Number($('wb-priority').value)||50,
+    probability: Math.max(0,Math.min(100, Number($('wb-prob').value)||100)),
+    scanDepth: Math.max(1, Number($('wb-depth').value)||wbScanDepth),
+    constant: $('wb-constant').checked,
+    global: $('wb-constant').checked,
+    recursive: $('wb-recursive').checked,
+    enabled: $('wb-enabled').checked,
+    sticky:0, cooldown:0, delay:0
+  });
+  if(editingWBIndex>=0){
+    worldBooks[editingWBIndex] = data;
+  } else {
+    worldBooks.push(data);
+  }
+  saveAll();
+  openApp('worldbook');
+  renderWorldBooks();
+  alert(editingWBIndex>=0 ? '已保存修改' : '已添加世界书条目');
+}
+function toggleWBConstant(i){ const w=worldBooks[i]; if(!w)return; w.constant=!w.constant; w.global=w.constant; saveAll(); renderWorldBooks(); }
+function toggleGlobal(i){ toggleWBConstant(i); }
+function toggleEnable(i){ if(worldBooks[i]){worldBooks[i].enabled=!worldBooks[i].enabled;saveAll();renderWorldBooks();} }
+function delWB(i){ if(confirm('删除这个世界书条目？')){worldBooks.splice(i,1);saveAll();renderWorldBooks();} }
+function showWBHelp(){ alert(`世界书会根据最近聊天自动扫描关键词。
+
+常驻：每次都注入，适合核心规则。
+关键词：提到人名、地点、事件等才注入。
+次关键词：用于更精确触发。
+优先级：数字越小越先注入。
+概率：命中后再进行概率判定。
+扫描深度：向最近几轮聊天查找。
+递归：一个条目被触发后，其内容还能继续触发其他条目。
+
+角色编辑里的“关联世界书”仍可按名称绑定专属条目。`); }
+function collectWBText(context){
+  const c=conversations[currentChatId];
+  const msgs=(c?.messages||[]).slice(-wbScanDepth).map(m=>m.text||'');
+  return [...msgs,context||''].join(' ').toLowerCase();
+}
+function getWorldBookPrompt(extraNames=[], context=''){
+  worldBooks=worldBooks.map(wbNormalize);
+  const text=collectWBText(context), linked=new Set(extraNames||[]), picked=new Map(), nowCount=(conversations[currentChatId]?.messages||[]).length;
+  const eligible=worldBooks.filter(w=>w.enabled && nowCount>=w.delay);
+  eligible.forEach(w=>{
+    const explicit=linked.has(w.name);
+    const main=w.constant || explicit || (w.keywords||[]).some(k=>k && text.includes(String(k).toLowerCase()));
+    if(!main)return;
+    if(w.probability<100 && Math.random()*100>w.probability)return;
+    if(w.secondary?.length && !w.secondary.some(k=>text.includes(String(k).toLowerCase()))) return;
+    picked.set(w.id||w.name,w);
+  });
+  // 递归最多3轮，避免世界书无限膨胀
+  if(picked.size){
+    let scan=[...picked.values()].map(w=>w.content||'').join(' ').toLowerCase();
+    for(let round=0;round<3;round++){
+      let added=false;
+      eligible.forEach(w=>{ if(picked.has(w.id||w.name)||!w.recursive)return; if((w.keywords||[]).some(k=>k&&scan.includes(String(k).toLowerCase()))){ picked.set(w.id||w.name,w); added=true; } });
+      if(!added)break; scan=[...picked.values()].map(w=>w.content||'').join(' ').toLowerCase();
+    }
+  }
+  const arr=[...picked.values()].sort((a,b)=>Number(a.priority||50)-Number(b.priority||50)).slice(0,wbMaxEntries);
+  if(!arr.length)return '';
+  return '【世界书·当前生效条目】\n'+arr.map(w=>`【${w.name}】\n${w.content}`).join('\n\n')+'\n\n';
+}
+
+// ========== AI ==========
+async function callAI(system, user, maxTokens=3000, linkedWB=[]) {
+  const p = getActiveProfile();
+  if(!p.url||!p.key) return '【未配置API】请先在设置保存可用配置。';
+  const wb = getWorldBookPrompt(linkedWB, user);
+  const fullSystem = wb + (p.style||'') + '\n\n' + system;
+  try {
+    const res = await fetch(p.url, {
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+p.key},
+      body:JSON.stringify({
+        model: p.model||'gpt-4o',
+        messages:[
+          {role:'system', content:fullSystem},
+          {role:'user', content:user}
+        ],
+        max_tokens:maxTokens,
+        temperature:0.9
+      })
+    });
+    const data = await res.json();
+    return data.choices?.[0]?.message?.content || JSON.stringify(data);
+  } catch(e){ return '请求失败：'+e.message; }
+}
+
+// ========== 消息 ==========
+function renderConvList() {
+  const list = Object.entries(conversations).sort((a,b)=>(b[1].time||0)-(a[1].time||0));
+  $('conv-list').innerHTML = list.map(([id,c])=>`
+    <div class="conv-item" onclick="openChat('${id}')">
+      <div class="conv-av">${avatarMarkup(c)}</div>
+      <div class="conv-info">
+        <div class="conv-top">
+          <div class="conv-name">${c.remark||c.name}</div>
+          <div class="conv-time">${c.time?new Date(c.time).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}):''}</div>
+        </div>
+        <div class="conv-last">${c.last||''}</div>
+      </div>
+    </div>
+  `).join('') || '<div style="text-align:center;color:#666;padding:40px;">暂无消息</div>';
+}
+function openChat(id) {
+  pendingReply=false;
+  currentChatId = id;
+  const c = conversations[id];
+  $('chat-title').textContent = c.remark || c.name;
+  openApp('chat');
+  renderMessages();
+  if(id==='master' && (!c.messages||c.messages.length===0)) startMasterChat();
+  else enableFreeChat();
+}
+function avatarMarkup(c){
+  return c?.avatarImg ? `<img class="avatar-img" src="${c.avatarImg}" alt="头像">` : escapeHtml(c?.avatar || (c?.remark||c?.name||'?')[0]);
+}
+function escapeHtml(v){ return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
+function renderMessages(){
+  const c=conversations[currentChatId]; $('msg-list').innerHTML='';
+  (c.messages||[]).forEach((m,i)=>{
+    const row=document.createElement('div'); row.className=`bubble-row ${m.who} ${m.type||''}`; row.dataset.index=i;
+    const quote=m.replyTo?`<div class="quote">回复：${escapeHtml(m.replyTo.text||'')}</div>`:'';
+    row.innerHTML=`<div class="b-av">${m.who==='him'?avatarMarkup(c):avatarMarkup({avatarImg:localStorage.getItem('myAvatar'),avatar:'我'})}</div><div class="b-text">${quote}${escapeHtml(m.text)}</div><div class="bubble-actions"><button class="reply-btn" onclick="event.stopPropagation();replyToMessage(${i})">回复</button><button class="del-btn" onclick="event.stopPropagation();delMessage(${i})">删除</button></div>`;
+    row.addEventListener('click',()=>row.classList.toggle('selected'));
+    $('msg-list').appendChild(row);
+  }); $('msg-list').scrollTop=$('msg-list').scrollHeight; updateReplyButton();
+}
+function delMessage(i){
+  const c=conversations[currentChatId]; if(!c||!c.messages||!c.messages[i]) return;
+  if(!confirm('删除这条消息？')) return;
+  c.messages.splice(i,1);
+  if(c.messages.length){ const last=c.messages[c.messages.length-1]; c.last=last.text.replace(/\n/g,' ').slice(0,28); c.time=Date.now(); }
+  else { c.last='暂无消息'; }
+  saveAll(); renderMessages(); renderConvList();
+}
+function updateReplyButton(){
+  const btn=$('chat-reply'); if(!btn)return;
+  const c=conversations[currentChatId], msgs=c?.messages||[], last=msgs[msgs.length-1];
+  const ready=!!last && last.who==='me' && !pendingReply;
+  btn.disabled=!ready; btn.classList.toggle('ready',ready); btn.textContent=pendingReply?'…':'↩';
+}
+function replyToMessage(i){
+  const m=conversations[currentChatId]?.messages?.[i]; if(!m)return;
+  window.replyTarget={index:i,text:m.text,who:m.who};
+  $('reply-preview').textContent=`回复：${m.text}`; $('reply-bar').classList.add('show'); $('input-bar').classList.add('show'); $('chat-input').focus();
+}
+function cancelReply(){ window.replyTarget=null; $('reply-bar').classList.remove('show'); }
+function addBubble(who, text, type='') {
+  const c = conversations[currentChatId];
+  if(!c.messages) c.messages=[];
+  const msg={who,text,type};
+  if(who==='me' && window.replyTarget){ msg.replyTo={who:window.replyTarget.who,text:window.replyTarget.text}; }
+  c.messages.push(msg);
+  if(who==='me') cancelReply();
+  c.last = text.replace(/\n/g,' ').slice(0,28);
+  c.time = Date.now();
+  saveAll();
+  renderMessages();
+}
+function addOpts(opts) {
+  const wrap = document.createElement('div');
+  wrap.className = 'opts';
+  opts.forEach(o=>{
+    const b = document.createElement('button');
+    b.className = 'opt';
+    b.textContent = o.text;
+    b.onclick = ()=>{
+      wrap.remove();
+      addBubble('me', o.text);
+      change(o.c||0,o.s||0,o.b||0,o.o||0);
+      setTimeout(()=>o.next&&o.next(o.flag), 280);
+    };
+    wrap.appendChild(b);
+  });
+  $('msg-list').appendChild(wrap);
+  $('msg-list').scrollTop = $('msg-list').scrollHeight;
+}
+function showInput(ph) {
+  $('input-bar').classList.add('show');
+  $('chat-input').placeholder = ph||'输入…';
+  $('chat-input').value = '';
+  $('chat-input').focus();
+}
+function hideInput(){ $('input-bar').classList.remove('show'); }
+
+function change(c=0,s=0,b=0,o=0){
+  cor=Math.min(100,cor+c); shame=Math.min(100,shame+s);
+  body=Math.min(100,body+b); obey=Math.min(100,obey+o);
+  updateTrainStatus(); saveAll();
+}
+
+// 主线简版（完整可继续扩展）
+function startMasterChat() {
+  if(mainFinished){
+    addBubble('him','主线已完成。随时继续聊，我会抽查。');
+    enableFreeChat(); return;
+  }
+  addBubble('him','进门的时候衣服被风掀起来了。你今天没穿内衣。');
+  addBubble('him','我看得一清二楚。真空、腿根还湿着。真是条欠操的下贱母狗。','shame');
+  addBubble('him','过来。开始做任务。');
+  addOpts([
+    {text:'我不是故意的……',c:3,s:10,b:4,o:2, next:()=>t1()},
+    {text:'……对不起，主人',c:4,s:8,b:5,o:6, next:()=>t1()}
+  ]);
+}
+function t1(){
+  addBubble('him','【任务1】自己掀衣服到胸口以上，站直。','task');
+  addBubble('him','奶头已经立起来了吧？真空走一天能不硬？骚货。','shame');
+  addOpts([
+    {text:'（掀起来）……',c:8,s:13,b:10,o:5, next:()=>{waiting='feel'; showInput('描述感觉…');}},
+    {text:'好羞耻…',c:7,s:15,b:9,o:3, next:()=>{waiting='feel'; showInput('描述感觉…');}}
+  ]);
+}
+function afterFeel(){
+  addBubble('him','【任务2】弯腰自己扒开给我看。','task');
+  waiting='finger'; showInput('描述现在…');
+}
+function afterFinger(){
+  addBubble('him','【任务3】边玩边骂自己。','task');
+  waiting='self'; showInput('骂自己…');
+}
+function afterSelf(){
+  addBubble('him','你天生就是给男人轮流使用的肉便器。','shame');
+  addBubble('him','【任务4】想象被轮，说出你想被怎么对待。','task');
+  waiting='gang'; showInput('描述…');
+}
+function afterGang(){
+  addBubble('him','【任务5】玩到高潮，到的时候说出你是什么。','task');
+  waiting='org'; showInput('到的时候说…');
+}
+function afterOrg(){
+  addBubble('him','【任务6·喝尿】跪好张开嘴，全部咽下去。','task');
+  addBubble('him','连尿都要喝的下贱母狗。','shame');
+  addOpts([
+    {text:'……我张开了',c:18,s:26,b:16,o:10, next:()=>{waiting='final'; showInput('说出你的身份…');}},
+    {text:'求主人尿进来',c:24,s:32,b:20,o:14, next:()=>{waiting='final'; showInput('说出你的身份…');}}
+  ]);
+}
+function ending(){
+  change(100-cor,100-shame,100-body,100-obey);
+  mainFinished=true; saveAll();
+  addBubble('him','很好。你已经彻底雌堕了。','shame');
+  addBubble('him','主线结束。之后可继续聊天，我会随机抽查。');
+  enableFreeChat();
+}
+function enableFreeChat(){
+  $('input-bar').classList.add('show');
+  $('chat-input').placeholder='输入消息…';
+}
+
+$('chat-send').onclick = ()=>{
+  const v=$('chat-input').value.trim(); if(!v)return;
+  addBubble('me',v); $('chat-input').value='';
+  if(waiting){ pendingReply=true; updateReplyButton(); return; }
+  pendingReply=true; updateReplyButton();
+};
+async function requestAIReply(){
+  const c=conversations[currentChatId], msgs=c?.messages||[], last=msgs[msgs.length-1];
+  if(!last || last.who!=='me' || !pendingReply) return;
+  pendingReply=true; updateReplyButton();
+  try{
+    if(waiting==='feel'){ change(9,12,11,4); waiting=null; hideInput(); setTimeout(afterFeel,300); return; }
+    if(waiting==='finger'){ change(11,14,13,5); waiting=null; hideInput(); setTimeout(afterFinger,300); return; }
+    if(waiting==='self'){ change(13,16,14,6); waiting=null; hideInput(); setTimeout(afterSelf,300); return; }
+    if(waiting==='gang'){ change(15,18,16,7); waiting=null; hideInput(); setTimeout(afterGang,300); return; }
+    if(waiting==='org'){ change(18,20,18,8); waiting=null; hideInput(); setTimeout(afterOrg,300); return; }
+    if(waiting==='final'){ change(20,22,16,10); waiting=null; hideInput(); setTimeout(ending,400); return; }
+    const linked=(c.linkedWB||'').split(',').map(s=>s.trim()).filter(Boolean);
+    let system=c.persona||'你是一个普通人，自然简短回复。';
+    if(currentChatId==='master') system=c.persona||'你是主人，正在和用户聊天。';
+    const reply=await callAI(system,last.text,800,linked);
+    addBubble('him',reply);
+  } finally { pendingReply=false; updateReplyButton(); }
+}
+$('chat-input').addEventListener('keydown', e=>{ if(e.key==='Enter') $('chat-send').click(); });
+
+// ========== 编辑角色 ==========
+function openEditChar() {
+  const c = conversations[currentChatId];
+  if(!c) return;
+  $('edit-name').value = c.remark || c.name || '';
+  $('edit-avatar').value = c.avatar || (c.remark||c.name||'?')[0];
+  const ep=$('edit-avatar-preview'); ep.innerHTML=c.avatarImg?`<img class="avatar-img" src="${c.avatarImg}">`:escapeHtml(c.avatar||'');
+  $('edit-persona').value = c.persona || '';
+  $('edit-wb').value = c.linkedWB || '';
+  openApp('edit');
+}
+function uploadChatAvatar(){
+  const input=document.createElement('input'); input.type='file'; input.accept='image/*';
+  input.onchange=e=>{ const f=e.target.files?.[0]; if(!f)return; const r=new FileReader(); r.onload=ev=>{ const c=conversations[currentChatId]; c.avatarImg=ev.target.result; $('edit-avatar-preview').innerHTML=`<img class="avatar-img" src="${c.avatarImg}">`; saveAll(); renderMessages(); renderConvList(); }; r.readAsDataURL(f); }; input.click();
+}
+function clearChatAvatar(){ const c=conversations[currentChatId]; if(!c)return; c.avatarImg=''; $('edit-avatar-preview').innerHTML=escapeHtml(c.avatar||''); saveAll(); renderMessages(); renderConvList(); }
+function uploadMyAvatar(){
+  const input=document.createElement('input'); input.type='file'; input.accept='image/*';
+  input.onchange=e=>{const f=e.target.files?.[0];if(!f)return;const r=new FileReader();r.onload=ev=>{localStorage.setItem('myAvatar',ev.target.result);renderMessages();};r.readAsDataURL(f);}; input.click();
+}
+
+function saveCharEdit() {
+  const c = conversations[currentChatId];
+  if(!c) return;
+  c.remark = $('edit-name').value.trim() || c.name;
+  c.avatar = $('edit-avatar').value.trim().slice(0,2) || c.avatar;
+  if(!c.avatarImg) c.avatarImg='';
+  c.persona = $('edit-persona').value.trim();
+  c.linkedWB = $('edit-wb').value.trim();
+  // 同步到 contacts
+  const ct = contacts.find(x=>x.id===currentChatId);
+  if(ct){ ct.remark = c.remark; }
+  saveAll();
+  $('chat-title').textContent = c.remark;
+  alert('角色已保存');
+  openApp('chat');
+  renderMessages();
+}
+
+// ========== 通讯录（可删除） ==========
+function renderContacts() {
+  let html = '';
+  if(pendingRequests.length){
+    html += '<div style="padding:8px 16px;font-size:13px;color:#888;">待处理申请</div>';
+    pendingRequests.forEach((r,i)=>{
+      html += `<div class="contact-item">
+        <div class="contact-av">${r.name[0]}</div>
+        <div style="flex:1;"><div class="contact-name">${r.name}</div>
+        <div class="contact-remark">${r.fromMe?'我发起的申请':'对方申请加你'}</div></div>
+        <button class="btn btn-primary" style="flex:0;padding:6px 10px;font-size:12px;" onclick="handleRequest(${i},true)">通过</button>
+        <button class="btn btn-secondary" style="flex:0;padding:6px 10px;font-size:12px;margin-left:4px;" onclick="handleRequest(${i},false)">拒绝</button>
+      </div>`;
+    });
+  }
+  html += '<div style="padding:8px 16px;font-size:13px;color:#888;">好友</div>';
+  html += contacts.map((c,i)=>`
+    <div class="contact-item">
+      <div class="contact-av">${avatarMarkup(conversations[c.id]||c)}</div>
+      <div style="flex:1;" onclick="openChat('${c.id}')">
+        <div class="contact-name">${c.remark||c.name}</div>
+        <div class="contact-remark">${escapeHtml(c.relation || (c.gender==='female'?'女舍友':'男生'))}</div>
+      </div>
+      <button class="btn btn-secondary" style="flex:0;padding:4px 8px;font-size:11px;" onclick="editRemark(${i})">备注</button>
+      ${!['suwan','linke','xuye','chenmo'].includes(c.id)?`<button class="btn btn-danger" style="flex:0;padding:4px 8px;font-size:11px;margin-left:4px;" onclick="delContact(${i})">删除</button>`:''}
+    </div>
+  `).join('');
+  if(!contacts.length && !pendingRequests.length) html += '<div style="text-align:center;color:#666;padding:40px;">暂无联系人<br>点击右上角刷新</div>';
+  $('contact-list').innerHTML = html;
+}
+function refreshContacts() {
+  if(Math.random()>0.45){
+    const name = maleNames[Math.floor(Math.random()*maleNames.length)];
+    pendingRequests.push({name, fromMe:Math.random()>0.5, id:'c'+Date.now()});
+  } else {
+    const name = maleNames[Math.floor(Math.random()*maleNames.length)];
+    const id = 'c'+Date.now();
+    contacts.push({id, name, remark:name, gender:'male'});
+    conversations[id] = {name, remark:name, avatar:name[0], messages:[], last:'你们已成为好友', time:Date.now(), persona:'你是一个普通男性，自然简短地回复。', gender:'male'};
+  }
+  saveAll(); renderContacts(); alert('已刷新');
+}
+function handleRequest(i, accept) {
+  const r = pendingRequests[i];
+  if(accept){
+    contacts.push({id:r.id, name:r.name, remark:r.name, gender:'male'});
+    conversations[r.id] = {name:r.name, remark:r.name, avatar:r.name[0], messages:[], last:'你们已成为好友', time:Date.now(), persona:'你是一个普通男性，自然简短回复。', gender:'male'};
+  }
+  pendingRequests.splice(i,1);
+  saveAll(); renderContacts(); renderConvList();
+}
+function editRemark(i) {
+  const c = contacts[i];
+  const n = prompt('修改备注：', c.remark||c.name);
+  if(n!==null){
+    c.remark = n;
+    if(conversations[c.id]) conversations[c.id].remark = n;
+    saveAll(); renderContacts(); renderConvList();
+  }
+}
+function delContact(i) {
+  if(!confirm('删除此好友？聊天记录也会消失')) return;
+  const c = contacts[i];
+  delete conversations[c.id];
+  contacts.splice(i,1);
+  saveAll(); renderContacts(); renderConvList();
+}
+
+// ========== 其余功能（调教、线下、日记、守则、壁纸等）保持可用 ==========
+function updateTrainStatus(){
+  const bar=$('train-status'); if(!bar) return;
+  bar.innerHTML=`<span class="tag ${cor>=40?'hot':''}">雌堕 ${cor}%</span>
+    <span class="tag ${shame>=40?'hot':''}">羞耻 ${shame}%</span>
+    <span class="tag ${body>=40?'hot':''}">敏感 ${body}%</span>
+    <span class="tag ${obey>=40?'hot':''}">服从 ${obey}%</span>`;
+}
+function renderBodyParts(){
+  updateTrainStatus();
+  $('body-parts').innerHTML = defaultParts.map(p=>{
+    const d=bodyData[p]||{status:'尚未记录',img:''};
+    return `<div class="body-part">
+      <img class="part-img" src="${d.img||''}" onclick="uploadImg('${p}')">
+      <div><div class="part-name" onclick="genShameScore('${p}')">${p} · 点击羞辱评分</div>
+      <div class="part-status">${d.status}</div>
+      <div class="part-actions"><button onclick="editStatus('${p}')">编辑</button>
+      <button onclick="uploadImg('${p}')">图片</button></div></div></div>`;
+  }).join('');
+}
+function editStatus(part){
+  const v=prompt(`【${part}】状态：`, bodyData[part]?.status||'');
+  if(v!==null){ bodyData[part]={...bodyData[part],status:v}; saveAll(); renderBodyParts(); }
+}
+function uploadImg(part){
+  const input=document.createElement('input'); input.type='file'; input.accept='image/*';
+  input.onchange=e=>{
+    const reader=new FileReader();
+    reader.onload=ev=>{ bodyData[part]={...bodyData[part],img:ev.target.result}; saveAll(); renderBodyParts(); };
+    reader.readAsDataURL(e.target.files[0]);
+  }; input.click();
+}
+async function genShameScore(part){
+  const d=bodyData[part]||{status:'尚未记录'};
+  const text=await callAI('你是主人，对母狗身体部位做刻薄羞辱评分与点评。',`部位：${part}\n状态：${d.status}`);
+  alert(text);
+}
+
+const taskPool=[
+  {title:'真空出门',desc:'今天一整天不许穿内衣内裤，真空在公共场合活动至少2小时，回来详细汇报身体反应和下流想法。',type:'露出',difficulty:'中',reward:'羞耻值+'},
+  {title:'公开自慰',desc:'找个半公开的地方（厕所隔间/公园角落等）把逼玩到湿透，拍下或详细描述给主人听。',type:'调教',difficulty:'高',reward:'敏感值+'},
+  {title:'角色扮演',desc:'在外面假装是别人的母狗，对陌生人微笑并在心里默念自己是公用肉便器。',type:'精神',difficulty:'中',reward:'服从值+'},
+  {title:'物品插入',desc:'用日用品（笔/勺子/遥控器等）塞进逼或后穴保持一段时间，完成日常事务。',type:'身体',difficulty:'高',reward:'身体开发+'},
+  {title:'语言羞辱',desc:'在日记或聊天里用最下贱的话骂自己至少20句，并记录高潮感。',type:'精神',difficulty:'低',reward:'雌堕+'},
+  {title:'被看光',desc:'故意走光或被路人看到真空/湿痕，回来描述对方表情和自己的反应。',type:'露出',difficulty:'高',reward:'羞耻值++'},
+  {title:'吞精幻想',desc:'边玩边幻想被多人轮流内射灌满，最后必须说出自己是什么东西。',type:'幻想',difficulty:'中',reward:'服从+'}
+];
+function renderTasks(){
+  if(!currentTasks.length) refreshTasks(true);
+  $('task-container').innerHTML=currentTasks.map((t,i)=>`<div class="card"><h4>${escapeHtml(t.title)}</h4><p>${escapeHtml(t.desc)}</p><div class="wish-meta">类型：${escapeHtml(t.type||'任务')} · 难度：${escapeHtml(t.difficulty||'普通')}${t.reward?' · 奖励：'+escapeHtml(t.reward):''}</div><div class="btn-row"><button class="btn btn-primary" onclick="acceptTask(${i})">接受并开始</button></div></div>`).join('') || '<div style="text-align:center;color:#666;padding:40px;">暂无任务<br>点右上角刷新或许愿</div>';
+}
+async function refreshTasks(silent){
+  const p = getActiveProfile();
+  if(!p.url||!p.key){
+    // 无API时用本地池
+    currentTasks=[]; const pool=[...taskPool];
+    for(let i=0;i<3;i++) if(pool.length) currentTasks.push(pool.splice(Math.floor(Math.random()*pool.length),1)[0]);
+    if(!silent) renderTasks();
+    return;
+  }
+  if(!silent) $('task-container').innerHTML='<div style="text-align:center;padding:40px;color:#888;">正在生成恶俗任务…</div>';
+  try{
+    const raw = await callAI(
+      '你是调教母狗的主人。请生成3个足够恶俗、下贱、羞辱、露出、物化的线下任务。每个任务必须包含title、desc、type、difficulty、reward字段。输出纯JSON数组，不要其他文字。任务要具体可执行，重口、变态、羞耻感拉满。',
+      '生成3个新的母狗线下任务，风格要极致恶俗物化。'
+    );
+    let arr;
+    try{
+      const m = raw.match(/\[[\s\S]*\]/);
+      arr = m ? JSON.parse(m[0]) : null;
+    }catch(e){ arr=null; }
+    if(Array.isArray(arr) && arr.length){
+      currentTasks = arr.slice(0,3).map(t=>({
+        title: t.title||'恶俗任务',
+        desc: t.desc||t.description||'',
+        type: t.type||'调教',
+        difficulty: t.difficulty||'中',
+        reward: t.reward||'羞耻+'
+      }));
+    } else {
+      currentTasks=[]; const pool=[...taskPool];
+      for(let i=0;i<3;i++) if(pool.length) currentTasks.push(pool.splice(Math.floor(Math.random()*pool.length),1)[0]);
+    }
+  }catch(e){
+    currentTasks=[]; const pool=[...taskPool];
+    for(let i=0;i<3;i++) if(pool.length) currentTasks.push(pool.splice(Math.floor(Math.random()*pool.length),1)[0]);
+  }
+  if(!silent) renderTasks();
+}
+async function wishTask(){
+  const wish = prompt('说出你的愿望（越下贱越好，AI会把它变成可执行的恶俗任务）：\n例如：想被当众玩逼 / 想真空上班一天 / 想被陌生人摸');
+  if(!wish?.trim()) return;
+  const p = getActiveProfile();
+  if(!p.url||!p.key){
+    const t={title:'愿望任务',desc:wish.trim(),type:'许愿',difficulty:'中',reward:'完成后汇报',wish:wish.trim()};
+    currentTasks.unshift(t); renderTasks();
+    return;
+  }
+  $('task-container').innerHTML='<div style="text-align:center;padding:40px;color:#888;">正在把你的愿望变成恶俗任务…</div>';
+  try{
+    const raw = await callAI(
+      '你是调教母狗的主人。根据用户的愿望，生成1个足够恶俗、羞辱、物化、可执行的线下任务。输出纯JSON对象，包含title、desc、type、difficulty、reward、wish字段。desc要具体、重口、羞耻感强。',
+      `用户愿望：${wish.trim()}\n请生成对应的恶俗任务。`
+    );
+    let t;
+    try{
+      const m = raw.match(/\{[\s\S]*\}/);
+      t = m ? JSON.parse(m[0]) : null;
+    }catch(e){ t=null; }
+    if(t && (t.title||t.desc)){
+      currentTasks.unshift({
+        title: t.title||'愿望任务',
+        desc: t.desc||t.description||wish.trim(),
+        type: t.type||'许愿',
+        difficulty: t.difficulty||'中',
+        reward: t.reward||'完成后详细汇报',
+        wish: wish.trim()
+      });
+    } else {
+      currentTasks.unshift({title:'愿望任务',desc:wish.trim(),type:'许愿',difficulty:'中',reward:'完成后汇报',wish:wish.trim()});
+    }
+  }catch(e){
+    currentTasks.unshift({title:'愿望任务',desc:wish.trim(),type:'许愿',difficulty:'中',reward:'完成后汇报',wish:wish.trim()});
+  }
+  renderTasks();
+}
+async function acceptTask(i){
+  const t=currentTasks[i]; currentStoryTitle=t.title;
+  openApp('story');
+  $('story-content').innerHTML='<div style="text-align:center;padding:40px;color:#888;">生成中（至少800字，恶俗重口）…</div>';
+  $('save-story-btn').style.display='none';
+  const text=await callAI(
+    '根据任务生成一段完整的线下任务剧情。用第一人称或第三人称详细描写母狗执行任务的过程，重点刻画羞耻、身体反应、下流想法、被发现的风险。语言要恶俗、物化、重口，至少800字。保持与任务目标一致。',
+    `任务：${t.title}\n类型：${t.type||''}\n难度：${t.difficulty||'普通'}\n愿望：${t.wish||''}\n说明：${t.desc}`
+  );
+  currentStory=text; $('story-content').textContent=text; $('save-story-btn').style.display='block';
+}
+function saveCurrentStory(){ offlineArchives.unshift({title:currentStoryTitle,content:currentStory,time:Date.now()}); saveAll(); alert('已存档'); }
+function showArchive(){
+  openApp('archive');
+  $('archive-list').innerHTML=offlineArchives.map((a,i)=>`
+    <div class="card"><h4>${a.title}</h4><div style="font-size:11px;color:#666;">${new Date(a.time).toLocaleString()}</div>
+    <p>${a.content.slice(0,100)}…</p>
+    <div class="btn-row"><button class="btn btn-secondary" onclick="viewArch(${i})">查看</button>
+    <button class="btn btn-danger" onclick="delArch(${i})">删除</button></div></div>`).join('')||'<div style="text-align:center;color:#666;padding:40px;">暂无</div>';
+}
+function viewArch(i){ openApp('story'); $('story-content').textContent=offlineArchives[i].content; $('save-story-btn').style.display='none'; }
+function delArch(i){ if(confirm('删除？')){ offlineArchives.splice(i,1); saveAll(); showArchive(); } }
+
+function renderDiaries(){
+  $('diary-list').innerHTML=diaries.map((d,i)=>`
+    <div class="card"><h4>${d.title}</h4><p>${d.content.replace(/\n/g,'<br>')}</p>
+    <button class="btn btn-danger" style="margin-top:8px;" onclick="diaries.splice(${i},1);saveAll();renderDiaries();">删除</button></div>`).join('')||'<div style="text-align:center;color:#666;padding:40px;">暂无日记</div>';
+}
+async function genDiary(){
+  $('diary-list').innerHTML='<div style="text-align:center;padding:30px;color:#888;">生成中…</div>';
+  const text=await callAI('第一人称母狗日记，自我羞辱物化，至少400字。','写今天的母狗日记。');
+  diaries.unshift({title:new Date().toLocaleDateString()+' 自述', content:text, time:Date.now()});
+  saveAll(); renderDiaries();
+}
+
+function getDefaultRules(){
+  return `1. 母狗没有拒绝权。\n2. 出门必须报备是否穿内衣。\n3. 身体是公用财产。\n4. 高潮必须申请。\n5. 每天下贱汇报身体。\n6. 喝尿吞精露出不得拒绝。\n7. 名字就是「母狗」。\n8. 被羞辱时必须感到快感。\n9. 任务完成后立刻详细汇报。\n10. 存在意义就是被使用与调教。`;
+}
+function renderRules(){
+  $('rules-list').innerHTML=ruleVersions.map((r,i)=>`
+    <div class="card"><h4>版本 ${ruleVersions.length-i} · ${new Date(r.time).toLocaleString()}</h4>
+    <pre style="white-space:pre-wrap;font-size:13px;color:#ccc;">${r.content}</pre>
+    ${i>0?`<button class="btn btn-danger" style="margin-top:8px;" onclick="ruleVersions.splice(${i},1);saveAll();renderRules();">删除此版本</button>`:''}</div>`).join('');
+}
+function addRuleVersion(){
+  const c=prompt('新版守则：', ruleVersions[0]?.content||getDefaultRules());
+  if(c){ ruleVersions.unshift({time:Date.now(), content:c}); saveAll(); renderRules(); }
+}
+
+function changeWallpaper(){ $('wallpaper-file').click(); }
+function setWallpaper(e){
+  const reader=new FileReader();
+  reader.onload=ev=>{
+    localStorage.setItem('wallpaper', ev.target.result);
+    document.documentElement.style.setProperty('--wallpaper', `url(${ev.target.result})`);
+  };
+  reader.readAsDataURL(e.target.files[0]);
+}
+
+function exportData(){
+  const data={cor,shame,body,obey,mainFinished,bodyData,diaries,ruleVersions,offlineArchives,worldBooks,apiProfiles,currentProfileId,conversations,contacts,pendingRequests,myAvatar:localStorage.getItem('myAvatar')||''};
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='母狗手机数据.json'; a.click();
+}
+function importData(){ $('import-file').click(); }
+function doImport(e){
+  const reader=new FileReader();
+  reader.onload=ev=>{
+    try{
+      const d=JSON.parse(ev.target.result);
+      Object.assign(window, d); saveAll(); loadAll(); alert('导入成功'); goHome();
+    }catch(err){ alert('导入失败'); }
+  };
+  reader.readAsText(e.target.files[0]);
+}
+function clearAll(){
+  if(confirm('确定清空全部？不可恢复！')){
+    localStorage.removeItem('bitchPhoneV3');
+    localStorage.removeItem('wallpaper');
+    location.reload();
+  }
+}
+
+loadAll();
+</script>
+</body>
+</html>
