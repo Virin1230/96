@@ -886,19 +886,13 @@ function collectWBText(context){
 function getWorldBookPrompt(extraNames=[], context=''){
   worldBooks=worldBooks.map(wbNormalize);
   const text=collectWBText(context), linked=new Set(extraNames||[]), picked=new Map(), nowCount=(conversations[currentChatId]?.messages||[]).length;
-  // 常驻世界书是硬性上下文：只要启用，就必须在 AI 生成前读取。
-  // 不受扫描深度、延迟、概率、次关键词限制；关键词世界书仍按原规则触发。
-  const eligible=worldBooks.filter(w=>w.enabled && (w.constant || nowCount>=w.delay));
+  const eligible=worldBooks.filter(w=>w.enabled && nowCount>=w.delay);
   eligible.forEach(w=>{
     const explicit=linked.has(w.name);
-    const isConstant=!!w.constant;
-    const main=isConstant || explicit || (w.keywords||[]).some(k=>k && text.includes(String(k).toLowerCase()));
+    const main=w.constant || explicit || (w.keywords||[]).some(k=>k && text.includes(String(k).toLowerCase()));
     if(!main)return;
-
-    // 常驻条目不再被概率/次关键词条件拦截
-    if(!isConstant && w.probability<100 && Math.random()*100>w.probability)return;
-    if(!isConstant && w.secondary?.length && !w.secondary.some(k=>text.includes(String(k).toLowerCase()))) return;
-
+    if(w.probability<100 && Math.random()*100>w.probability)return;
+    if(w.secondary?.length && !w.secondary.some(k=>text.includes(String(k).toLowerCase()))) return;
     picked.set(w.id||w.name,w);
   });
   // 递归最多3轮，避免世界书无限膨胀
@@ -920,7 +914,6 @@ async function callAI(system, user, maxTokens=3000, linkedWB=[]) {
   const p = getActiveProfile();
   if(!p.url || !p.key) return '【未配置API】请先去「设置」填好 API 地址和 Key，然后点保存。';
 
-  // 先读取世界书，再组装 system prompt，确保常驻世界书先于 AI 生成进入上下文。
   const wb = getWorldBookPrompt(linkedWB, user);
   const fullSystem = (wb || '') + (p.style || '') + '\n\n' + system;
 
