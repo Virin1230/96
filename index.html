@@ -236,12 +236,13 @@
         <div class="app" onclick="openApp('worldbook')"><div class="app-icon" style="background:linear-gradient(135deg,#5856d6,#af52de);">📖</div><div class="app-name">世界书</div></div>
         <div class="app" onclick="openApp('diary')"><div class="app-icon" style="background:linear-gradient(135deg,#af52de,#8e44ad);">📓</div><div class="app-name">日记</div></div>
         <div class="app" onclick="openApp('rules')"><div class="app-icon" style="background:linear-gradient(135deg,#30d158,#34c759);">📝</div><div class="app-name">守则</div></div>
+        <div class="app" onclick="openApp('me')"><div class="app-icon" style="background:linear-gradient(135deg,#ff2d55,#ff8a80);">🐶</div><div class="app-name">母狗</div></div>
         <div class="app" onclick="openApp('settings')"><div class="app-icon" style="background:linear-gradient(135deg,#8e8e93,#636366);">⚙️</div><div class="app-name">设置</div></div>
       </div>
       <div class="dock">
         <div class="app" onclick="openApp('messages')"><div class="app-icon" style="background:linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045);">💬</div></div>
         <div class="app" onclick="openApp('train')"><div class="app-icon" style="background:linear-gradient(135deg,#ff2d55,#c41e3a);">🔒</div></div>
-        <div class="app" onclick="openApp('offline')"><div class="app-icon" style="background:linear-gradient(135deg,#ff9500,#ff5e3a);">📍</div></div>
+        <div class="app" onclick="openApp('me')"><div class="app-icon" style="background:linear-gradient(135deg,#ff2d55,#ff8a80);">🐶</div></div>
         <div class="app" onclick="openApp('settings')"><div class="app-icon" style="background:linear-gradient(135deg,#8e8e93,#636366);">⚙️</div></div>
       </div>
     </div>
@@ -425,6 +426,38 @@
       <div class="scroll" style="padding:12px;" id="rules-list"></div>
     </div>
 
+    <!-- 母狗（用户自己） -->
+    <div class="page" id="page-me">
+      <div class="nav">
+        <button class="nav-back" onclick="goHome()">‹ 桌面</button>
+        <div class="nav-title">我是母狗</div>
+        <button class="nav-right" onclick="saveMeProfile()">保存</button>
+      </div>
+      <div class="scroll edit-section">
+        <div style="text-align:center;padding:18px 0 10px;">
+          <div id="me-avatar-preview" style="width:84px;height:84px;border-radius:50%;background:#2c2c2e;margin:0 auto 10px;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:28px;color:#ff8a80;border:2px solid #3a1515;"></div>
+          <div style="display:flex;gap:8px;justify-content:center;">
+            <button class="btn btn-secondary" style="flex:0;padding:8px 14px;" onclick="uploadMeAvatar()">换头像</button>
+            <button class="btn btn-secondary" style="flex:0;padding:8px 14px;" onclick="clearMeAvatar()">清除</button>
+          </div>
+        </div>
+        <label>母狗名字（聊天里显示的「我」）</label>
+        <input type="text" id="me-name" placeholder="例如：小母狗 / 今晚的肉便器">
+        <label>头像文字（没图片时显示，1-2字）</label>
+        <input type="text" id="me-avatar-text" maxlength="2" placeholder="狗">
+        <label>基础人设（会被注入到所有聊天，AI会知道你是谁）</label>
+        <textarea id="me-persona" style="height:160px;" placeholder="例如：我是一只已经被彻底调教的母狗，名字叫xxx，性格xx，身体敏感，喜欢被羞辱，会主动讨好主人……写得越具体，聊天时对方越清楚你是谁。"></textarea>
+        <div style="margin-top:14px;padding:12px;background:#1a1212;border-radius:12px;border:1px solid #3a1515;">
+          <div style="font-size:13px;color:#ff8a80;margin-bottom:6px;">当前状态速览</div>
+          <div id="me-status" style="font-size:12.5px;color:#bbb;line-height:1.6;"></div>
+        </div>
+        <div style="margin-top:16px;font-size:12px;color:#888;line-height:1.5;">
+          这里改的名字和人设会同步到所有微信聊天里的「我」。<br>
+          人设会被悄悄告诉对方AI，让它知道你是什么样的母狗。
+        </div>
+      </div>
+    </div>
+
     <!-- 设置 -->
     <div class="page" id="page-settings">
       <div class="nav">
@@ -510,6 +543,13 @@ let pendingRequests = [];
 let pendingReply = false;
 let wbScanDepth = 6;
 let wbMaxEntries = 12;
+// 用户自己（母狗）的资料，会注入到所有聊天
+let meProfile = {
+  name: '母狗',
+  avatarText: '狗',
+  avatarImg: '',
+  persona: '我是一只已经被主人彻底调教的下贱母狗，身体敏感，喜欢被羞辱和命令，会乖乖听话并主动讨好。'
+};
 
 const defaultParts = ['奶子','乳头','逼','阴蒂','嘴巴','舌头','屁股','后穴','大腿','全身'];
 const maleNames = ['学长-陈默','同事-小林','邻居-张叔','前桌-阿杰','健身房-教练','咖啡店-店员','网友-夜色','房东-王哥','陌生人-路过','学弟-小宇','公司-李哥','球友-大伟'];
@@ -557,7 +597,9 @@ function loadAll() {
       apiProfiles=d.apiProfiles||[]; currentProfileId=d.currentProfileId;
       conversations=d.conversations||{}; contacts=d.contacts||[];
       pendingRequests=d.pendingRequests||[];
-      if(d.myAvatar) localStorage.setItem('myAvatar',d.myAvatar);
+      if(d.meProfile) meProfile = Object.assign(meProfile, d.meProfile);
+      if(d.myAvatar && !meProfile.avatarImg) meProfile.avatarImg = d.myAvatar;
+      if(meProfile.avatarImg) localStorage.setItem('myAvatar', meProfile.avatarImg);
     } catch(e){}
   }
   if (Object.keys(bodyData).length===0) defaultParts.forEach(p=>bodyData[p]={status:'尚未记录',img:''});
@@ -598,8 +640,11 @@ function saveAll() {
   localStorage.setItem('bitchPhoneV3', JSON.stringify({
     cor,shame,body,obey,mainFinished,bodyData,diaries,ruleVersions,
     offlineArchives,worldBooks,apiProfiles,currentProfileId,
-    conversations,contacts,pendingRequests
+    conversations,contacts,pendingRequests, meProfile
   }));
+  // 同步头像给旧逻辑兼容
+  if(meProfile.avatarImg) localStorage.setItem('myAvatar', meProfile.avatarImg);
+  else localStorage.removeItem('myAvatar');
 }
 
 function updateClock() {
@@ -626,6 +671,7 @@ function openApp(name) {
   if(name==='diary') renderDiaries();
   if(name==='rules') renderRules();
   if(name==='settings'){ renderApiSelect(); loadCurrentProfile(); }
+  if(name==='me') loadMePage();
 }
 
 // ========== API ==========
@@ -931,13 +977,17 @@ function openChat(id) {
 function avatarMarkup(c){
   return c?.avatarImg ? `<img class="avatar-img" src="${c.avatarImg}" alt="头像">` : escapeHtml(c?.avatar || (c?.remark||c?.name||'?')[0]);
 }
+function meAvatarMarkup(){
+  if(meProfile.avatarImg) return `<img class="avatar-img" src="${meProfile.avatarImg}" alt="我">`;
+  return escapeHtml(meProfile.avatarText || meProfile.name?.[0] || '狗');
+}
 function escapeHtml(v){ return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
 function renderMessages(){
   const c=conversations[currentChatId]; $('msg-list').innerHTML='';
   (c.messages||[]).forEach((m,i)=>{
     const row=document.createElement('div'); row.className=`bubble-row ${m.who} ${m.type||''}`; row.dataset.index=i;
     const quote=m.replyTo?`<div class="quote">回复：${escapeHtml(m.replyTo.text||'')}</div>`:'';
-    row.innerHTML=`<div class="b-av">${m.who==='him'?avatarMarkup(c):avatarMarkup({avatarImg:localStorage.getItem('myAvatar'),avatar:'我'})}</div><div class="b-text">${quote}${escapeHtml(m.text)}</div><div class="bubble-actions"><button class="reply-btn" onclick="event.stopPropagation();replyToMessage(${i})">回复</button><button class="del-btn" onclick="event.stopPropagation();delMessage(${i})">删除</button></div>`;
+    row.innerHTML=`<div class="b-av">${m.who==='him'?avatarMarkup(c):meAvatarMarkup()}</div><div class="b-text">${quote}${escapeHtml(m.text)}</div><div class="bubble-actions"><button class="reply-btn" onclick="event.stopPropagation();replyToMessage(${i})">回复</button><button class="del-btn" onclick="event.stopPropagation();delMessage(${i})">删除</button></div>`;
     row.addEventListener('click',()=>row.classList.toggle('selected'));
     $('msg-list').appendChild(row);
   }); $('msg-list').scrollTop=$('msg-list').scrollHeight; updateReplyButton();
@@ -1105,6 +1155,13 @@ async function requestAIReply(){
     if(currentChatId === 'master'){
       system = c.persona || '你是主人，正在和用户聊天。语言支配、羞辱、偶尔抽查身体。';
     }
+    // 注入用户（母狗）自己的人设，让对方AI知道在和谁说话
+    if(meProfile.persona || meProfile.name){
+      system += `\n\n【当前对话对象（用户）的人设】
+名字：${meProfile.name || '母狗'}
+${meProfile.persona || ''}
+请根据以上人设理解对方是谁，自然地对话。`;
+    }
     // 强制像真实微信聊天一样分段，方便前端拆成多气泡
     system += `\n\n【重要回复格式】
 你必须像真人在微信里打字一样回复：
@@ -1115,7 +1172,7 @@ async function requestAIReply(){
 - 不要加「对方：」「我：」等任何前缀
 - 只输出纯对话内容`;
     // 带上最近对话上下文，避免只看最后一句
-    const recent = (c.messages || []).slice(-10).map(m => (m.who === 'me' ? '用户：' : '对方：') + m.text).join('\n');
+    const recent = (c.messages || []).slice(-10).map(m => (m.who === 'me' ? (meProfile.name||'用户')+'：' : '对方：') + m.text).join('\n');
     const reply = await callAI(system, recent + '\n\n请以对方身份，针对最后一句自然回复。按上面的格式要求输出。', 900, linked);
     // 拆成多个气泡，模拟真实线上聊天
     await addBubblesFromReply(reply);
@@ -1239,8 +1296,58 @@ function uploadChatAvatar(){
 }
 function clearChatAvatar(){ const c=conversations[currentChatId]; if(!c)return; c.avatarImg=''; $('edit-avatar-preview').innerHTML=escapeHtml(c.avatar||''); saveAll(); renderMessages(); renderConvList(); }
 function uploadMyAvatar(){
-  const input=document.createElement('input'); input.type='file'; input.accept='image/*';
-  input.onchange=e=>{const f=e.target.files?.[0];if(!f)return;const r=new FileReader();r.onload=ev=>{localStorage.setItem('myAvatar',ev.target.result);renderMessages();};r.readAsDataURL(f);}; input.click();
+  // 兼容旧调用，转接到新逻辑
+  uploadMeAvatar();
+}
+
+// ========== 母狗（用户自己）资料 ==========
+function loadMePage(){
+  $('me-name').value = meProfile.name || '';
+  $('me-avatar-text').value = meProfile.avatarText || '';
+  $('me-persona').value = meProfile.persona || '';
+  const prev = $('me-avatar-preview');
+  if(meProfile.avatarImg){
+    prev.innerHTML = `<img class="avatar-img" src="${meProfile.avatarImg}">`;
+  } else {
+    prev.textContent = meProfile.avatarText || meProfile.name?.[0] || '狗';
+  }
+  $('me-status').innerHTML = `名字：${escapeHtml(meProfile.name||'未设置')}<br>
+    雌堕 ${cor}% · 羞耻 ${shame}% · 敏感 ${body}% · 服从 ${obey}%<br>
+    人设已写入所有聊天上下文`;
+}
+function uploadMeAvatar(){
+  const input = document.createElement('input');
+  input.type = 'file'; input.accept = 'image/*';
+  input.onchange = e => {
+    const f = e.target.files?.[0]; if(!f) return;
+    const r = new FileReader();
+    r.onload = ev => {
+      meProfile.avatarImg = ev.target.result;
+      $('me-avatar-preview').innerHTML = `<img class="avatar-img" src="${meProfile.avatarImg}">`;
+      saveAll();
+      if(currentChatId) renderMessages();
+    };
+    r.readAsDataURL(f);
+  };
+  input.click();
+}
+function clearMeAvatar(){
+  meProfile.avatarImg = '';
+  $('me-avatar-preview').textContent = meProfile.avatarText || meProfile.name?.[0] || '狗';
+  saveAll();
+  if(currentChatId) renderMessages();
+}
+function saveMeProfile(){
+  meProfile.name = $('me-name').value.trim() || '母狗';
+  meProfile.avatarText = ($('me-avatar-text').value.trim() || meProfile.name[0] || '狗').slice(0,2);
+  meProfile.persona = $('me-persona').value.trim();
+  if(!meProfile.avatarImg){
+    $('me-avatar-preview').textContent = meProfile.avatarText;
+  }
+  saveAll();
+  loadMePage();
+  if(currentChatId) renderMessages();
+  alert('已保存。名字和人设已同步到所有聊天。');
 }
 
 function saveCharEdit() {
@@ -1515,7 +1622,7 @@ function setWallpaper(e){
 }
 
 function exportData(){
-  const data={cor,shame,body,obey,mainFinished,bodyData,diaries,ruleVersions,offlineArchives,worldBooks,apiProfiles,currentProfileId,conversations,contacts,pendingRequests,myAvatar:localStorage.getItem('myAvatar')||''};
+  const data={cor,shame,body,obey,mainFinished,bodyData,diaries,ruleVersions,offlineArchives,worldBooks,apiProfiles,currentProfileId,conversations,contacts,pendingRequests,meProfile,myAvatar:meProfile.avatarImg||''};
   const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
   const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='母狗手机数据.json'; a.click();
 }
@@ -1525,7 +1632,10 @@ function doImport(e){
   reader.onload=ev=>{
     try{
       const d=JSON.parse(ev.target.result);
-      Object.assign(window, d); saveAll(); loadAll(); alert('导入成功'); goHome();
+      if(d.meProfile) meProfile = Object.assign(meProfile, d.meProfile);
+      Object.assign(window, d);
+      if(d.myAvatar && !meProfile.avatarImg) meProfile.avatarImg = d.myAvatar;
+      saveAll(); loadAll(); alert('导入成功'); goHome();
     }catch(err){ alert('导入失败'); }
   };
   reader.readAsText(e.target.files[0]);
