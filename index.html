@@ -31,40 +31,15 @@
     position:absolute; top:0; left:50%; transform:translateX(-50%);
     width:126px; height:32px; background:#000; border-radius:0 0 20px 20px; z-index:200;
   }
-  /* 从桌面图标打开：全屏，去掉外框，真正像原生 App */
   @media all and (display-mode: standalone),
          all and (display-mode: fullscreen) {
-    body {
-      background: #000;
-      padding: 0;
-      align-items: stretch;
-      justify-content: stretch;
-    }
-    .phone {
-      width: 100%;
-      height: 100%;
-      max-height: 100%;
-      border-radius: 0;
-      border: none;
-      box-shadow: none;
-    }
-    .notch { display: none; }
+    body { background:#000; padding:0; align-items:stretch; justify-content:stretch; }
+    .phone { width:100%; height:100%; max-height:100%; border-radius:0; border:none; box-shadow:none; }
+    .notch { display:none; }
   }
-  body.standalone-mode {
-    background: #000;
-    padding: 0;
-    align-items: stretch;
-    justify-content: stretch;
-  }
-  body.standalone-mode .phone {
-    width: 100%;
-    height: 100%;
-    max-height: 100%;
-    border-radius: 0;
-    border: none;
-    box-shadow: none;
-  }
-  body.standalone-mode .notch { display: none; }
+  body.standalone-mode { background:#000; padding:0; align-items:stretch; justify-content:stretch; }
+  body.standalone-mode .phone { width:100%; height:100%; max-height:100%; border-radius:0; border:none; box-shadow:none; }
+  body.standalone-mode .notch { display:none; }
   .screen { width:100%; height:100%; position:relative; overflow:hidden; background:#000; }
 
   .home {
@@ -869,44 +844,73 @@ function toggleEnable(i){ if(worldBooks[i]){worldBooks[i].enabled=!worldBooks[i]
 function delWB(i){ if(confirm('删除这个世界书条目？')){worldBooks.splice(i,1);saveAll();renderWorldBooks();} }
 function showWBHelp(){ alert(`世界书会根据最近聊天自动扫描关键词。
 
-常驻：每次都注入，适合核心规则。
-关键词：提到人名、地点、事件等才注入。
-次关键词：用于更精确触发。
-优先级：数字越小越先注入。
-概率：命中后再进行概率判定。
-扫描深度：向最近几轮聊天查找。
+常驻：只要启用，就会在「每一次」需要 AI 的生成前强制注入——包括聊天回复、线下任务、日记、身体羞辱评分等，不受关键词/次关键词/延迟/概率影响。适合核心规则、全局人设。
+关键词：提到人名、地点、事件等才注入（非常驻）。
+次关键词：用于更精确触发（非常驻）。
+优先级：数字越小越先注入；常驻条目始终排在最前。
+概率：仅对非常驻条目生效。
+扫描深度：向最近几轮聊天查找关键词。
 递归：一个条目被触发后，其内容还能继续触发其他条目。
 
 角色编辑里的“关联世界书”仍可按名称绑定专属条目。`); }
 function collectWBText(context){
-  const c=conversations[currentChatId];
+  const c=currentChatId ? conversations[currentChatId] : null;
   const msgs=(c?.messages||[]).slice(-wbScanDepth).map(m=>m.text||'');
   return [...msgs,context||''].join(' ').toLowerCase();
 }
 function getWorldBookPrompt(extraNames=[], context=''){
   worldBooks=worldBooks.map(wbNormalize);
-  const text=collectWBText(context), linked=new Set(extraNames||[]), picked=new Map(), nowCount=(conversations[currentChatId]?.messages||[]).length;
-  const eligible=worldBooks.filter(w=>w.enabled && nowCount>=w.delay);
+  const text=collectWBText(context), linked=new Set(extraNames||[]), picked=new Map();
+  const nowCount=(currentChatId && conversations[currentChatId]?.messages||[]).length;
+
+  // 1) 常驻条目：只要启用，就强制注入（不受关键词、次关键词、延迟、概率影响）
+  //    聊天 / 线下任务 / 日记 / 羞辱评分 / 任何 callAI 都会带上
+  worldBooks.forEach(w=>{
+    if(!w.enabled) return;
+    if(w.constant || w.global){
+      picked.set(w.id||w.name, w);
+    }
+  });
+
+  // 2) 非常驻：按关键词 / 角色关联 / 概率 / 次关键词 / 延迟筛选
+  const eligible=worldBooks.filter(w=>w.enabled && !w.constant && !w.global && nowCount>=(w.delay||0));
   eligible.forEach(w=>{
     const explicit=linked.has(w.name);
-    const main=w.constant || explicit || (w.keywords||[]).some(k=>k && text.includes(String(k).toLowerCase()));
-    if(!main)return;
-    if(w.probability<100 && Math.random()*100>w.probability)return;
+    const keywordHit=(w.keywords||[]).some(k=>k && text.includes(String(k).toLowerCase()));
+    if(!explicit && !keywordHit) return;
+    if(w.probability<100 && Math.random()*100>w.probability) return;
     if(w.secondary?.length && !w.secondary.some(k=>text.includes(String(k).toLowerCase()))) return;
     picked.set(w.id||w.name,w);
   });
-  // 递归最多3轮，避免世界书无限膨胀
+
+  // 3) 递归最多3轮（只对非常驻条目）
   if(picked.size){
     let scan=[...picked.values()].map(w=>w.content||'').join(' ').toLowerCase();
     for(let round=0;round<3;round++){
       let added=false;
-      eligible.forEach(w=>{ if(picked.has(w.id||w.name)||!w.recursive)return; if((w.keywords||[]).some(k=>k&&scan.includes(String(k).toLowerCase()))){ picked.set(w.id||w.name,w); added=true; } });
-      if(!added)break; scan=[...picked.values()].map(w=>w.content||'').join(' ').toLowerCase();
+      eligible.forEach(w=>{
+        if(picked.has(w.id||w.name)||!w.recursive) return;
+        if((w.keywords||[]).some(k=>k&&scan.includes(String(k).toLowerCase()))){
+          picked.set(w.id||w.name,w); added=true;
+        }
+      });
+      if(!added) break;
+      scan=[...picked.values()].map(w=>w.content||'').join(' ').toLowerCase();
     }
   }
-  const arr=[...picked.values()].sort((a,b)=>Number(a.priority||50)-Number(b.priority||50)).slice(0,wbMaxEntries);
-  if(!arr.length)return '';
-  return '【世界书·当前生效条目】\n'+arr.map(w=>`【${w.name}】\n${w.content}`).join('\n\n')+'\n\n';
+
+  // 常驻优先排序，再按 priority
+  const arr=[...picked.values()].sort((a,b)=>{
+    const ac=(a.constant||a.global)?0:1, bc=(b.constant||b.global)?0:1;
+    if(ac!==bc) return ac-bc;
+    return Number(a.priority||50)-Number(b.priority||50);
+  }).slice(0, Math.max(wbMaxEntries, picked.size)); // 常驻再多也尽量都带上，不硬砍
+
+  if(!arr.length) return '';
+  return '【世界书·当前生效条目（含全部常驻，必须严格遵守）】\n'+arr.map(w=>{
+    const tag=(w.constant||w.global)?'[常驻]':'';
+    return `【${tag}${w.name}】\n${w.content}`;
+  }).join('\n\n')+'\n\n';
 }
 
 // ========== AI ==========
@@ -1043,7 +1047,8 @@ function delMessage(i){
   const c=conversations[currentChatId]; if(!c||!c.messages||!c.messages[i]) return;
   if(!confirm('删除这条消息？')) return;
   c.messages.splice(i,1);
-  if(c.messages.length){ const last=c.messages[c.messages.length-1]; c.last=last.text.replace(/\n/g,' '); c.time=Date.now(); }
+  if(c.messages.length){ const last=c.messages[c.messages.length-1]; c.last=last.text.replace(/
+/g,' '); c.time=Date.now(); }
   else { c.last='暂无消息'; }
   saveAll(); renderMessages(); renderConvList();
 }
@@ -1069,7 +1074,8 @@ function addBubble(who, text, type='') {
   if(who==='me' && window.replyTarget){ msg.replyTo={who:window.replyTarget.who,text:window.replyTarget.text}; }
   c.messages.push(msg);
   if(who==='me') cancelReply();
-  c.last = text.replace(/\n/g,' ');
+  c.last = text.replace(/
+/g,' ');
   c.time = Date.now();
   saveAll();
   renderMessages();
