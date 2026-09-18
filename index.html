@@ -1105,16 +1105,86 @@ async function requestAIReply(){
     if(currentChatId === 'master'){
       system = c.persona || '你是主人，正在和用户聊天。语言支配、羞辱、偶尔抽查身体。';
     }
+    // 强制像真实微信聊天一样分段，方便前端拆成多气泡
+    system += `\n\n【重要回复格式】
+你必须像真人在微信里打字一样回复：
+- 多用短句、口语、语气词
+- 尽量分成 2～5 段
+- 每段之间用空行隔开
+- 不要写成一大段完整长文
+- 不要加「对方：」「我：」等任何前缀
+- 只输出纯对话内容`;
     // 带上最近对话上下文，避免只看最后一句
     const recent = (c.messages || []).slice(-10).map(m => (m.who === 'me' ? '用户：' : '对方：') + m.text).join('\n');
-    const reply = await callAI(system, recent + '\n\n请以对方身份，针对最后一句自然回复。只输出回复内容，不要加前缀。', 900, linked);
-    addBubble('him', reply);
+    const reply = await callAI(system, recent + '\n\n请以对方身份，针对最后一句自然回复。按上面的格式要求输出。', 900, linked);
+    // 拆成多个气泡，模拟真实线上聊天
+    await addBubblesFromReply(reply);
   } catch(e){
     addBubble('him', '【回复失败】' + (e.message || e));
   } finally {
     pendingReply = false;
     updateReplyButton();
     if(btn){ btn.textContent = '响应'; }
+  }
+}
+
+// 把AI回复拆成多个气泡，带轻微延迟，更像真实微信/线上聊天
+async function addBubblesFromReply(raw){
+  if(!raw || typeof raw !== 'string') {
+    addBubble('him', String(raw || ''));
+    return;
+  }
+
+  // 清理常见前缀
+  let text = raw
+    .replace(/\r\n/g, '\n')
+    .replace(/^(对方|助手|AI|角色)[:：]\s*/i, '')
+    .trim();
+
+  // 1. 优先按空行（双换行）拆
+  let parts = text.split(/\n\s*\n+/).map(s => s.trim()).filter(Boolean);
+
+  // 2. 如果拆出来还是只有一段，再按单换行拆
+  if(parts.length <= 1){
+    const lines = text.split('\n').map(s => s.trim()).filter(Boolean);
+    if(lines.length > 1) parts = lines;
+  }
+
+  // 3. 如果仍然只有一段且比较长，按中文句末标点再切
+  if(parts.length === 1 && parts[0].length > 60){
+    const sentences = parts[0]
+      .split(/(?<=[。！？!?…])\s*/)
+      .map(s => s.trim())
+      .filter(Boolean);
+    if(sentences.length > 1) parts = sentences;
+  }
+
+  // 4. 过长的单句再强行按逗号切（避免一条超级长气泡）
+  const finalParts = [];
+  for(const p of parts){
+    if(p.length > 120){
+      const chunks = p.split(/(?<=[，,；;])\s*/).map(s => s.trim()).filter(Boolean);
+      if(chunks.length > 1) finalParts.push(...chunks);
+      else finalParts.push(p);
+    } else {
+      finalParts.push(p);
+    }
+  }
+
+  // 过滤纯标点或空
+  const clean = finalParts.filter(p => p && !/^[。！？!?…，,；;\s]+$/.test(p));
+
+  if(clean.length === 0){
+    addBubble('him', text || '……');
+    return;
+  }
+
+  for(let i = 0; i < clean.length; i++){
+    addBubble('him', clean[i]);
+    // 轻微延迟，模拟一条条发出
+    if(i < clean.length - 1){
+      await new Promise(r => setTimeout(r, 260 + Math.random() * 280));
+    }
   }
 }
 $('chat-input').addEventListener('keydown', e=>{ if(e.key === 'Enter') $('chat-send').click(); });
