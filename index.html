@@ -89,18 +89,18 @@
   .b-text {
     padding:9px 12px; border-radius:16px; font-size:14.5px; line-height:1.45; white-space:pre-wrap;
   }
-  .bubble-row.him .b-text { background:#2c2c2e; border-bottom-left-radius:4px; }
-  .bubble-row.me .b-text { background:#3a1a1a; border-bottom-right-radius:4px; color:#f0c8c8; }
+  .bubble-row.him .b-text { background:#2c2c2e; border-bottom-left-radius:4px; color:#eee; }
+  .bubble-row.me .b-text { background:#07c160; border-bottom-right-radius:4px; color:#fff; }
   .shame .b-text { background:#2a1010!important; color:#ffab91!important; }
-  .task .b-text { background:#101428!important; border-left:3px solid #5c9eff; }
+  .task .b-text { background:#101428!important; border-left:3px solid #5c9eff; color:#cce; }
   .opts { display:flex; flex-direction:column; gap:6px; margin:4px 0 4px 36px; }
   .opt {
     background:#1c1c1e; border:1px solid #333; color:#ddd;
     padding:9px 12px; border-radius:10px; text-align:left; font-size:13.5px; cursor:pointer;
   }
   .input-bar {
-    padding:8px 12px; background:#1c1c1e; border-top:.5px solid var(--border);
-    display:none; gap:8px; flex-shrink:0;
+    padding:8px 10px; background:#1c1c1e; border-top:.5px solid var(--border);
+    display:none; gap:8px; flex-shrink:0; align-items:center;
   }
   .input-bar.show { display:flex; }
   #chat-input {
@@ -108,9 +108,16 @@
     padding:9px 14px; color:#fff; outline:none; font-size:16px;
   }
   #chat-send {
-    background:var(--blue); border:none; color:#fff;
-    width:36px; height:36px; border-radius:50%; font-size:16px; cursor:pointer;
+    background:#07c160; border:none; color:#fff;
+    height:36px; min-width:56px; border-radius:6px; font-size:14px; cursor:pointer; padding:0 12px;
   }
+  #chat-reply {
+    border:0; background:#2c2c2e; color:#07c160; border-radius:6px;
+    height:36px; min-width:52px; font-size:13px; cursor:pointer; padding:0 10px;
+    flex:0 0 auto; opacity:.45; border:1px solid #07c160;
+  }
+  #chat-reply.ready { opacity:1; background:#07c160; color:#fff; }
+  #chat-reply:disabled { cursor:default; opacity:.4; }
 
   .card { background:var(--card); border-radius:14px; padding:14px; margin-bottom:12px; }
   .card h4 { color:#ff8a80; margin-bottom:6px; font-size:15px; }
@@ -195,9 +202,7 @@
   .bubble-row.selected .bubble-actions { display:flex; }
   .reply-btn, .del-btn { border:0; background:#333; color:#fff; border-radius:12px; padding:5px 9px; font-size:11px; cursor:pointer; box-shadow:0 3px 10px rgba(0,0,0,.35); margin-left:4px; }
   .del-btn { background:#5a2020; color:#ff8a80; }
-  #chat-reply { border:0; background:#34c759; color:#fff; border-radius:50%; width:34px; height:34px; font-size:16px; cursor:pointer; flex:0 0 34px; opacity:.45; }
-  #chat-reply.ready { opacity:1; }
-  #chat-reply:disabled { cursor:default; }
+  /* chat-reply styles moved to input-bar section */
   .wb-toolbar { display:flex; gap:8px; margin-bottom:10px; }
   .wb-filter { flex:1; background:#2c2c2e; border:0; border-radius:10px; padding:9px 11px; color:#fff; outline:none; font-size:16px !important; }
   .wb-section { padding:10px 12px; background:#191919; border-radius:12px; margin-bottom:10px; }
@@ -245,8 +250,8 @@
     <div class="page" id="page-messages">
       <div class="nav">
         <button class="nav-back" onclick="goHome()">‹ 桌面</button>
-        <div class="nav-title">消息</div>
-        <button class="nav-right" onclick="openApp('contacts')">通讯录</button>
+        <div class="nav-title">微信</div>
+        <button class="nav-right" onclick="openCreateChar()">＋</button>
       </div>
       <div class="scroll" id="conv-list"></div>
     </div>
@@ -256,14 +261,36 @@
       <div class="nav">
         <button class="nav-back" onclick="openApp('messages')">‹ 返回</button>
         <div class="nav-title" id="chat-title">聊天</div>
-        <button class="nav-right" onclick="openEditChar()">编辑</button>
+        <button class="nav-right" onclick="openEditChar()">···</button>
       </div>
       <div class="msg-list" id="msg-list"></div>
       <div class="reply-bar" id="reply-bar"><div class="reply-preview" id="reply-preview"></div><button class="reply-cancel" onclick="cancelReply()">取消</button></div>
       <div class="input-bar" id="input-bar">
+        <button id="chat-reply" title="让对方回复" onclick="requestAIReply()" disabled>响应</button>
         <input type="text" id="chat-input" placeholder="输入消息…">
-        <button id="chat-send">↑</button>
-        <button id="chat-reply" title="让对方回复" onclick="requestAIReply()" disabled>↩</button>
+        <button id="chat-send">发送</button>
+      </div>
+    </div>
+
+    <!-- 新建角色 -->
+    <div class="page" id="page-create">
+      <div class="nav">
+        <button class="nav-back" onclick="openApp('messages')">‹ 返回</button>
+        <div class="nav-title">新建角色</div>
+        <button class="nav-right" onclick="saveNewChar()">完成</button>
+      </div>
+      <div class="scroll edit-section">
+        <label>姓名</label>
+        <input type="text" id="create-name" placeholder="角色真实姓名">
+        <label>备注（显示名称）</label>
+        <input type="text" id="create-remark" placeholder="聊天里显示的名字">
+        <label>头像文字（1-2字）</label>
+        <input type="text" id="create-avatar" maxlength="2" placeholder="默">
+        <label>角色设定（人设，AI严格遵守）</label>
+        <textarea id="create-persona" style="height:140px;" placeholder="详细描述性格、说话方式、和用户的关系、是否知道用户的秘密等…"></textarea>
+        <label>关联世界书（多选，用逗号分隔世界书名称）</label>
+        <input type="text" id="create-wb" placeholder="例如：全局规则,苏晚专属">
+        <div style="margin-top:16px;font-size:12px;color:#888;">创建后会出现在消息列表，可直接开始聊天。</div>
       </div>
     </div>
 
@@ -843,10 +870,13 @@ function delMessage(i){
   saveAll(); renderMessages(); renderConvList();
 }
 function updateReplyButton(){
-  const btn=$('chat-reply'); if(!btn)return;
-  const c=conversations[currentChatId], msgs=c?.messages||[], last=msgs[msgs.length-1];
-  const ready=!!last && last.who==='me' && !pendingReply;
-  btn.disabled=!ready; btn.classList.toggle('ready',ready); btn.textContent=pendingReply?'…':'↩';
+  const btn = $('chat-reply'); if(!btn) return;
+  const c = conversations[currentChatId], msgs = c?.messages || [], last = msgs[msgs.length-1];
+  // 只有最后一条是自己发的，且当前没有在请求中，才允许点「响应」
+  const ready = !!last && last.who === 'me' && !pendingReply;
+  btn.disabled = !ready;
+  btn.classList.toggle('ready', ready);
+  if(!pendingReply) btn.textContent = '响应';
 }
 function replyToMessage(i){
   const m=conversations[currentChatId]?.messages?.[i]; if(!m)return;
@@ -955,33 +985,91 @@ function ending(){
 function enableFreeChat(){
   $('input-bar').classList.add('show');
   $('chat-input').placeholder='输入消息…';
+  pendingReply=false; updateReplyButton();
 }
 
 $('chat-send').onclick = ()=>{
   const v=$('chat-input').value.trim(); if(!v)return;
   addBubble('me',v); $('chat-input').value='';
-  if(waiting){ pendingReply=true; updateReplyButton(); return; }
-  pendingReply=true; updateReplyButton();
+  // 发送后不自动回复，只把「响应」按钮点亮，等用户主动点
+  pendingReply = false;
+  updateReplyButton();
 };
 async function requestAIReply(){
-  const c=conversations[currentChatId], msgs=c?.messages||[], last=msgs[msgs.length-1];
-  if(!last || last.who!=='me' || !pendingReply) return;
-  pendingReply=true; updateReplyButton();
+  const c = conversations[currentChatId], msgs = c?.messages || [], last = msgs[msgs.length-1];
+  if(!last || last.who !== 'me'){
+    alert('请先发送一条消息，再点「响应」');
+    return;
+  }
+  if(pendingReply){
+    // 已经在请求中，防止连点
+    return;
+  }
+  pendingReply = true;
+  updateReplyButton();
+  const btn = $('chat-reply');
+  if(btn){ btn.textContent = '…'; btn.disabled = true; }
   try{
-    if(waiting==='feel'){ change(9,12,11,4); waiting=null; hideInput(); setTimeout(afterFeel,300); return; }
-    if(waiting==='finger'){ change(11,14,13,5); waiting=null; hideInput(); setTimeout(afterFinger,300); return; }
-    if(waiting==='self'){ change(13,16,14,6); waiting=null; hideInput(); setTimeout(afterSelf,300); return; }
-    if(waiting==='gang'){ change(15,18,16,7); waiting=null; hideInput(); setTimeout(afterGang,300); return; }
-    if(waiting==='org'){ change(18,20,18,8); waiting=null; hideInput(); setTimeout(afterOrg,300); return; }
-    if(waiting==='final'){ change(20,22,16,10); waiting=null; hideInput(); setTimeout(ending,400); return; }
-    const linked=(c.linkedWB||'').split(',').map(s=>s.trim()).filter(Boolean);
-    let system=c.persona||'你是一个普通人，自然简短回复。';
-    if(currentChatId==='master') system=c.persona||'你是主人，正在和用户聊天。';
-    const reply=await callAI(system,last.text,800,linked);
-    addBubble('him',reply);
-  } finally { pendingReply=false; updateReplyButton(); }
+    // 主线任务分支
+    if(waiting === 'feel'){ change(9,12,11,4); waiting=null; hideInput(); setTimeout(afterFeel,300); return; }
+    if(waiting === 'finger'){ change(11,14,13,5); waiting=null; hideInput(); setTimeout(afterFinger,300); return; }
+    if(waiting === 'self'){ change(13,16,14,6); waiting=null; hideInput(); setTimeout(afterSelf,300); return; }
+    if(waiting === 'gang'){ change(15,18,16,7); waiting=null; hideInput(); setTimeout(afterGang,300); return; }
+    if(waiting === 'org'){ change(18,20,18,8); waiting=null; hideInput(); setTimeout(afterOrg,300); return; }
+    if(waiting === 'final'){ change(20,22,16,10); waiting=null; hideInput(); setTimeout(ending,400); return; }
+
+    // 自由聊天
+    const linked = (c.linkedWB || '').split(',').map(s=>s.trim()).filter(Boolean);
+    let system = c.persona || '你是一个普通人，自然简短地回复。';
+    if(currentChatId === 'master'){
+      system = c.persona || '你是主人，正在和用户聊天。语言支配、羞辱、偶尔抽查身体。';
+    }
+    // 带上最近对话上下文，避免只看最后一句
+    const recent = (c.messages || []).slice(-10).map(m => (m.who === 'me' ? '用户：' : '对方：') + m.text).join('\n');
+    const reply = await callAI(system, recent + '\n\n请以对方身份，针对最后一句自然回复。只输出回复内容，不要加前缀。', 900, linked);
+    addBubble('him', reply);
+  } catch(e){
+    addBubble('him', '【回复失败】' + (e.message || e));
+  } finally {
+    pendingReply = false;
+    updateReplyButton();
+    if(btn){ btn.textContent = '响应'; }
+  }
 }
-$('chat-input').addEventListener('keydown', e=>{ if(e.key==='Enter') $('chat-send').click(); });
+$('chat-input').addEventListener('keydown', e=>{ if(e.key === 'Enter') $('chat-send').click(); });
+
+// ========== 新建角色 ==========
+function openCreateChar(){
+  $('create-name').value = '';
+  $('create-remark').value = '';
+  $('create-avatar').value = '';
+  $('create-persona').value = '';
+  $('create-wb').value = '';
+  openApp('create');
+}
+function saveNewChar(){
+  const name = $('create-name').value.trim();
+  if(!name){ alert('请填写姓名'); return; }
+  const remark = $('create-remark').value.trim() || name;
+  const avatar = ($('create-avatar').value.trim() || name[0]).slice(0,2);
+  const persona = $('create-persona').value.trim() || '你是一个普通人，自然简短地回复。';
+  const linkedWB = $('create-wb').value.trim();
+  const id = 'c' + Date.now();
+  conversations[id] = {
+    name, remark, avatar,
+    messages: [], last: '你们已成为好友', time: Date.now(),
+    persona, linkedWB, gender: 'unknown'
+  };
+  if(!contacts.find(c=>c.id===id)){
+    contacts.push({id, name, remark, gender:'unknown'});
+  }
+  saveAll();
+  openApp('messages');
+  renderConvList();
+  alert('角色已创建，可以开始聊天了');
+  // 直接进入聊天
+  setTimeout(()=>openChat(id), 300);
+}
 
 // ========== 编辑角色 ==========
 function openEditChar() {
