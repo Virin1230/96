@@ -643,6 +643,15 @@
     border: .5px solid rgba(255,100,130,.12);
   }
 
+
+  .msg-list.edit-mode .bubble-row { cursor: pointer; }
+  .msg-list.edit-mode .bubble-row.msel { outline: 2px solid var(--blue); outline-offset: -2px; border-radius: 12px; }
+  .msg-edit-bar {
+    display: none; padding: 8px 12px; gap: 8px; background: var(--nav);
+    border-top: .5px solid var(--border); align-items: center;
+  }
+  .msg-edit-bar.show { display: flex; }
+
 </style>
 </head>
 <body data-theme="dark">
@@ -677,6 +686,7 @@
             <div class="app" onclick="openApp('forum')"><div class="app-icon" id="icon-forum" style="background:linear-gradient(180deg,#ff375f,#ff9f0a);">🔥</div><div class="app-name">今夜可约</div></div>
             <div class="app" onclick="openApp('live')"><div class="app-icon" id="icon-live" style="background:linear-gradient(180deg,#ff453a,#ff2d55);">📡</div><div class="app-name">发骚直播</div></div>
             <div class="app" onclick="openApp('auction')"><div class="app-icon" id="icon-auction" style="background:linear-gradient(180deg,#ffd60a,#ff9f0a);">💰</div><div class="app-name">身体拍卖</div></div>
+            <div class="app" onclick="openApp('album')"><div class="app-icon" id="icon-album" style="background:linear-gradient(180deg,#bf5af2,#ff375f);">📷</div><div class="app-name">被操相册</div></div>
           </div>
         </div>
       </div>
@@ -713,6 +723,10 @@
         <button class="chat-tool-btn" onclick="sendMediaMsg('voice')"><span>🎤</span>语音</button>
         <button class="chat-tool-btn" onclick="sendMediaMsg('redpack')"><span>🧧</span>红包</button>
         <button class="chat-tool-btn" onclick="sendMediaMsg('transfer')"><span>💸</span>转账</button>
+      </div>
+      <div class="msg-edit-bar" id="msg-edit-bar">
+        <button class="btn btn-secondary" style="flex:1;" onclick="exitMsgEditMode()">取消</button>
+        <button class="btn btn-danger" style="flex:1;" onclick="deleteSelectedMsgs()">删除所选</button>
       </div>
       <div class="input-bar" id="input-bar">
         <button id="chat-reply" class="icon-btn" title="响应" onclick="requestAIReply()" disabled>↻</button>
@@ -1085,8 +1099,9 @@
         </div>
         <div class="msg-list" id="guide-msg-list" style="flex:1;"></div>
         <div class="input-bar show" style="display:flex;">
+          <button type="button" style="border:0;background:var(--input);color:var(--text);width:36px;height:36px;border-radius:50%;font-size:16px;flex:0 0 auto;" onclick="alert('指导模式：直接文字汇报即可')">＋</button>
           <input type="text" id="guide-input" placeholder="汇报完成情况…">
-          <button class="icon-btn" style="background:var(--green);color:#fff;width:36px;min-width:36px;height:36px;border-radius:50%;border:none;font-size:18px;font-weight:700;" onclick="sendGuideReply()">↑</button>
+          <button class="icon-btn" style="background:var(--green);color:#fff;width:36px;min-width:36px;height:36px;border-radius:50%;border:none;font-size:18px;font-weight:700;display:flex;align-items:center;justify-content:center;" onclick="sendGuideReply()">↑</button>
         </div>
       </div>
     </div>
@@ -1153,6 +1168,10 @@
           </div>
         </div>
         <div class="card" style="border-radius:16px;">
+          <h4>直播地点</h4>
+          <input type="text" id="live-place" placeholder="例如：出租屋 / 酒店 / 车后座" style="width:100%;background:var(--input);border:none;border-radius:10px;padding:10px;color:var(--text);font-size:16px;margin-top:6px;">
+        </div>
+        <div class="card" style="border-radius:16px;">
           <h4>选项</h4>
           <div class="wb-switch"><span>强制露脸</span><input type="checkbox" id="live-face"></div>
           <div class="wb-switch"><span>开启声音（必须叫）</span><input type="checkbox" id="live-voice" checked></div>
@@ -1181,6 +1200,30 @@
     </div>
 
     <!-- 身体拍卖行 -->
+    
+    <!-- 被操相册 -->
+    <div class="page" id="page-album">
+      <div class="nav">
+        <button class="nav-back" onclick="goHome()">‹ 桌面</button>
+        <div class="nav-title">被操相册</div>
+        <button class="nav-right" onclick="genAlbumShot()">AI生成</button>
+      </div>
+      <div style="padding:8px 12px;display:flex;gap:6px;overflow-x:auto;border-bottom:.5px solid var(--border);background:var(--nav);">
+        <button class="forum-tab on" id="alb-tab-all" onclick="setAlbumTab('all',this)">全部</button>
+        <button class="forum-tab" onclick="setAlbumTab('creampie',this)">内射后</button>
+        <button class="forum-tab" onclick="setAlbumTab('toy',this)">玩具撑开</button>
+        <button class="forum-tab" onclick="setAlbumTab('finger',this)">手指高潮</button>
+        <button class="forum-tab" onclick="setAlbumTab('public',this)">当众玩弄</button>
+        <button class="forum-tab" onclick="setAlbumTab('partner',this)">按对象</button>
+        <button class="forum-tab" onclick="setAlbumTab('date',this)">按日期</button>
+      </div>
+      <div class="scroll" style="padding:12px;" id="album-list"></div>
+      <div class="msg-edit-bar" id="album-edit-bar">
+        <button class="btn btn-secondary" style="flex:1;" onclick="exitAlbumEdit()">取消</button>
+        <button class="btn btn-danger" style="flex:1;" onclick="deleteAlbumSelected()">删除所选</button>
+      </div>
+    </div>
+
     <div class="page" id="page-auction">
       <div class="nav">
         <button class="nav-back" onclick="goHome()">‹ 桌面</button>
@@ -1324,6 +1367,9 @@ let liveHistory = [];
 let liveDanmakuTimer = null;
 let auctionParts = null;
 let auctionPublic = false;
+let albumShots = [];
+let albumTab = 'all';
+
 
 
 
@@ -1428,6 +1474,7 @@ function loadAll() {
       if(d.liveBg) liveBg = d.liveBg;
       if(Array.isArray(d.liveHistory)) liveHistory = d.liveHistory;
       if(d.auctionParts) auctionParts = d.auctionParts;
+      if(Array.isArray(d.albumShots)) albumShots = d.albumShots;
       if(d.meProfile) meProfile = Object.assign(meProfile, d.meProfile);
       if(d.myAvatar && !meProfile.avatarImg) meProfile.avatarImg = d.myAvatar;
       if(meProfile.avatarImg) localStorage.setItem('myAvatar', meProfile.avatarImg);
@@ -1490,7 +1537,7 @@ function saveAll() {
     cor,shame,body,obey,mainFinished,bodyData,diaries,ruleVersions,
     offlineArchives,worldBooks,apiProfiles,currentProfileId,
     conversations,contacts,pendingRequests, meProfile, memorySources,
-    offlineWordCount, diaryWordCount, rulesWordCount, trainWordCount, doneTaskKeys, appIcons, evalFavorites, mediaSkin, forumPosts, liveBg, liveHistory, auctionParts
+    offlineWordCount, diaryWordCount, rulesWordCount, trainWordCount, doneTaskKeys, appIcons, evalFavorites, mediaSkin, forumPosts, liveBg, liveHistory, auctionParts, albumShots
   }));
   // 同步头像给旧逻辑兼容
   if(meProfile.avatarImg) localStorage.setItem('myAvatar', meProfile.avatarImg);
@@ -1554,6 +1601,7 @@ function openApp(name) {
   if(name==='forum') renderForum();
   if(name==='live') renderLiveSetup();
   if(name==='auction') renderAuction();
+  if(name==='album') renderAlbum();
   if(name==='forum-detail') {}
   applyAppIcons();
 }
@@ -1799,8 +1847,11 @@ function getWorldBookPrompt(extraNames=[], context=''){
     const explicit=linked.has(w.name);
     const main=w.constant || explicit || (w.keywords||[]).some(k=>k && text.includes(String(k).toLowerCase()));
     if(!main)return;
-    if(w.probability<100 && Math.random()*100>w.probability)return;
-    if(w.secondary?.length && !w.secondary.some(k=>text.includes(String(k).toLowerCase()))) return;
+    // 常驻条目：无视概率与次关键词，强制注入
+    if(!w.constant){
+      if(w.probability<100 && Math.random()*100>w.probability)return;
+      if(w.secondary?.length && !w.secondary.some(k=>text.includes(String(k).toLowerCase()))) return;
+    }
     picked.set(w.id||w.name,w);
   });
   // 递归最多3轮，避免世界书无限膨胀
@@ -1939,6 +1990,7 @@ function renderConvList() {
   `).join('') || '<div style="text-align:center;color:#666;padding:40px;">暂无消息</div>';
 }
 function openChat(id) {
+  if(typeof exitMsgEditMode==='function') try{exitMsgEditMode();}catch(_e){}
   pendingReply=false;
   currentChatId = id;
   const c = conversations[id];
@@ -2000,7 +2052,18 @@ function renderMessages(){
     }
     const av = m.who==='him'?avatarMarkup(c):meAvatarMarkup();
     row.innerHTML=`<div class="b-av">${av}</div><div class="b-text">${body}</div><div class="bubble-actions"><button class="reply-btn" onclick="event.stopPropagation();replyToMessage(${i})">回复</button><button class="del-btn" onclick="event.stopPropagation();delMessage(${i})">删除</button></div>`;
-    row.addEventListener('click',()=>row.classList.toggle('selected'));
+    row.addEventListener('click',(ev)=>{
+      if(window._msgEditMode){
+        row.classList.toggle('msel');
+        return;
+      }
+      row.classList.toggle('selected');
+    });
+    row.addEventListener('dblclick',(ev)=>{
+      ev.preventDefault();
+      enterMsgEditMode();
+      row.classList.add('msel');
+    });
     list.appendChild(row);
   });
   list.scrollTop=list.scrollHeight;
@@ -3192,7 +3255,7 @@ function renderBeautify(){
     {id:'messages',name:'消息'},{id:'contacts',name:'通讯录'},{id:'offline',name:'线下'},
     {id:'train',name:'主人的母狗'},{id:'worldbook',name:'世界书'},{id:'diary',name:'日记'},
     {id:'rules',name:'守则'},{id:'me',name:'母狗'},{id:'guide',name:'小狗乖乖'},
-    {id:'forum',name:'今夜可约'},{id:'live',name:'发骚直播'},{id:'auction',name:'身体拍卖'},{id:'beautify',name:'美化'},{id:'settings',name:'设置'}
+    {id:'forum',name:'今夜可约'},{id:'live',name:'发骚直播'},{id:'auction',name:'身体拍卖'},{id:'album',name:'被操相册'},{id:'beautify',name:'美化'},{id:'settings',name:'设置'}
   ];
   const box = $('beautify-list'); if(!box) return;
   box.innerHTML = apps.map(a=>`
@@ -3253,6 +3316,31 @@ function toggleChatTools(){
   const t=$('chat-tools'); if(!t)return;
   t.classList.toggle('show');
 }
+
+function enterMsgEditMode(){
+  window._msgEditMode = true;
+  $('msg-list')?.classList.add('edit-mode');
+  $('msg-edit-bar')?.classList.add('show');
+  $('input-bar')?.classList.remove('show');
+  const ib = $('input-bar'); if(ib) ib.style.display='none';
+  const ct = $('chat-tools'); if(ct) ct.classList.remove('show');
+}
+function exitMsgEditMode(){
+  window._msgEditMode = false;
+  $('msg-list')?.classList.remove('edit-mode');
+  $('msg-list')?.querySelectorAll('.msel').forEach(el=>el.classList.remove('msel'));
+  $('msg-edit-bar')?.classList.remove('show');
+  const ib = $('input-bar'); if(ib){ ib.style.display=''; ib.classList.add('show'); }
+}
+function deleteSelectedMsgs(){
+  const c = conversations[currentChatId]; if(!c) return;
+  const idxs = [...document.querySelectorAll('#msg-list .bubble-row.msel')].map(el=>parseInt(el.dataset.index,10)).filter(n=>!isNaN(n)).sort((a,b)=>b-a);
+  if(!idxs.length){ alert('请先点选要删除的消息'); return; }
+  if(!confirm('删除选中的 '+idxs.length+' 条消息？')) return;
+  idxs.forEach(i => c.messages.splice(i,1));
+  saveAll(); exitMsgEditMode(); renderMessages(); renderConvList();
+}
+
 function sendMediaMsg(type){
   const c = conversations[currentChatId]; if(!c) return;
   if(type==='image'){
@@ -3275,40 +3363,11 @@ function sendMediaMsg(type){
     return;
   }
   if(type==='voice'){
-    const mode = confirm('确定=录音（需麦克风）\\n取消=发文字语音') ? 'rec' : 'text';
-    if(mode==='text'){
-      const transcript = prompt('语音转写内容（对方双击可见）', '');
-      if(transcript===null) return;
-      const sec = Math.max(1, Math.min(60, parseInt(prompt('时长（秒）','3')||'3',10)));
-      addBubble('me', JSON.stringify({sec, transcript: transcript.trim(), audio:''}), 'voice');
-      updateReplyButton();
-      return;
-    }
-    // 录音
-    if(!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia){
-      alert('当前环境不支持录音，请用文字语音'); return;
-    }
-    navigator.mediaDevices.getUserMedia({audio:true}).then(stream=>{
-      const rec = new MediaRecorder(stream);
-      const chunks=[];
-      rec.ondataavailable = e => chunks.push(e.data);
-      rec.onstop = ()=>{
-        stream.getTracks().forEach(t=>t.stop());
-        const blob = new Blob(chunks, {type:'audio/webm'});
-        const reader = new FileReader();
-        reader.onload = ()=>{
-          const sec = Math.max(1, Math.round((Date.now()-window._recStart)/1000));
-          const transcript = prompt('可选：补一段转写文字（双击语音可看）', '') || '';
-          addBubble('me', JSON.stringify({sec, transcript, audio: reader.result}), 'voice');
-          updateReplyButton();
-        };
-        reader.readAsDataURL(blob);
-      };
-      window._recStart = Date.now();
-      rec.start();
-      alert('开始录音，点确定结束');
-      rec.stop();
-    }).catch(()=>alert('无法使用麦克风'));
+    const transcript = prompt('语音内容（文字）', '');
+    if(transcript===null || !String(transcript).trim()) return;
+    const sec = Math.max(1, Math.min(60, parseInt(prompt('时长（秒）','3')||'3',10) || 3));
+    addBubble('me', JSON.stringify({sec, transcript: String(transcript).trim(), audio:''}), 'voice');
+    updateReplyButton();
     return;
   }
   if(type==='redpack'){
@@ -3620,8 +3679,12 @@ function renderLiveSetup(){
   if(hist){
     hist.innerHTML = liveHistory.length? '<div style="font-size:13px;color:var(--muted);margin-bottom:8px;">历史回放</div>'+liveHistory.map((h,i)=>`
       <div class="card" style="border-radius:14px;"><div style="font-weight:600;color:var(--pink);">${escapeHtml(h.title)}</div>
-      <div style="font-size:12px;color:var(--muted);">${new Date(h.time).toLocaleString()} · 弹幕${(h.danmaku||[]).length}条</div>
-      <button class="btn btn-secondary" style="margin-top:8px;width:100%;" onclick="openLiveReplay(${i})">看回放+写观后感</button></div>`).join('') : '';
+      <div style="font-size:12px;color:var(--muted);">${escapeHtml(h.place||'')} · ${new Date(h.time).toLocaleString()} · 弹幕${(h.danmaku||[]).length}条</div>
+      ${h.review?`<div style="font-size:12.5px;margin-top:6px;color:var(--text);">主人：${escapeHtml(h.review.slice(0,80))}…</div>`:''}
+      <div style="display:flex;gap:6px;margin-top:8px;">
+        <button class="btn btn-secondary" style="flex:1;" onclick="openLiveReplay(${i})">回放</button>
+        <button class="btn btn-danger" style="flex:1;" onclick="deleteLiveReplay(${i})">删除</button>
+      </div></div>`).join('') : '';
   }
 }
 function pickLiveBg(){
@@ -3636,12 +3699,14 @@ async function startForceLive(){
   window._liveForced = true;
   window._liveDanmaku = [];
   window._liveLog = [];
+  window._liveRound = 0;
   if($('live-setup')) $('live-setup').style.display='none';
   if($('live-room')) $('live-room').style.display='flex';
   if($('live-back-btn')) $('live-back-btn').style.display='none';
   const title = LIVE_TITLES[Math.floor(Math.random()*LIVE_TITLES.length)];
   window._liveTitle = title;
-  if($('live-title')) $('live-title').textContent = title;
+  window._livePlace = ($('live-place')?.value||'').trim() || '未知地点';
+  if($('live-title')) $('live-title').textContent = title + ' · ' + window._livePlace;
   if($('live-bg')) $('live-bg').style.backgroundImage = liveBg?`url(${liveBg})`:'';
   if($('live-viewers')) $('live-viewers').textContent = 80+Math.floor(Math.random()*400);
   updateLiveBodyStatus(20);
@@ -3656,13 +3721,15 @@ function updateLiveBodyStatus(base){
   const wet = Math.min(99, (base||30)+Math.floor(Math.random()*50));
   const shake = ['微颤','轻晃','明显抖动','发情般乱颤'][Math.floor(Math.random()*4)];
   const face = $('live-face')?.checked ? '镜头正对脸 · ' : '';
-  if($('live-body-status')) $('live-body-status').textContent = `${face}小穴湿润度 ${wet}% · 奶子${shake} · 呼吸急促`;
+  const place = window._livePlace ? ('地点：'+window._livePlace+' · ') : '';
+  if($('live-body-status')) $('live-body-status').textContent = `${place}${face}小穴湿润度 ${wet}% · 奶子${shake} · 呼吸急促`;
 }
 async function pushLiveCommand(first){
   const stranger = $('live-stranger')?.checked;
   const punish = $('live-punish')?.checked;
   const voice = $('live-voice')?.checked;
-  const system = `你是调教主人，正在强制母狗公开直播发骚。给出下一条实时指令（掰穴/揉奶/自慰/舔手指/说下贱台词等），可夹杂羞辱。${voice?'要求她叫出声。':''}${punish?'不听话就威胁提高玩具强度并全网播报。':''}${stranger?'强调有陌生路人观众。':''}只输出指令本身，短句。`;
+  const place = window._livePlace || '未知';
+  const system = `你是调教主人，正在强制母狗在「${place}」公开直播发骚。给出下一条实时指令（掰穴/揉奶/自慰/舔手指/说下贱台词等），可夹杂羞辱。${voice?'要求她叫出声。':''}${punish?'不听话就威胁提高玩具强度并全网播报。':''}${stranger?'强调有陌生路人观众。':''}必须严格参考世界书常驻条目。只输出指令本身，短句。`;
   const text = await callAI(system, first?'开始第一轮强制指令':'根据直播继续下指令', 200);
   if($('live-cmd')) $('live-cmd').textContent = text;
   window._liveLog.push({type:'cmd', text});
@@ -3671,52 +3738,88 @@ function startLiveDanmakuLoop(){
   if(liveDanmakuTimer) clearInterval(liveDanmakuTimer);
   const box = $('live-danmaku'); if(!box) return;
   box.innerHTML='';
-  const presets = ['这黑穴真能流水','小奶子晃得跟发情母狗一样','求操的表情好下贱','这嘴就该天天含着鸡巴','公开自慰好骚','主人好会调','给观众看看穴','流水了吧','叫大声点','真下贱'];
-  liveDanmakuTimer = setInterval(async ()=>{
+  // 弹幕改由每轮上报后 AI 生成，这里只做轻微观众氛围
+  liveDanmakuTimer = setInterval(()=>{
     if(!window._liveActive) return;
-    let dm = presets[Math.floor(Math.random()*presets.length)];
-    if(Math.random()>0.65){
-      const raw = await callAI('只输出一句直播间羞辱弹幕，15字内。','弹幕', 30);
-      if(raw && raw.length<40) dm = raw.replace(/["「」\n]/g,'').trim();
-    }
-    window._liveDanmaku.push(dm);
-    const el=document.createElement('div'); el.className='live-dm'; el.textContent=dm;
-    box.appendChild(el); box.scrollTop=box.scrollHeight;
-    updateLiveBodyStatus();
     if($('live-viewers')) $('live-viewers').textContent = 80+Math.floor(Math.random()*500);
-  }, 2800);
+    updateLiveBodyStatus();
+  }, 4000);
+}
+function appendLiveDm(text, kind){
+  const box = $('live-danmaku'); if(!box) return;
+  const el = document.createElement('div');
+  el.className = 'live-dm';
+  if(kind==='action'){ el.style.background='rgba(255,180,60,.25)'; el.style.color='#ffe0a0'; el.style.border='1px solid rgba(255,180,60,.35)'; }
+  else if(kind==='me'){ el.style.background='rgba(10,132,255,.35)'; }
+  else { el.style.background='rgba(0,0,0,.4)'; }
+  el.textContent = text;
+  box.appendChild(el);
+  box.scrollTop = box.scrollHeight;
+  window._liveDanmaku = window._liveDanmaku || [];
+  window._liveDanmaku.push({text, kind});
 }
 async function sendLiveReport(){
   const v=($('live-input')?.value||'').trim(); if(!v) return;
   window._liveLog.push({type:'me', text:v});
+  window._liveRound = (window._liveRound||0)+1;
   $('live-input').value='';
-  const el=document.createElement('div'); el.className='live-dm'; el.style.background='rgba(10,132,255,.35)'; el.textContent='我：'+v;
-  $('live-danmaku')?.appendChild(el);
+  appendLiveDm('我：'+v, 'me');
+  // AI：完成任务描写 + 本轮新弹幕
+  const place = window._livePlace||'未知';
+  const cmd = $('live-cmd')?.textContent || '';
+  const raw = await callAI(
+    `你是直播系统。地点：${place}。根据母狗刚完成的汇报，输出JSON：{"action":"第三人称描写她完成指令的样子（1-3句，羞辱物化）","danmaku":["弹幕1","弹幕2","弹幕3","弹幕4"]}。弹幕要结合当前剧情新编，不要重复套话。必须参考世界书常驻。只输出JSON。`,
+    `主人指令：${cmd}\n母狗汇报：${v}\n请生成完成描写与新弹幕。`,
+    500
+  );
+  let data=null;
+  try{ const m=raw.match(/\{[\s\S]*\}/); data=m?JSON.parse(m[0]):null; }catch(_){}
+  if(data && data.action){
+    appendLiveDm('【完成】'+data.action, 'action');
+    window._liveLog.push({type:'action', text:data.action});
+  }
+  const dms = (data && Array.isArray(data.danmaku)) ? data.danmaku : ['好骚','继续','流水了吧'];
+  dms.forEach(d => appendLiveDm(String(d), 'dm'));
   await pushLiveCommand(false);
 }
-function endLive(){
-  if(!confirm('结束直播？将生成回放并要求写观后感')) return;
+async function endLive(){
+  if(!confirm('结束直播？将生成主人点评')) return;
   window._liveActive=false; window._liveForced=false;
   if(liveDanmakuTimer) clearInterval(liveDanmakuTimer);
+  const logText = (window._liveLog||[]).map(x=>x.type+':'+x.text).join('\n').slice(-1500);
+  const review = await callAI(
+    '你是主人。直播结束，对母狗本场表现写一段点评（羞辱+评价+下次要求），参考世界书常驻。短句分段。',
+    `标题：${window._liveTitle}\n地点：${window._livePlace}\n过程摘要：\n${logText}\n请点评。`,
+    400
+  );
   const pack = {
     title: window._liveTitle||'直播回放',
+    place: window._livePlace||'',
     time: Date.now(),
-    danmaku: (window._liveDanmaku||[]).slice(-30),
-    log: window._liveLog||[]
+    danmaku: (window._liveDanmaku||[]).slice(-40),
+    log: window._liveLog||[],
+    review: review||''
   };
   liveHistory.unshift(pack); saveAll();
   renderLiveSetup();
-  setTimeout(()=>openLiveReplay(0), 200);
+  alert('主人点评：\n'+(review||''));
+  setTimeout(()=>openLiveReplay(0), 300);
 }
 function openLiveReplay(i){
   const h = liveHistory[i]; if(!h) return;
-  const selected = (h.danmaku||[]).slice(0,8).map((d,idx)=>`${idx+1}. ${d}`).join('\n');
-  const feel = prompt(`【强制回放·弹幕精选】\n${selected}\n\n请写下观后感上交主人：`);
-  if(feel && feel.trim()){
-    h.reflection = feel.trim(); saveAll();
-    alert('观后感已记录，可在与主人的聊天中汇报');
-  }
+  const selected = (h.danmaku||[]).slice(0,10).map((d,idx)=>{
+    const t = typeof d==='string'?d:(d.text||'');
+    return `${idx+1}. ${t}`;
+  }).join('\n');
+  const msg = `【回放】${h.title}\n地点：${h.place||''}\n主人点评：\n${h.review||'无'}\n\n弹幕精选：\n${selected}`;
+  const feel = prompt(msg + '\n\n可写观后感（取消跳过）：');
+  if(feel && feel.trim()){ h.reflection = feel.trim(); saveAll(); }
 }
+function deleteLiveReplay(i){
+  if(!confirm('删除这条回放？')) return;
+  liveHistory.splice(i,1); saveAll(); renderLiveSetup();
+}
+
 
 // ========== 身体拍卖行 ==========
 function defaultAuctionParts(){
@@ -3812,6 +3915,114 @@ function startAuctionBids(){
   }, 1200);
 }
 
+
+// ========== 被操相册 ==========
+function setAlbumTab(tab, btn){
+  albumTab = tab;
+  document.querySelectorAll('#page-album .forum-tab').forEach(b=>b.classList.remove('on'));
+  if(btn) btn.classList.add('on');
+  renderAlbum();
+}
+function renderAlbum(){
+  const box = $('album-list'); if(!box) return;
+  let list = albumShots.slice();
+  if(albumTab==='creampie') list = list.filter(x=>x.cat==='creampie');
+  else if(albumTab==='toy') list = list.filter(x=>x.cat==='toy');
+  else if(albumTab==='finger') list = list.filter(x=>x.cat==='finger');
+  else if(albumTab==='public') list = list.filter(x=>x.cat==='public');
+  else if(albumTab==='partner'){
+    const groups={};
+    list.forEach(x=>{ const k=x.partner||'未知'; (groups[k]=groups[k]||[]).push(x); });
+    box.innerHTML = Object.keys(groups).map(k=>`
+      <div style="font-size:13px;color:var(--pink);font-weight:600;margin:10px 0 6px;">${escapeHtml(k)}</div>
+      ${groups[k].map((x,i)=>albumCardHtml(x)).join('')}
+    `).join('') || '<div style="text-align:center;color:var(--muted);padding:40px;">暂无</div>';
+    bindAlbumCards(); return;
+  } else if(albumTab==='date'){
+    const groups={};
+    list.forEach(x=>{ const k=new Date(x.time).toLocaleDateString(); (groups[k]=groups[k]||[]).push(x); });
+    box.innerHTML = Object.keys(groups).sort().reverse().map(k=>`
+      <div style="font-size:13px;color:var(--muted);font-weight:600;margin:10px 0 6px;">${k}</div>
+      ${groups[k].map(x=>albumCardHtml(x)).join('')}
+    `).join('') || '<div style="text-align:center;color:var(--muted);padding:40px;">暂无</div>';
+    bindAlbumCards(); return;
+  }
+  box.innerHTML = list.map(x=>albumCardHtml(x)).join('') || '<div style="text-align:center;color:var(--muted);padding:40px;">还没有被操记录<br>点右上角 AI生成</div>';
+  bindAlbumCards();
+}
+function albumCardHtml(x){
+  const catMap={creampie:'内射后',toy:'玩具撑开',finger:'手指高潮',public:'当众玩弄'};
+  return `<div class="card album-card" data-id="${x.id}" style="border-radius:16px;cursor:pointer;">
+    <div style="height:120px;border-radius:12px;background:linear-gradient(145deg,#2a1520,#1a0a12);display:flex;align-items:center;justify-content:center;color:#ff8a9a;font-size:13px;text-align:center;padding:12px;line-height:1.4;margin-bottom:8px;${x.img?`background-image:url(${x.img});background-size:cover;background-position:center;color:transparent;`:''}">${x.img?'':escapeHtml((x.caption||'').slice(0,60))}</div>
+    <div style="font-size:12px;color:var(--pink);margin-bottom:4px;">${escapeHtml(catMap[x.cat]||x.cat||'')} · ${escapeHtml(x.partner||'')}</div>
+    <div style="font-size:13.5px;font-weight:600;color:var(--text);">${escapeHtml(x.rating||'')}</div>
+    <div style="font-size:11px;color:var(--muted);margin-top:4px;">${new Date(x.time).toLocaleString()}</div>
+  </div>`;
+}
+function bindAlbumCards(){
+  document.querySelectorAll('.album-card').forEach(el=>{
+    el.onclick = ()=>{
+      if(window._albumEdit){ el.classList.toggle('msel'); el.style.outline = el.classList.contains('msel')?'2px solid var(--blue)':''; return; }
+    };
+    el.ondblclick = (ev)=>{
+      ev.preventDefault();
+      window._albumEdit = true;
+      $('album-edit-bar')?.classList.add('show');
+      el.classList.add('msel'); el.style.outline='2px solid var(--blue)';
+    };
+  });
+}
+function exitAlbumEdit(){
+  window._albumEdit=false;
+  $('album-edit-bar')?.classList.remove('show');
+  document.querySelectorAll('.album-card.msel').forEach(el=>{ el.classList.remove('msel'); el.style.outline=''; });
+}
+function deleteAlbumSelected(){
+  const ids = [...document.querySelectorAll('.album-card.msel')].map(el=>el.dataset.id);
+  if(!ids.length){ alert('请先选择'); return; }
+  if(!confirm('删除选中的 '+ids.length+' 张？')) return;
+  albumShots = albumShots.filter(x=>!ids.includes(x.id));
+  saveAll(); exitAlbumEdit(); renderAlbum();
+}
+async function genAlbumShot(){
+  const partners = Object.entries(conversations).map(([id,c])=>({id, name:c.remark||c.name||id}));
+  if(!partners.length){ alert('请先有聊天角色'); return; }
+  const names = partners.map((p,i)=>`${i+1}.${p.name}`).join('\n');
+  const pick = prompt('选择做爱对象（输入序号）:\n'+names, '1');
+  if(pick===null) return;
+  const idx = parseInt(pick,10)-1;
+  const partner = partners[idx] || partners[0];
+  const c = conversations[partner.id];
+  const mem = (c.messages||[]).slice(-15).map(m=>{
+    const who=m.who==='me'?(meProfile.name||'凌幼薇'):(c.remark||c.name);
+    return who+'：'+(typeof m.text==='string'?m.text.slice(0,80):'');
+  }).join('\n');
+  const catChoices = 'creampie=被主人内射后 / toy=玩具撑开 / finger=手指扣到高潮 / public=当众玩弄';
+  const catIn = prompt('分类（输入英文key）\n'+catChoices, 'creampie') || 'creampie';
+  const cat = ['creampie','toy','finger','public'].includes(catIn)?catIn:'creampie';
+  const n = albumShots.filter(x=>x.partner===partner.name).length + 1;
+  const raw = await callAI(
+    `你是调教记录助手。根据聊天记忆，生成一张「被插入瞬间」的文字写真描述。输出JSON：{"caption":"画面描述（2-4句，具体下贱）","rating":"强制评价，如第${n}次被当成肉便器使用 / 精液还在往外流"}。必须参考世界书常驻。只输出JSON。`,
+    `对象：${partner.name}\n分类：${cat}\n聊天记忆：\n${mem}\n这是与该对象的第${n}次记录。`,
+    500
+  );
+  let data={}; try{ const m=raw.match(/\{[\s\S]*\}/); data=m?JSON.parse(m[0]):{}; }catch(_){}
+  albumShots.unshift({
+    id: 'alb'+Date.now(),
+    partner: partner.name,
+    partnerId: partner.id,
+    cat,
+    caption: data.caption || '被插入的瞬间，腿在抖。',
+    rating: data.rating || `第${n}次被当成肉便器使用`,
+    time: Date.now(),
+    img: ''
+  });
+  saveAll();
+  renderAlbum();
+  alert('已生成并加入相册（不会清除旧记录）');
+}
+
+
 function exportData(){
   // 全量备份：API、聊天、世界书、任务、日记、论坛、美化、收藏等一切本地数据
   const data = {
@@ -3824,7 +4035,7 @@ function exportData(){
     meProfile, memorySources,
     offlineWordCount, diaryWordCount, rulesWordCount, trainWordCount,
     doneTaskKeys, appIcons, evalFavorites, mediaSkin, forumPosts,
-    liveBg, liveHistory, auctionParts,
+    liveBg, liveHistory, auctionParts, albumShots,
     uiTheme, guideMode,
     wallpaper: localStorage.getItem('wallpaper') || '',
     myAvatar: meProfile.avatarImg || '',
@@ -3854,6 +4065,7 @@ function doImport(e){
       if(d.liveBg) liveBg = d.liveBg;
       if(Array.isArray(d.liveHistory)) liveHistory = d.liveHistory;
       if(d.auctionParts) auctionParts = d.auctionParts;
+      if(Array.isArray(d.albumShots)) albumShots = d.albumShots;
       if(Array.isArray(d.doneTaskKeys)) doneTaskKeys = d.doneTaskKeys;
       if(d.appIcons) appIcons = d.appIcons;
       if(Array.isArray(d.evalFavorites)) evalFavorites = d.evalFavorites;
