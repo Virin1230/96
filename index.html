@@ -140,18 +140,101 @@
   .page { position: absolute; inset: 0; background: var(--bg); display: none; flex-direction: column; }
   .page.show { display: flex; }
   .nav {
-    height: 52px; padding: 0 12px; display: flex; align-items: center; justify-content: space-between;
-    background: var(--nav); backdrop-filter: blur(24px) saturate(180%);
-    -webkit-backdrop-filter: blur(24px) saturate(180%);
-    border-bottom: .5px solid var(--border); margin-top: 32px; flex-shrink: 0;
+    height: 48px; padding: 0 8px 0 4px; display: flex; align-items: center; justify-content: space-between;
+    background: var(--nav); backdrop-filter: blur(40px) saturate(200%);
+    -webkit-backdrop-filter: blur(40px) saturate(200%);
+    border-bottom: .33px solid var(--border); margin-top: 34px; flex-shrink: 0;
   }
   .nav-back, .nav-right {
-    color: var(--blue); font-size: 16px; background: none; border: none; cursor: pointer;
-    font-weight: 400; padding: 6px 4px; min-width: 44px;
+    color: var(--blue); font-size: 17px; background: none; border: none; cursor: pointer;
+    font-weight: 400; padding: 8px 10px; min-width: 36px; letter-spacing: -.2px;
   }
-  .nav-back { text-align: left; }
-  .nav-right { text-align: right; }
-  .nav-title { font-weight: 600; font-size: 16px; color: var(--text); letter-spacing: -.2px; }
+  .nav-back { text-align: left; font-size: 17px; }
+  .nav-right { text-align: right; font-size: 17px; font-weight: 400; }
+  .nav-title {
+    font-weight: 600; font-size: 17px; color: var(--text); letter-spacing: -.3px;
+    position: absolute; left: 50%; transform: translateX(-50%);
+    max-width: 46%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    pointer-events: none;
+  }
+  .nav { position: relative; }
+
+  /* media message bubbles */
+  .b-media { max-width: 200px; border-radius: 12px; overflow: hidden; display: block; }
+  .b-media img { width: 100%; display: block; border-radius: 12px; }
+  .b-voice {
+    display: flex; align-items: center; gap: 8px; min-width: 88px; max-width: 160px;
+    padding: 8px 12px;
+  }
+  .b-voice-bars { display: flex; align-items: flex-end; gap: 2px; height: 16px; }
+  .b-voice-bars i { width: 3px; background: currentColor; border-radius: 1px; opacity: .85; display: block; }
+  .b-redpack, .b-transfer {
+    width: 210px; border-radius: 10px; overflow: hidden; font-size: 13px;
+  }
+  .b-redpack-top { background: linear-gradient(135deg,#f54b4b,#e03b3b); color: #ffe9b0; padding: 12px; }
+  .b-redpack-bot { background: #fff8e8; color: #996; padding: 6px 12px; font-size: 11px; }
+  .b-transfer-top { background: linear-gradient(135deg,#f5a623,#f7c948); color: #fff; padding: 12px; }
+  .b-transfer-bot { background: #fffaf0; color: #996; padding: 6px 12px; font-size: 11px; }
+  [data-theme="dark"] .b-redpack-bot, [data-theme="dark"] .b-transfer-bot { background: #2a2218; color: #c9a86c; }
+
+  /* swipe task card */
+  .task-swipe-wrap { position: relative; overflow: hidden; border-radius: 14px; margin-bottom: 12px; }
+  .task-swipe-del {
+    position: absolute; right: 0; top: 0; bottom: 0; width: 76px;
+    background: var(--red); color: #fff; display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 600;
+  }
+  .task-swipe-inner {
+    position: relative; background: var(--card); border-radius: 14px; border: .5px solid var(--border);
+    transition: transform .2s; padding: 14px; z-index: 1;
+  }
+  .task-done-badge {
+    display: inline-block; font-size: 10px; padding: 2px 7px; border-radius: 8px;
+    background: rgba(48,209,88,.15); color: var(--green); margin-left: 6px; font-weight: 600;
+  }
+
+  /* glass bubbles */
+  .msg-list.glass-mode .bubble-row.him .b-text {
+    background: rgba(255,255,255,.12); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+    border: .5px solid rgba(255,255,255,.18);
+  }
+  [data-theme="light"] .msg-list.glass-mode .bubble-row.him .b-text {
+    background: rgba(255,255,255,.55); border: .5px solid rgba(0,0,0,.06);
+  }
+  .msg-list.glass-mode .bubble-row.me .b-text {
+    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    border: .5px solid rgba(255,255,255,.25);
+  }
+
+  /* chat tool bar */
+  .chat-tools {
+    display: none; padding: 8px 10px; gap: 10px; background: var(--nav);
+    border-top: .5px solid var(--border); flex-wrap: wrap; justify-content: space-around;
+  }
+  .chat-tools.show { display: flex; }
+  .chat-tool-btn {
+    width: 56px; display: flex; flex-direction: column; align-items: center; gap: 4px;
+    background: none; border: none; color: var(--text); font-size: 11px; cursor: pointer;
+  }
+  .chat-tool-btn span {
+    width: 44px; height: 44px; border-radius: 12px; background: var(--card2);
+    display: flex; align-items: center; justify-content: center; font-size: 20px;
+  }
+
+  /* guide / puppy */
+  .guide-cmd {
+    background: var(--card); border-radius: 14px; padding: 12px; margin-bottom: 10px;
+    border-left: 3px solid var(--pink); border: .5px solid var(--border); border-left-width: 3px; border-left-color: var(--pink);
+  }
+  .guide-action {
+    background: rgba(255,100,100,.08); border-radius: 10px; padding: 10px; margin: 8px 0;
+    font-size: 13.5px; color: var(--danger-text); line-height: 1.5; white-space: pre-wrap;
+  }
+  .fav-item {
+    background: var(--card); border-radius: 12px; padding: 12px; margin-bottom: 10px;
+    border: .5px solid var(--border); font-size: 13.5px; line-height: 1.5; white-space: pre-wrap;
+  }
+
 
   .scroll { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; background: var(--bg); }
 
@@ -389,15 +472,17 @@
       <div class="time" id="clock">22:16</div>
       <div class="date" id="date">9月17日 周四</div>
       <div class="apps">
-        <div class="app" onclick="openApp('messages')"><div class="app-icon" style="background:linear-gradient(180deg,#5ac8fa,#007aff);">💬</div><div class="app-name">消息</div></div>
-        <div class="app" onclick="openApp('contacts')"><div class="app-icon" style="background:linear-gradient(180deg,#ff9f0a,#ff375f);">👤</div><div class="app-name">通讯录</div></div>
-        <div class="app" onclick="openApp('offline')"><div class="app-icon" style="background:linear-gradient(180deg,#ffd60a,#ff9f0a);">📍</div><div class="app-name">线下</div></div>
-        <div class="app" onclick="openApp('train')"><div class="app-icon" style="background:linear-gradient(180deg,#ff6482,#ff2d55);">🔒</div><div class="app-name">主人的母狗</div></div>
-        <div class="app" onclick="openApp('worldbook')"><div class="app-icon" style="background:linear-gradient(180deg,#bf5af2,#5856d6);">📖</div><div class="app-name">世界书</div></div>
-        <div class="app" onclick="openApp('diary')"><div class="app-icon" style="background:linear-gradient(180deg,#da8fff,#af52de);">📓</div><div class="app-name">日记</div></div>
-        <div class="app" onclick="openApp('rules')"><div class="app-icon" style="background:linear-gradient(180deg,#30d158,#248a3d);">📋</div><div class="app-name">守则</div></div>
-        <div class="app" onclick="openApp('me')"><div class="app-icon" style="background:linear-gradient(180deg,#ff8a80,#ff375f);">🐶</div><div class="app-name">母狗</div></div>
-        <div class="app" onclick="openApp('settings')"><div class="app-icon" style="background:linear-gradient(180deg,#8e8e93,#636366);">⚙️</div><div class="app-name">设置</div></div>
+        <div class="app" onclick="openApp('messages')"><div class="app-icon" id="icon-messages" style="background:linear-gradient(180deg,#5ac8fa,#007aff);">💬</div><div class="app-name">消息</div></div>
+        <div class="app" onclick="openApp('contacts')"><div class="app-icon" id="icon-contacts" style="background:linear-gradient(180deg,#ff9f0a,#ff375f);">👤</div><div class="app-name">通讯录</div></div>
+        <div class="app" onclick="openApp('offline')"><div class="app-icon" id="icon-offline" style="background:linear-gradient(180deg,#ffd60a,#ff9f0a);">📍</div><div class="app-name">线下</div></div>
+        <div class="app" onclick="openApp('train')"><div class="app-icon" id="icon-train" style="background:linear-gradient(180deg,#ff6482,#ff2d55);">🔒</div><div class="app-name">主人的母狗</div></div>
+        <div class="app" onclick="openApp('worldbook')"><div class="app-icon" id="icon-worldbook" style="background:linear-gradient(180deg,#bf5af2,#5856d6);">📖</div><div class="app-name">世界书</div></div>
+        <div class="app" onclick="openApp('diary')"><div class="app-icon" id="icon-diary" style="background:linear-gradient(180deg,#da8fff,#af52de);">📓</div><div class="app-name">日记</div></div>
+        <div class="app" onclick="openApp('rules')"><div class="app-icon" id="icon-rules" style="background:linear-gradient(180deg,#30d158,#248a3d);">📋</div><div class="app-name">守则</div></div>
+        <div class="app" onclick="openApp('me')"><div class="app-icon" id="icon-me" style="background:linear-gradient(180deg,#ff8a80,#ff375f);">🐶</div><div class="app-name">母狗</div></div>
+        <div class="app" onclick="openApp('guide')"><div class="app-icon" id="icon-guide" style="background:linear-gradient(180deg,#64d2ff,#0a84ff);">🎀</div><div class="app-name">小狗乖乖</div></div>
+        <div class="app" onclick="openApp('beautify')"><div class="app-icon" id="icon-beautify" style="background:linear-gradient(180deg,#bf5af2,#5e5ce6);">✨</div><div class="app-name">美化</div></div>
+        <div class="app" onclick="openApp('settings')"><div class="app-icon" id="icon-settings" style="background:linear-gradient(180deg,#8e8e93,#636366);">⚙️</div><div class="app-name">设置</div></div>
       </div>
       <div class="dock">
         <div class="app" onclick="openApp('messages')"><div class="app-icon" style="background:linear-gradient(180deg,#5ac8fa,#007aff);">💬</div></div>
@@ -426,8 +511,15 @@
       </div>
       <div class="msg-list" id="msg-list"></div>
       <div class="reply-bar" id="reply-bar"><div class="reply-preview" id="reply-preview"></div><button class="reply-cancel" onclick="cancelReply()">取消</button></div>
+      <div class="chat-tools" id="chat-tools">
+        <button class="chat-tool-btn" onclick="sendMediaMsg('image')"><span>🖼️</span>图片</button>
+        <button class="chat-tool-btn" onclick="sendMediaMsg('voice')"><span>🎤</span>语音</button>
+        <button class="chat-tool-btn" onclick="sendMediaMsg('redpack')"><span>🧧</span>红包</button>
+        <button class="chat-tool-btn" onclick="sendMediaMsg('transfer')"><span>💸</span>转账</button>
+      </div>
       <div class="input-bar" id="input-bar">
         <button id="chat-reply" title="让对方回复" onclick="requestAIReply()" disabled>响应</button>
+        <button type="button" onclick="toggleChatTools()" style="border:0;background:var(--input);color:var(--text);width:36px;height:36px;border-radius:50%;font-size:18px;cursor:pointer;flex:0 0 auto;">+</button>
         <input type="text" id="chat-input" placeholder="输入消息…">
         <button id="chat-send">发送</button>
       </div>
@@ -468,10 +560,10 @@
         <label>头像文字（没有图片时显示）</label>
         <input type="text" id="edit-avatar" maxlength="2">
         <label>头像图片（本地上传 或 填图片链接）</label>
-        <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px;">
-          <div id="edit-avatar-preview" style="width:52px;height:52px;border-radius:50%;background:var(--card2);overflow:hidden;display:flex;align-items:center;justify-content:center;color:var(--muted);"></div>
-          <button class="btn btn-secondary" style="flex:0;padding:8px 12px;" onclick="uploadChatAvatar()">选择本地</button>
-          <button class="btn btn-secondary" style="flex:0;padding:8px 12px;" onclick="clearChatAvatar()">移除</button>
+        <div style="display:flex;flex-direction:row;gap:8px;align-items:center;margin-bottom:8px;flex-wrap:nowrap;">
+          <div id="edit-avatar-preview" style="width:52px;height:52px;border-radius:50%;background:var(--card2);overflow:hidden;display:flex;align-items:center;justify-content:center;color:var(--muted);flex-shrink:0;"></div>
+          <button class="btn btn-secondary" style="flex:1;padding:10px 8px;" onclick="uploadChatAvatar()">选择本地</button>
+          <button class="btn btn-secondary" style="flex:1;padding:10px 8px;" onclick="clearChatAvatar()">移除</button>
         </div>
         <input type="text" id="edit-avatar-url" placeholder="粘贴图片链接 http(s)://… 然后点下方「使用链接」">
         <button class="btn btn-secondary" style="margin-top:8px;width:100%;" onclick="setChatAvatarUrl()">使用链接</button>
@@ -489,6 +581,22 @@
         <textarea id="edit-persona"></textarea>
         <label>关联世界书（多选，用逗号分隔世界书名称）</label>
         <input type="text" id="edit-wb" placeholder="例如：全局规则,苏晚专属">
+
+        <label>读取上下文记忆条数</label>
+        <input type="number" id="edit-mem-depth" value="10" min="2" max="50" placeholder="默认10条">
+
+        <div style="margin-top:14px;padding:12px;background:var(--card);border-radius:12px;border:.5px solid var(--border);">
+          <div style="font-size:13px;font-weight:600;margin-bottom:10px;">聊天主题</div>
+          <label style="margin-top:0;">气泡效果</label>
+          <div class="seg" style="margin:6px 0 10px;">
+            <button type="button" id="theme-fx-normal" class="active" onclick="setChatFx('normal')">普通</button>
+            <button type="button" id="theme-fx-glass" onclick="setChatFx('glass')">毛玻璃</button>
+          </div>
+          <label>我的气泡颜色</label>
+          <input type="color" id="edit-bubble-me" value="#0a84ff" style="width:100%;height:40px;border:none;border-radius:10px;background:transparent;margin-bottom:8px;">
+          <label>对方气泡颜色</label>
+          <input type="color" id="edit-bubble-him" value="#2c2c2e" style="width:100%;height:40px;border:none;border-radius:10px;background:transparent;">
+        </div>
 
         <div style="margin-top:18px;padding:12px;background:var(--card);border-radius:12px;border:.5px solid var(--border);">
           <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:10px;">聊天记录</div>
@@ -564,8 +672,8 @@
         <button class="nav-right" onclick="refreshTasks()">刷新</button>
       </div>
       <div id="offline-settings" class="feature-settings" style="display:none;padding:10px 12px;background:#141414;border-bottom:.5px solid var(--border);">
-        <div style="font-size:12px;color:#ff8a80;margin-bottom:6px;">每轮生成字数</div>
-        <input type="number" id="offline-word-count" value="800" min="200" max="4000" step="100" style="width:100%;background:#2c2c2e;border:none;border-radius:10px;padding:10px 12px;color:#fff;font-size:16px;outline:none;margin-bottom:10px;">
+        <div style="font-size:12px;color:#ff8a80;margin-bottom:6px;display:none;">每轮生成字数</div>
+        <input type="number" id="offline-word-count" style="display:none" value="800" min="200" max="4000" step="100" style="width:100%;background:#2c2c2e;border:none;border-radius:10px;padding:10px 12px;color:#fff;font-size:16px;outline:none;margin-bottom:10px;">
         <div style="font-size:12px;color:#ff8a80;margin-bottom:6px;">记忆来源（勾选聊天记录）</div>
         <div id="offline-memory-list" style="max-height:140px;overflow-y:auto;margin-bottom:10px;"></div>
         <button class="btn btn-primary" style="width:100%;" onclick="saveFeatureSettings('offline')">保存设置</button>
@@ -588,9 +696,9 @@
       <div class="story-view" id="story-content"></div>
       <div id="story-options" style="display:none;padding:8px 12px;border-top:.5px solid var(--border);background:#111;"></div>
       <div id="story-continue-bar" style="display:none;padding:10px 12px;border-top:.5px solid var(--border);flex-direction:column;gap:8px;">
-        <div style="display:flex;gap:8px;align-items:center;">
-          <span style="font-size:12px;color:#aaa;white-space:nowrap;">本轮字数</span>
-          <input type="number" id="story-round-words" value="800" min="200" max="4000" step="100" style="flex:1;background:#2c2c2e;border:none;border-radius:10px;padding:8px 10px;color:#fff;font-size:14px;outline:none;">
+        <div style="display:none;gap:8px;align-items:center;">
+          <span style="font-size:12px;color:var(--muted);white-space:nowrap;">本轮字数</span>
+          <input type="number" id="story-round-words" value="0" min="0" max="8000" step="100" style="flex:1;background:var(--input);border:none;border-radius:10px;padding:8px 10px;color:var(--text);font-size:14px;outline:none;">
         </div>
         <div style="display:flex;gap:8px;">
           <input type="text" id="story-action-input" placeholder="选择行动或自己输入…" style="flex:1;background:#2c2c2e;border:none;border-radius:10px;padding:10px 12px;color:#fff;font-size:14px;outline:none;">
@@ -607,8 +715,11 @@
     <div class="page" id="page-train">
       <div class="nav">
         <button class="nav-back" onclick="goHome()">‹ 桌面</button>
-        <div class="nav-title" style="display:flex;align-items:center;gap:6px;">主人的母狗 <button class="nav-right" style="font-size:14px;padding:0;min-width:auto;" onclick="toggleFeatureSettings('train')" title="设置">⚙</button></div>
-        <div></div>
+        <div class="nav-title">主人的母狗</div>
+        <div style="display:flex;gap:2px;">
+          <button class="nav-right" style="min-width:auto;padding:8px;" onclick="openApp('favs')" title="收藏">★</button>
+          <button class="nav-right" style="min-width:auto;padding:8px;" onclick="toggleFeatureSettings('train')" title="设置">⚙</button>
+        </div>
       </div>
       <div id="train-settings" class="feature-settings" style="display:none;padding:10px 12px;background:#141414;border-bottom:.5px solid var(--border);">
         <div style="font-size:12px;color:#ff8a80;margin-bottom:6px;">记忆来源（仅主人）</div>
@@ -702,6 +813,73 @@
           人设会被悄悄告诉对方AI，让它知道你是什么样的母狗。
         </div>
       </div>
+    </div>
+
+
+    <!-- 美化 -->
+    <div class="page" id="page-beautify">
+      <div class="nav">
+        <button class="nav-back" onclick="goHome()">‹ 桌面</button>
+        <div class="nav-title">美化</div>
+        <div style="width:44px"></div>
+      </div>
+      <div class="scroll" style="padding:12px;" id="beautify-list"></div>
+    </div>
+
+    <!-- 小狗乖乖 -->
+    <div class="page" id="page-guide">
+      <div class="nav">
+        <button class="nav-back" onclick="goHome()">‹ 桌面</button>
+        <div class="nav-title">小狗乖乖</div>
+        <button class="nav-right" onclick="startGuideSession()">开始</button>
+      </div>
+      <div class="scroll" style="padding:12px;" id="guide-setup">
+        <div class="card">
+          <h4>今天的主人</h4>
+          <select id="guide-master" style="width:100%;background:var(--input);border:none;border-radius:10px;padding:10px;color:var(--text);font-size:16px;margin-top:6px;"></select>
+        </div>
+        <div class="card">
+          <h4>场景</h4>
+          <div class="seg" style="margin-top:8px;">
+            <button type="button" id="guide-mode-offline" class="active" onclick="setGuideMode('offline')">线下</button>
+            <button type="button" id="guide-mode-online" onclick="setGuideMode('online')">线上</button>
+          </div>
+        </div>
+        <div class="card">
+          <h4>地点</h4>
+          <div style="display:flex;gap:8px;margin-top:8px;">
+            <input type="text" id="guide-place" placeholder="自己输入地点…" style="flex:1;background:var(--input);border:none;border-radius:10px;padding:10px;color:var(--text);font-size:16px;">
+            <button class="btn btn-secondary" style="flex:0;padding:0 12px;" onclick="randomGuidePlace()">随机</button>
+          </div>
+        </div>
+        <div class="card">
+          <h4>读取记忆条数</h4>
+          <input type="number" id="guide-mem-depth" value="12" min="2" max="40" style="width:100%;background:var(--input);border:none;border-radius:10px;padding:10px;color:var(--text);font-size:16px;margin-top:6px;">
+        </div>
+        <p style="font-size:12px;color:var(--muted);padding:0 4px;">主人会一次发若干指令+羞辱。线下模式可出现动作描写，例如「（主人狠狠扇了母狗奶子）」。做完后回复，再要下一轮。</p>
+      </div>
+      <div class="page" id="page-guide-chat" style="display:none;position:absolute;inset:0;flex-direction:column;background:var(--bg);">
+        <div class="nav">
+          <button class="nav-back" onclick="closeGuideChat()">‹ 返回</button>
+          <div class="nav-title" id="guide-chat-title">指导中</div>
+          <div style="width:44px"></div>
+        </div>
+        <div class="msg-list" id="guide-msg-list" style="flex:1;"></div>
+        <div class="input-bar show" style="display:flex;">
+          <input type="text" id="guide-input" placeholder="汇报完成情况…">
+          <button id="chat-send" onclick="sendGuideReply()">发送</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 收藏的评价 -->
+    <div class="page" id="page-favs">
+      <div class="nav">
+        <button class="nav-back" onclick="openApp('train')">‹ 返回</button>
+        <div class="nav-title">收藏的评价</div>
+        <div style="width:44px"></div>
+      </div>
+      <div class="scroll" style="padding:12px;" id="fav-list"></div>
     </div>
 
     <!-- 设置 -->
@@ -816,6 +994,13 @@ let memorySources = {
   train: ['master'],
   rules: []
 };
+let doneTaskKeys = []; // 做过的任务标记
+let appIcons = {}; // 自定义桌面图标
+let evalFavorites = []; // 收藏的主人评价
+let guideMode = 'offline';
+let guideMessages = [];
+let chatFxTemp = 'normal';
+
 // 用户自己（母狗）的资料，会注入到所有聊天
 let meProfile = {
   name: '凌幼薇',
@@ -858,6 +1043,38 @@ const fixedMaleContacts = [
   }
 ];
 
+
+// 图片自动压缩
+function compressImage(file, maxSide=1280, quality=0.72){
+  return new Promise((resolve, reject)=>{
+    if(!file || !file.type || !file.type.startsWith('image/')){
+      const r=new FileReader(); r.onload=e=>resolve(e.target.result); r.onerror=reject; r.readAsDataURL(file); return;
+    }
+    const url = URL.createObjectURL(file);
+    const img = new Image();
+    img.onload = ()=>{
+      let w=img.width, h=img.height;
+      const scale = Math.min(1, maxSide / Math.max(w,h));
+      w = Math.round(w*scale); h = Math.round(h*scale);
+      const canvas = document.createElement('canvas');
+      canvas.width=w; canvas.height=h;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img,0,0,w,h);
+      URL.revokeObjectURL(url);
+      let q = quality;
+      let data = canvas.toDataURL('image/jpeg', q);
+      // 若仍过大再压
+      while(data.length > 900000 && q > 0.4){
+        q -= 0.1;
+        data = canvas.toDataURL('image/jpeg', q);
+      }
+      resolve(data);
+    };
+    img.onerror = ()=>{ URL.revokeObjectURL(url); reject(new Error('图片读取失败')); };
+    img.src = url;
+  });
+}
+
 function loadAll() {
   const s = localStorage.getItem('bitchPhoneV3');
   if (s) {
@@ -877,6 +1094,9 @@ function loadAll() {
       if(typeof d.diaryWordCount === 'number') diaryWordCount = d.diaryWordCount;
       if(typeof d.rulesWordCount === 'number') rulesWordCount = d.rulesWordCount;
       if(typeof d.trainWordCount === 'number') trainWordCount = d.trainWordCount;
+      if(Array.isArray(d.doneTaskKeys)) doneTaskKeys = d.doneTaskKeys;
+      if(d.appIcons) appIcons = d.appIcons;
+      if(Array.isArray(d.evalFavorites)) evalFavorites = d.evalFavorites;
       if(d.meProfile) meProfile = Object.assign(meProfile, d.meProfile);
       if(d.myAvatar && !meProfile.avatarImg) meProfile.avatarImg = d.myAvatar;
       if(meProfile.avatarImg) localStorage.setItem('myAvatar', meProfile.avatarImg);
@@ -939,7 +1159,7 @@ function saveAll() {
     cor,shame,body,obey,mainFinished,bodyData,diaries,ruleVersions,
     offlineArchives,worldBooks,apiProfiles,currentProfileId,
     conversations,contacts,pendingRequests, meProfile, memorySources,
-    offlineWordCount, diaryWordCount, rulesWordCount, trainWordCount
+    offlineWordCount, diaryWordCount, rulesWordCount, trainWordCount, doneTaskKeys, appIcons, evalFavorites
   }));
   // 同步头像给旧逻辑兼容
   if(meProfile.avatarImg) localStorage.setItem('myAvatar', meProfile.avatarImg);
@@ -989,6 +1209,10 @@ function openApp(name) {
   }
   if(name==='settings'){ renderApiSelect(); loadCurrentProfile(); }
   if(name==='me') loadMePage();
+  if(name==='beautify') renderBeautify();
+  if(name==='guide'){ renderGuideSetup(); $('guide-setup').style.display='block'; const gc=$('page-guide-chat'); if(gc) gc.style.display='none'; }
+  if(name==='favs') renderFavs();
+  applyAppIcons();
 }
 
 function toggleFeatureSettings(feature){
@@ -1391,14 +1615,43 @@ function meAvatarMarkup(){
 }
 function escapeHtml(v){ return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
 function renderMessages(){
-  const c=conversations[currentChatId]; $('msg-list').innerHTML='';
+  const c=conversations[currentChatId]; if(!c) return;
+  const list=$('msg-list'); if(!list) return;
+  list.innerHTML='';
+  // 主题
+  const fx = c.chatFx || 'normal';
+  list.classList.toggle('glass-mode', fx==='glass');
+  if(c.bubbleMe) list.style.setProperty('--bubble-me', c.bubbleMe);
+  else list.style.removeProperty('--bubble-me');
+  if(c.bubbleHim) list.style.setProperty('--bubble-him', c.bubbleHim);
+  else list.style.removeProperty('--bubble-him');
+
   (c.messages||[]).forEach((m,i)=>{
     const row=document.createElement('div'); row.className=`bubble-row ${m.who} ${m.type||''}`; row.dataset.index=i;
     const quote=m.replyTo?`<div class="quote">回复：${escapeHtml(m.replyTo.text||'')}</div>`:'';
-    row.innerHTML=`<div class="b-av">${m.who==='him'?avatarMarkup(c):meAvatarMarkup()}</div><div class="b-text">${quote}${escapeHtml(m.text)}</div><div class="bubble-actions"><button class="reply-btn" onclick="event.stopPropagation();replyToMessage(${i})">回复</button><button class="del-btn" onclick="event.stopPropagation();delMessage(${i})">删除</button></div>`;
+    let body = '';
+    if(m.type==='image'){
+      body = `${quote}<div class="b-media"><img src="${m.text}" alt="图片"></div>`;
+    } else if(m.type==='voice'){
+      const sec = parseInt(m.text,10)||3;
+      const bars = [8,14,10,16,9,13,7].map(h=>`<i style="height:${h}px"></i>`).join('');
+      body = `${quote}<div class="b-voice"><div class="b-voice-bars">${bars}</div><span>${sec}"</span></div>`;
+    } else if(m.type==='redpack'){
+      let d={amount:'0.00',blessing:'恭喜发财'}; try{d=JSON.parse(m.text);}catch(_){}
+      body = `${quote}<div class="b-redpack"><div class="b-redpack-top">🧧 ${escapeHtml(d.blessing||'恭喜发财')}<div style="font-size:18px;margin-top:6px;color:#fff;">¥${escapeHtml(String(d.amount))}</div></div><div class="b-redpack-bot">微信红包</div></div>`;
+    } else if(m.type==='transfer'){
+      let d={amount:'0.00',note:'转账给你'}; try{d=JSON.parse(m.text);}catch(_){}
+      body = `${quote}<div class="b-transfer"><div class="b-transfer-top">💸 ${escapeHtml(d.note||'转账')}<div style="font-size:18px;margin-top:6px;">¥${escapeHtml(String(d.amount))}</div></div><div class="b-transfer-bot">微信转账</div></div>`;
+    } else {
+      body = `${quote}${escapeHtml(m.text)}`;
+    }
+    const av = m.who==='him'?avatarMarkup(c):meAvatarMarkup();
+    row.innerHTML=`<div class="b-av">${av}</div><div class="b-text">${body}</div><div class="bubble-actions"><button class="reply-btn" onclick="event.stopPropagation();replyToMessage(${i})">回复</button><button class="del-btn" onclick="event.stopPropagation();delMessage(${i})">删除</button></div>`;
     row.addEventListener('click',()=>row.classList.toggle('selected'));
-    $('msg-list').appendChild(row);
-  }); $('msg-list').scrollTop=$('msg-list').scrollHeight; updateReplyButton();
+    list.appendChild(row);
+  });
+  list.scrollTop=list.scrollHeight;
+  updateReplyButton();
 }
 function delMessage(i){
   const c=conversations[currentChatId]; if(!c||!c.messages||!c.messages[i]) return;
@@ -1578,9 +1831,13 @@ ${meProfile.persona || ''}
 - 每段之间用空行隔开
 - 不要写成一大段完整长文
 - 不要加「对方：」「我：」等任何前缀
-- 只输出纯对话内容`;
+- 只输出纯对话内容
+- 若要发红包，单独一行写：[[红包:金额:祝福语]]
+- 若要转账，单独一行写：[[转账:金额:说明]]
+- 若要发语音，单独一行写：[[语音:秒数]]
+- 普通文字不要用上述标记`;
     // 带上最近对话上下文，避免只看最后一句
-    const recent = (c.messages || []).slice(-10).map(m => (m.who === 'me' ? (meProfile.name||'用户')+'：' : '对方：') + m.text).join('\n');
+    const recent = (c.messages || []).slice(-(c.memDepth||10)).map(m => (m.who === 'me' ? (meProfile.name||'用户')+'：' : '对方：') + m.text).join('\n');
     const reply = await callAI(system, recent + '\n\n请以对方身份，针对最后一句自然回复。按上面的格式要求输出。', 900, linked);
     // 拆成多个气泡，模拟真实线上聊天
     await addBubblesFromReply(reply);
@@ -1645,8 +1902,15 @@ async function addBubblesFromReply(raw){
   }
 
   for(let i = 0; i < clean.length; i++){
-    addBubble('him', clean[i]);
-    // 轻微延迟，模拟一条条发出
+    const line = clean[i];
+    let type = '', text = line;
+    const rp = line.match(/^\[\[红包:(.+?):(.*)\]\]$/);
+    const tf = line.match(/^\[\[转账:(.+?):(.*)\]\]$/);
+    const vc = line.match(/^\[\[语音:(\d+)\]\]$/);
+    if(rp){ type='redpack'; text=JSON.stringify({amount:rp[1], blessing:rp[2]||'恭喜发财'}); }
+    else if(tf){ type='transfer'; text=JSON.stringify({amount:tf[1], note:tf[2]||'转账给你'}); }
+    else if(vc){ type='voice'; text=vc[1]; }
+    addBubble('him', text, type);
     if(i < clean.length - 1){
       await new Promise(r => setTimeout(r, 260 + Math.random() * 280));
     }
@@ -1704,21 +1968,23 @@ function openEditChar() {
     else bgPrev.innerHTML = '';
   }
   if($('edit-chatbg-url')) $('edit-chatbg-url').value = (c.chatBg && /^https?:\/\//i.test(c.chatBg)) ? c.chatBg : '';
+  if($('edit-mem-depth')) $('edit-mem-depth').value = c.memDepth || 10;
+  chatFxTemp = c.chatFx || 'normal';
+  setChatFx(chatFxTemp);
+  if($('edit-bubble-me')) $('edit-bubble-me').value = c.bubbleMe || '#0a84ff';
+  if($('edit-bubble-him')) $('edit-bubble-him').value = c.bubbleHim || '#2c2c2e';
   openApp('edit');
 }
 function uploadChatBg(){
   const input=document.createElement('input'); input.type='file'; input.accept='image/*';
-  input.onchange=e=>{
+  input.onchange=async e=>{
     const f=e.target.files?.[0]; if(!f)return;
-    const r=new FileReader();
-    r.onload=ev=>{
-      const c=conversations[currentChatId]; if(!c)return;
-      c.chatBg = ev.target.result;
-      const bgPrev=$('edit-chatbg-preview');
-      if(bgPrev) bgPrev.innerHTML = `<img class="avatar-img" src="${c.chatBg}" style="width:100%;height:100%;object-fit:cover;">`;
-      saveAll(); applyChatBackground();
-    };
-    r.readAsDataURL(f);
+    const data=await compressImage(f,1400,0.7);
+    const c=conversations[currentChatId]; if(!c)return;
+    c.chatBg = data;
+    const bgPrev=$('edit-chatbg-preview');
+    if(bgPrev) bgPrev.innerHTML = `<img class="avatar-img" src="${c.chatBg}" style="width:100%;height:100%;object-fit:cover;">`;
+    saveAll(); applyChatBackground();
   };
   input.click();
 }
@@ -1789,7 +2055,7 @@ function clearCharChat(){
 }
 function uploadChatAvatar(){
   const input=document.createElement('input'); input.type='file'; input.accept='image/*';
-  input.onchange=e=>{ const f=e.target.files?.[0]; if(!f)return; const r=new FileReader(); r.onload=ev=>{ const c=conversations[currentChatId]; c.avatarImg=ev.target.result; $('edit-avatar-preview').innerHTML=`<img class="avatar-img" src="${c.avatarImg}">`; saveAll(); renderMessages(); renderConvList(); }; r.readAsDataURL(f); }; input.click();
+  input.onchange=async e=>{ const f=e.target.files?.[0]; if(!f)return; const data=await compressImage(f,512,0.75); const c=conversations[currentChatId]; c.avatarImg=data; $('edit-avatar-preview').innerHTML=`<img class="avatar-img" src="${c.avatarImg}">`; saveAll(); renderMessages(); renderConvList(); }; input.click();
 }
 function clearChatAvatar(){ const c=conversations[currentChatId]; if(!c)return; c.avatarImg=''; $('edit-avatar-preview').innerHTML=escapeHtml(c.avatar||''); if($('edit-avatar-url')) $('edit-avatar-url').value=''; saveAll(); renderMessages(); renderConvList(); }
 function setChatAvatarUrl(){
@@ -1828,16 +2094,13 @@ function loadMePage(){
 function uploadMeAvatar(){
   const input = document.createElement('input');
   input.type = 'file'; input.accept = 'image/*';
-  input.onchange = e => {
+  input.onchange = async e => {
     const f = e.target.files?.[0]; if(!f) return;
-    const r = new FileReader();
-    r.onload = ev => {
-      meProfile.avatarImg = ev.target.result;
-      $('me-avatar-preview').innerHTML = `<img class="avatar-img" src="${meProfile.avatarImg}">`;
-      saveAll();
-      if(currentChatId) renderMessages();
-    };
-    r.readAsDataURL(f);
+    const data = await compressImage(f, 512, 0.75);
+    meProfile.avatarImg = data;
+    $('me-avatar-preview').innerHTML = `<img class="avatar-img" src="${meProfile.avatarImg}">`;
+    saveAll();
+    if(currentChatId) renderMessages();
   };
   input.click();
 }
@@ -1881,6 +2144,10 @@ function saveCharEdit() {
   if(!c.avatarImg) c.avatarImg='';
   c.persona = $('edit-persona').value.trim();
   c.linkedWB = $('edit-wb').value.trim();
+  c.memDepth = parseInt($('edit-mem-depth')?.value,10) || 10;
+  c.chatFx = chatFxTemp || 'normal';
+  c.bubbleMe = $('edit-bubble-me')?.value || '';
+  c.bubbleHim = $('edit-bubble-him')?.value || '';
   const ct = contacts.find(x=>x.id===currentChatId);
   if(ct){ ct.remark = c.remark; }
   saveAll();
@@ -1993,10 +2260,10 @@ function editStatus(part){
 }
 function uploadImg(part){
   const input=document.createElement('input'); input.type='file'; input.accept='image/*';
-  input.onchange=e=>{
-    const reader=new FileReader();
-    reader.onload=ev=>{ bodyData[part]={...bodyData[part],img:ev.target.result}; saveAll(); renderBodyParts(); };
-    reader.readAsDataURL(e.target.files[0]);
+  input.onchange=async e=>{
+    const f=e.target.files[0]; if(!f)return;
+    const data=await compressImage(f, 1000, 0.72);
+    bodyData[part]={...bodyData[part],img:data}; saveAll(); renderBodyParts();
   }; input.click();
 }
 function openPartEval(part){
@@ -2033,7 +2300,15 @@ async function submitPartEval(){
 必须严格参考世界书常驻条目。回复约 ${words} 字，像微信短句分段。`,
     `${mem}部位：${part}\n当前状态：${d.status}\n母狗说：${question}\n\n请以主人身份直接回复评价。`
   );
-  if(resBox) resBox.textContent = text;
+  if(resBox){
+    resBox.textContent = text;
+    resBox.title = '双击收藏';
+    resBox.ondblclick = ()=>{
+      evalFavorites.unshift({ part, text, time: Date.now() });
+      saveAll();
+      alert('已收藏到★');
+    };
+  }
 }
 
 const taskPool=[
@@ -2047,7 +2322,40 @@ const taskPool=[
 ];
 function renderTasks(){
   if(!currentTasks.length) refreshTasks(true);
-  $('task-container').innerHTML=currentTasks.map((t,i)=>`<div class="card"><h4>${escapeHtml(t.title)}</h4><p>${escapeHtml(t.desc)}</p><div class="wish-meta">类型：${escapeHtml(t.type||'任务')} · 难度：${escapeHtml(t.difficulty||'普通')}${t.reward?' · 奖励：'+escapeHtml(t.reward):''}</div><div class="btn-row"><button class="btn btn-primary" onclick="acceptTask(${i})">接受并开始</button></div></div>`).join('') || '<div style="text-align:center;color:#666;padding:40px;">暂无任务<br>点右上角刷新或许愿</div>';
+  const box = $('task-container'); if(!box) return;
+  box.innerHTML = currentTasks.map((t,i)=>{
+    const key = (t.title||'') + '|' + (t.desc||'').slice(0,40);
+    const done = doneTaskKeys.includes(key);
+    return `<div class="task-swipe-wrap" data-idx="${i}">
+      <div class="task-swipe-del" onclick="deleteTask(${i})">删除</div>
+      <div class="task-swipe-inner" id="task-inner-${i}">
+        <h4 style="color:var(--pink);font-size:15px;margin-bottom:6px;">${escapeHtml(t.title||'')}${done?'<span class="task-done-badge">已做过</span>':''}</h4>
+        <p style="font-size:13.5px;color:var(--muted);line-height:1.5;">${escapeHtml(t.desc||'')}</p>
+        <div class="wish-meta">类型：${escapeHtml(t.type||'任务')} · 难度：${escapeHtml(t.difficulty||'普通')}${t.reward?' · 奖励：'+escapeHtml(t.reward):''}</div>
+        <div class="btn-row">
+          <button class="btn btn-primary" onclick="event.stopPropagation();acceptTask(${i})">${done?'再来一次':'接受并开始'}</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('') || '<div style="text-align:center;color:var(--muted);padding:40px;">暂无任务<br>点右上角刷新或许愿</div>';
+  // 绑定左滑
+  box.querySelectorAll('.task-swipe-inner').forEach(el=>{
+    let startX=0, dx=0;
+    el.addEventListener('touchstart', e=>{ startX=e.touches[0].clientX; dx=0; el.style.transition='none'; }, {passive:true});
+    el.addEventListener('touchmove', e=>{
+      dx = e.touches[0].clientX - startX;
+      if(dx<0) el.style.transform = `translateX(${Math.max(dx,-76)}px)`;
+    }, {passive:true});
+    el.addEventListener('touchend', ()=>{
+      el.style.transition='transform .2s';
+      if(dx < -40) el.style.transform='translateX(-76px)';
+      else el.style.transform='translateX(0)';
+    });
+  });
+}
+function deleteTask(i){
+  currentTasks.splice(i,1);
+  renderTasks();
 }
 async function refreshTasks(silent){
   const p = getActiveProfile();
@@ -2099,8 +2407,8 @@ async function wishTask(){
   $('task-container').innerHTML='<div style="text-align:center;padding:40px;color:#888;">正在把你的愿望变成恶俗任务…</div>';
   try{
     const raw = await callAI(
-      '你是调教母狗的主人。根据用户的愿望，生成1个足够恶俗、羞辱、物化、可执行的线下任务。输出纯JSON对象，包含title、desc、type、difficulty、reward、wish字段。desc要具体、重口、羞耻感强。',
-      `用户愿望：${wish.trim()}\n请生成对应的恶俗任务。`
+      '你是调教母狗的主人。根据用户给的提示词/愿望，重新设计并生成1个全新的、足够恶俗、羞辱、物化、可执行的线下任务。不要照搬用户原话当任务说明，要改写成具体可执行步骤。输出纯JSON对象，字段：title,desc,type,difficulty,reward,wish。desc必须具体、重口、羞耻感强。',
+      `用户提示词/愿望：${wish.trim()}\n请据此创作一个新的恶俗任务（重新组织语言与玩法，不要原文照搬）。`
     );
     let t;
     try{
@@ -2143,14 +2451,16 @@ async function acceptTask(i){
   // 不隐藏历史：先放加载提示在底部
   $('story-content').innerHTML = '<div class="story-loading" id="story-loading">第一轮生成中…（从接到任务后凌幼薇的准备工作开始）</div>';
 
-  const words = offlineWordCount || 800;
+  const words = 0; // 不限制字数，避免截断
+  const key = (t.title||'') + '|' + (t.desc||'').slice(0,40);
+  if(!doneTaskKeys.includes(key)){ doneTaskKeys.push(key); saveAll(); }
   const mem = getMemoryContext('offline');
   const girlName = meProfile.name || '凌幼薇';
   const system = `你正在写线下任务剧情。必须严格遵守世界书常驻条目。
 角色名：${girlName}
 本轮是【第一轮】，必须从她「接到任务之后」开始写，重点描写她的准备工作过程（换衣服/真空/涂药/塞道具/心理挣扎/出门前检查身体等），不要直接跳到执行高潮。
 用第三人称或第一人称均可，语言恶俗、物化、重口，重点刻画羞耻、身体反应、下流想法。
-本轮目标字数约 ${words} 字，写满即可，不要提前结束任务。
+不要刻意限制篇幅，把这一轮写完整、写细，不要中途截断。
 不要写「第一轮结束」之类的元叙述。
 
 【重要：选项格式，参考酒馆 / SillyTavern】
@@ -2171,7 +2481,7 @@ async function acceptTask(i){
 
 请开始写第一轮：接到任务后，${girlName}开始做准备工作……`;
 
-  const raw = await callAI(system, userPrompt, Math.max(1400, Math.ceil(words * 1.8)));
+  const raw = await callAI(system, userPrompt, 4000);
   const { text, options } = parseStoryWithOptions(raw);
   currentStoryRounds.push({ text, options });
   currentStoryRound = 1;
@@ -2223,7 +2533,8 @@ function renderStoryView(){
     const opts = typeof r === 'string' ? [] : (r.options || []);
     html += `<div class="story-round-block">`;
     html += `<div class="story-round-label">———— 第 ${idx+1} 轮 ————</div>`;
-    html += `<div style="white-space:pre-wrap;">${escapeHtml(body)}</div>`;
+    const isUser = r && r.isUser;
+    html += `<div style="white-space:pre-wrap;${isUser?'background:rgba(10,132,255,.12);border-radius:10px;padding:10px;border-left:3px solid var(--blue);':''}">${escapeHtml(body)}</div>`;
     // 酒馆式：选项写在正文里（可折叠）
     if(opts.length){
       const openCls = (idx === currentStoryRounds.length - 1) ? ' open' : '';
@@ -2285,17 +2596,18 @@ function selectStoryOption(idx){
 async function submitStoryAction(){
   const action = ($('story-action-input')?.value || '').trim();
   if(!action){ alert('先选一个行动，或自己输入'); return; }
+  // 先把「我的回复」显示在故事里
+  currentStoryRounds.push({ text: '【我的行动】\n' + action, options: [], isUser: true });
+  renderStoryView();
   window._pendingStoryAction = action;
-  await continueStory(action);
   if($('story-action-input')) $('story-action-input').value = '';
+  await continueStory(action);
 }
 
 async function continueStory(forcedAction){
   const t = window._currentOfflineTask;
   if(!t){ alert('没有进行中的任务'); return; }
   const action = forcedAction || window._pendingStoryAction || ($('story-action-input')?.value || '').trim();
-  const words = parseInt($('story-round-words')?.value, 10) || offlineWordCount || 800;
-  offlineWordCount = words;
   const nextRound = currentStoryRound + 1;
   if($('story-nav-title')) $('story-nav-title').textContent = t.title + ' · 第' + nextRound + '轮生成中…';
   // 不隐藏前文：只在底部加 loading
@@ -2322,7 +2634,7 @@ async function continueStory(forcedAction){
 角色名：${girlName}
 这是第 ${nextRound} 轮续写。请紧接上一轮内容继续往下写，不要重复已写过的情节，推进任务执行过程。
 语言恶俗、物化、重口，重点刻画羞耻、身体反应、被发现风险、下流想法。
-本轮目标字数约 ${words} 字。不要写「第x轮结束」等元叙述。
+不要刻意限制篇幅，把这一轮写完整。不要写「第x轮结束」等元叙述。
 
 【重要：选项格式，参考酒馆 / SillyTavern】
 正文写完后，必须在文末单独输出可折叠选项块，格式严格如下：
@@ -2341,7 +2653,7 @@ ${prev}
 
 请继续第 ${nextRound} 轮……`;
 
-  const raw = await callAI(system, userPrompt, Math.max(1400, Math.ceil(words * 1.8)));
+  const raw = await callAI(system, userPrompt, 4000);
   const { text, options } = parseStoryWithOptions(raw);
   currentStoryRounds.push({ text, options });
   currentStoryRound = nextRound;
@@ -2433,17 +2745,199 @@ function addRuleVersion(){
 }
 
 function changeWallpaper(){ $('wallpaper-file').click(); }
-function setWallpaper(e){
-  const reader=new FileReader();
-  reader.onload=ev=>{
-    localStorage.setItem('wallpaper', ev.target.result);
-    document.documentElement.style.setProperty('--wallpaper', `url(${ev.target.result})`);
+async function setWallpaper(e){
+  const f=e.target.files[0]; if(!f)return;
+  const data=await compressImage(f, 1600, 0.7);
+  localStorage.setItem('wallpaper', data);
+  document.documentElement.style.setProperty('--wallpaper', `url(${data})`);
+}
+
+
+// ========== 美化图标 ==========
+function applyAppIcons(){
+  Object.keys(appIcons||{}).forEach(id=>{
+    const el = document.getElementById('icon-'+id);
+    if(!el || !appIcons[id]) return;
+    el.style.backgroundImage = `url(${appIcons[id]})`;
+    el.style.backgroundSize = 'cover';
+    el.style.backgroundPosition = 'center';
+    el.textContent = '';
+  });
+}
+function renderBeautify(){
+  const apps = [
+    {id:'messages',name:'消息'},{id:'contacts',name:'通讯录'},{id:'offline',name:'线下'},
+    {id:'train',name:'主人的母狗'},{id:'worldbook',name:'世界书'},{id:'diary',name:'日记'},
+    {id:'rules',name:'守则'},{id:'me',name:'母狗'},{id:'guide',name:'小狗乖乖'},
+    {id:'beautify',name:'美化'},{id:'settings',name:'设置'}
+  ];
+  const box = $('beautify-list'); if(!box) return;
+  box.innerHTML = apps.map(a=>`
+    <div class="card" style="display:flex;align-items:center;gap:12px;">
+      <div class="app-icon" id="beautify-preview-${a.id}" style="width:52px;height:52px;font-size:22px;${appIcons[a.id]?`background-image:url(${appIcons[a.id]});background-size:cover;`:''}">${appIcons[a.id]?'':(document.getElementById('icon-'+a.id)?.textContent||'📱')}</div>
+      <div style="flex:1;font-weight:600;">${a.name}</div>
+      <button class="btn btn-secondary" style="flex:0;padding:8px 12px;" onclick="pickAppIcon('${a.id}')">更换</button>
+      <button class="btn btn-secondary" style="flex:0;padding:8px 12px;" onclick="resetAppIcon('${a.id}')">重置</button>
+    </div>`).join('');
+}
+function pickAppIcon(id){
+  const input=document.createElement('input'); input.type='file'; input.accept='image/*';
+  input.onchange=async e=>{
+    const f=e.target.files?.[0]; if(!f)return;
+    try{
+      const data = await compressImage(f, 256, 0.75);
+      appIcons[id]=data; saveAll(); applyAppIcons(); renderBeautify();
+    }catch(err){ alert('压缩失败'); }
   };
-  reader.readAsDataURL(e.target.files[0]);
+  input.click();
+}
+function resetAppIcon(id){ delete appIcons[id]; saveAll(); location.reload(); }
+
+// ========== 聊天工具：图片/语音/红包/转账 ==========
+function toggleChatTools(){
+  const t=$('chat-tools'); if(!t)return;
+  t.classList.toggle('show');
+}
+function sendMediaMsg(type){
+  const c = conversations[currentChatId]; if(!c) return;
+  if(type==='image'){
+    const input=document.createElement('input'); input.type='file'; input.accept='image/*';
+    input.onchange=async e=>{
+      const f=e.target.files?.[0]; if(!f)return;
+      const data = await compressImage(f, 1280, 0.72);
+      addBubble('me', data, 'image');
+      updateReplyButton();
+    };
+    input.click();
+    return;
+  }
+  if(type==='voice'){
+    const sec = Math.floor(2+Math.random()*12);
+    addBubble('me', String(sec), 'voice');
+    updateReplyButton();
+    return;
+  }
+  if(type==='redpack'){
+    const amount = prompt('红包金额（元）', '0.88');
+    if(amount===null) return;
+    const blessing = prompt('祝福语', '恭喜发财') || '恭喜发财';
+    addBubble('me', JSON.stringify({amount, blessing}), 'redpack');
+    updateReplyButton();
+    return;
+  }
+  if(type==='transfer'){
+    const amount = prompt('转账金额（元）', '520');
+    if(amount===null) return;
+    const note = prompt('转账说明', '转账给你') || '转账给你';
+    addBubble('me', JSON.stringify({amount, note}), 'transfer');
+    updateReplyButton();
+    return;
+  }
+}
+
+// 覆盖 addBubble 渲染在 renderMessages 里处理 type
+
+// ========== 聊天主题 / 记忆条数 ==========
+function setChatFx(fx){
+  chatFxTemp = fx;
+  $('theme-fx-normal')?.classList.toggle('active', fx==='normal');
+  $('theme-fx-glass')?.classList.toggle('active', fx==='glass');
+}
+
+// ========== 小狗乖乖 ==========
+const GUIDE_PLACES = ['家门口玄关','出租屋客厅','商场试衣间','公园长椅旁','电梯里','电影院后排','便利店厕所','阳台','车后座','天台'];
+function setGuideMode(m){
+  guideMode = m;
+  $('guide-mode-offline')?.classList.toggle('active', m==='offline');
+  $('guide-mode-online')?.classList.toggle('active', m==='online');
+}
+function randomGuidePlace(){
+  $('guide-place').value = GUIDE_PLACES[Math.floor(Math.random()*GUIDE_PLACES.length)];
+}
+function renderGuideSetup(){
+  const sel = $('guide-master'); if(!sel) return;
+  const list = Object.entries(conversations);
+  sel.innerHTML = list.map(([id,c])=>`<option value="${id}">${escapeHtml(c.remark||c.name||id)}</option>`).join('');
+  // 默认主人
+  if(conversations['master']) sel.value='master';
+}
+function closeGuideChat(){
+  const gc=$('page-guide-chat'); if(gc) gc.style.display='none';
+  if($('guide-setup')) $('guide-setup').style.display='block';
+}
+async function startGuideSession(){
+  const mid = $('guide-master')?.value;
+  if(!mid || !conversations[mid]){ alert('请选择主人'); return; }
+  const place = ($('guide-place')?.value||'').trim() || GUIDE_PLACES[Math.floor(Math.random()*GUIDE_PLACES.length)];
+  const depth = parseInt($('guide-mem-depth')?.value,10)||12;
+  guideMessages = [];
+  $('guide-setup').style.display='none';
+  const gc=$('page-guide-chat');
+  if(gc){ gc.style.display='flex'; }
+  $('guide-chat-title').textContent = (conversations[mid].remark||conversations[mid].name) + ' · 指导';
+  $('guide-msg-list').innerHTML = '<div class="story-loading">主人正在下达指令…</div>';
+
+  const c = conversations[mid];
+  const memMsgs = (c.messages||[]).slice(-depth).map(m=>{
+    const who = m.who==='me' ? (meProfile.name||'凌幼薇') : (c.remark||c.name);
+    return who+'：'+(m.text||'');
+  }).join('\n');
+  const girl = meProfile.name||'凌幼薇';
+  const modeHint = guideMode==='offline'
+    ? '这是线下指导。你可以穿插动作描写，用括号写出例如：（主人狠狠扇了母狗奶子）（一把扯开衣服）这类具体动作。'
+    : '这是线上文字指导，不要写面对面的肢体动作，用指令与羞辱驱动。';
+
+  const system = `你是「${c.remark||c.name}」。${c.persona||''}
+你正在指导母狗「${girl}」。${modeHint}
+地点：${place}
+必须严格参考世界书常驻条目。
+一次发布 2～4 条指令，每条要具体可执行，并夹杂羞辱。
+用短句分段，像微信。不要加前缀。`;
+  const user = `【聊天记忆】\n${memMsgs}\n\n请下达第一轮指令。地点：${place}。场景：${guideMode==='offline'?'线下':'线上'}。`;
+  const reply = await callAI(system, user, 1200);
+  guideMessages.push({who:'him', text:reply});
+  renderGuideMsgs(c);
+}
+function renderGuideMsgs(c){
+  const box=$('guide-msg-list'); if(!box)return;
+  box.innerHTML = guideMessages.map(m=>{
+    if(m.who==='him'){
+      return `<div class="bubble-row him"><div class="b-av">${avatarMarkup(c)}</div><div class="b-text">${escapeHtml(m.text)}</div></div>`;
+    }
+    return `<div class="bubble-row me"><div class="b-av">${meAvatarMarkup()}</div><div class="b-text">${escapeHtml(m.text)}</div></div>`;
+  }).join('');
+  box.scrollTop = box.scrollHeight;
+}
+async function sendGuideReply(){
+  const v=($('guide-input')?.value||'').trim(); if(!v)return;
+  guideMessages.push({who:'me', text:v});
+  $('guide-input').value='';
+  const mid = $('guide-master')?.value;
+  const c = conversations[mid];
+  renderGuideMsgs(c);
+  const girl = meProfile.name||'凌幼薇';
+  const place = ($('guide-place')?.value||'').trim()||'未知地点';
+  const recent = guideMessages.slice(-8).map(m=>(m.who==='me'?girl:'主人')+'：'+m.text).join('\n');
+  const modeHint = guideMode==='offline' ? '可穿插括号动作描写。' : '保持线上文字指导。';
+  const system = `你是「${c.remark||c.name}」。继续指导母狗。${modeHint}
+根据她的汇报给予评价，再发 2～3 条新指令+羞辱。短句分段。`;
+  const reply = await callAI(system, recent+'\n\n请继续下达指令。地点：'+place, 1200);
+  guideMessages.push({who:'him', text:reply});
+  renderGuideMsgs(c);
+}
+
+// ========== 收藏评价 ==========
+function renderFavs(){
+  const box=$('fav-list'); if(!box)return;
+  box.innerHTML = evalFavorites.length ? evalFavorites.map((f,i)=>`
+    <div class="fav-item" ondblclick="if(confirm('取消收藏？')){evalFavorites.splice(${i},1);saveAll();renderFavs();}">
+      <div style="font-size:11px;color:var(--muted);margin-bottom:6px;">${escapeHtml(f.part||'')} · ${new Date(f.time).toLocaleString()}</div>
+      ${escapeHtml(f.text||'')}
+    </div>`).join('') : '<div style="text-align:center;color:var(--muted);padding:40px;">暂无收藏<br>在评价结果上双击可收藏</div>';
 }
 
 function exportData(){
-  const data={cor,shame,body,obey,mainFinished,bodyData,diaries,ruleVersions,offlineArchives,worldBooks,apiProfiles,currentProfileId,conversations,contacts,pendingRequests,meProfile,memorySources,offlineWordCount,diaryWordCount,rulesWordCount,trainWordCount,myAvatar:meProfile.avatarImg||''};
+  const data={cor,shame,body,obey,mainFinished,bodyData,diaries,ruleVersions,offlineArchives,worldBooks,apiProfiles,currentProfileId,conversations,contacts,pendingRequests,meProfile,memorySources,offlineWordCount,diaryWordCount,rulesWordCount,trainWordCount,doneTaskKeys,appIcons,evalFavorites,myAvatar:meProfile.avatarImg||''};
   const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
   const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='母狗手机数据.json'; a.click();
 }
