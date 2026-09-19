@@ -652,6 +652,88 @@
   }
   .msg-edit-bar.show { display: flex; }
 
+
+  .live-mid {
+    position: relative; z-index: 2; flex: 1; display: flex; gap: 8px;
+    min-height: 0; padding: 0 10px; overflow: hidden;
+  }
+  .live-col {
+    flex: 1; display: flex; flex-direction: column; min-width: 0;
+    background: rgba(0,0,0,.35); border-radius: 14px; overflow: hidden;
+  }
+  .live-col-h {
+    font-size: 11px; color: rgba(255,255,255,.7); padding: 6px 10px;
+    background: rgba(0,0,0,.25); font-weight: 600; letter-spacing: .3px;
+  }
+  .live-col-body {
+    flex: 1; overflow-y: auto; padding: 8px; font-size: 12.5px; line-height: 1.45;
+  }
+  .live-narr {
+    color: #ffe0b0; white-space: pre-wrap; margin-bottom: 10px;
+    padding: 8px; border-radius: 10px; background: rgba(255,160,60,.12);
+    border-left: 3px solid #ffb84d;
+  }
+  .live-dm-ai {
+    background: rgba(0,0,0,.45); color: #fff; padding: 5px 9px;
+    border-radius: 10px; margin-bottom: 5px; font-size: 12px;
+  }
+
+  /* Apple-like album */
+  .alb-years { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+  .alb-year-chip {
+    padding: 6px 12px; border-radius: 16px; background: var(--card2);
+    font-size: 13px; color: var(--text); border: none; cursor: pointer;
+  }
+  .alb-year-chip.on { background: var(--blue); color: #fff; }
+  .alb-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 3px;
+  }
+  .alb-cell {
+    aspect-ratio: 1; background: #1c1c1e; position: relative; overflow: hidden;
+    cursor: pointer;
+  }
+  .alb-cell .cap {
+    position: absolute; inset: 0; display: flex; align-items: flex-end;
+    padding: 6px; font-size: 10px; color: #fff; line-height: 1.25;
+    background: linear-gradient(transparent 40%, rgba(0,0,0,.75));
+  }
+  .alb-cell.msel::after {
+    content:''; position:absolute; inset:0; border:3px solid var(--blue);
+    background: rgba(10,132,255,.2);
+  }
+  .alb-detail-sheet {
+    position: absolute; inset: 0; background: rgba(0,0,0,.92); z-index: 20;
+    display: none; flex-direction: column; padding: 48px 16px 20px;
+  }
+  .alb-detail-sheet.show { display: flex; }
+
+  /* Real auction */
+  .auc-lot {
+    background: var(--card); border-radius: 16px; padding: 14px; margin-bottom: 12px;
+    border: .5px solid var(--border);
+  }
+  .auc-timer { color: var(--red); font-weight: 700; font-size: 13px; }
+  .auc-bid-row { display: flex; gap: 6px; margin-top: 8px; }
+  .auc-feed { max-height: 120px; overflow-y: auto; font-size: 12px; color: var(--muted); margin-top: 8px; }
+
+  /* heat calendar */
+  .cal-grid {
+    display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px;
+  }
+  .cal-cell {
+    aspect-ratio: 1; border-radius: 10px; background: var(--card2);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    font-size: 12px; color: var(--text); position: relative; cursor: pointer;
+  }
+  .cal-cell .mark {
+    font-size: 9px; margin-top: 2px; font-weight: 600;
+  }
+  .cal-cell.fertile { background: rgba(255,59,48,.2); color: #ff6b6b; }
+  .cal-cell.want { background: rgba(255,149,0,.2); color: #ff9f0a; }
+  .cal-cell.force { background: rgba(191,90,242,.25); color: #bf5af2; }
+  .cal-cell.today { outline: 2px solid var(--blue); }
+  .cal-legend { display: flex; flex-wrap: wrap; gap: 8px; font-size: 11px; margin: 10px 0; color: var(--muted); }
+
 </style>
 </head>
 <body data-theme="dark">
@@ -687,6 +769,7 @@
             <div class="app" onclick="openApp('live')"><div class="app-icon" id="icon-live" style="background:linear-gradient(180deg,#ff453a,#ff2d55);">📡</div><div class="app-name">发骚直播</div></div>
             <div class="app" onclick="openApp('auction')"><div class="app-icon" id="icon-auction" style="background:linear-gradient(180deg,#ffd60a,#ff9f0a);">💰</div><div class="app-name">身体拍卖</div></div>
             <div class="app" onclick="openApp('album')"><div class="app-icon" id="icon-album" style="background:linear-gradient(180deg,#bf5af2,#ff375f);">📷</div><div class="app-name">被操相册</div></div>
+            <div class="app" onclick="openApp('heat')"><div class="app-icon" id="icon-heat" style="background:linear-gradient(180deg,#ff6482,#bf5af2);">📅</div><div class="app-name">发情日历</div></div>
           </div>
         </div>
       </div>
@@ -1190,7 +1273,16 @@
         </div>
         <div class="live-status" id="live-body-status">小穴湿润度 37% · 奶子微颤 · 呼吸急促</div>
         <div class="live-cmd" id="live-cmd">等待主人指令…</div>
-        <div class="live-danmaku" id="live-danmaku"></div>
+        <div class="live-mid">
+          <div class="live-col">
+            <div class="live-col-h">观众弹幕（AI）</div>
+            <div class="live-col-body" id="live-danmaku"></div>
+          </div>
+          <div class="live-col">
+            <div class="live-col-h">完成描写</div>
+            <div class="live-col-body" id="live-narrative"></div>
+          </div>
+        </div>
         <div class="live-bar">
           <input type="text" id="live-input" placeholder="汇报你正在做的事…" style="flex:1;background:rgba(255,255,255,.12);border:none;border-radius:18px;padding:9px 14px;color:#fff;font-size:15px;outline:none;">
           <button class="btn btn-primary" style="flex:0;padding:0 14px;border-radius:18px;" onclick="sendLiveReport()">上报</button>
@@ -1201,37 +1293,67 @@
 
     <!-- 身体拍卖行 -->
     
-    <!-- 被操相册 -->
+    
+    <!-- 被操相册 · 苹果相册风格 -->
     <div class="page" id="page-album">
       <div class="nav">
-        <button class="nav-back" onclick="goHome()">‹ 桌面</button>
-        <div class="nav-title">被操相册</div>
-        <button class="nav-right" onclick="genAlbumShot()">AI生成</button>
-      </div>
-      <div style="padding:8px 12px;display:flex;gap:6px;overflow-x:auto;border-bottom:.5px solid var(--border);background:var(--nav);">
-        <button class="forum-tab on" id="alb-tab-all" onclick="setAlbumTab('all',this)">全部</button>
-        <button class="forum-tab" onclick="setAlbumTab('creampie',this)">内射后</button>
-        <button class="forum-tab" onclick="setAlbumTab('toy',this)">玩具撑开</button>
-        <button class="forum-tab" onclick="setAlbumTab('finger',this)">手指高潮</button>
-        <button class="forum-tab" onclick="setAlbumTab('public',this)">当众玩弄</button>
-        <button class="forum-tab" onclick="setAlbumTab('partner',this)">按对象</button>
-        <button class="forum-tab" onclick="setAlbumTab('date',this)">按日期</button>
+        <button class="nav-back" id="alb-back" onclick="albumNavBack()">‹ 桌面</button>
+        <div class="nav-title" id="alb-title">相册</div>
+        <button class="nav-right" onclick="genAlbumShot()">＋</button>
       </div>
       <div class="scroll" style="padding:12px;" id="album-list"></div>
       <div class="msg-edit-bar" id="album-edit-bar">
         <button class="btn btn-secondary" style="flex:1;" onclick="exitAlbumEdit()">取消</button>
-        <button class="btn btn-danger" style="flex:1;" onclick="deleteAlbumSelected()">删除所选</button>
+        <button class="btn btn-danger" style="flex:1;" onclick="deleteAlbumSelected()">删除</button>
+      </div>
+      <div class="alb-detail-sheet" id="alb-detail">
+        <button onclick="closeAlbDetail()" style="position:absolute;top:44px;left:12px;border:0;background:none;color:#fff;font-size:17px;">关闭</button>
+        <div id="alb-detail-body" style="flex:1;overflow-y:auto;padding-top:20px;"></div>
       </div>
     </div>
 
+    <!-- 身体拍卖行 · 真实拍卖模拟 -->
     <div class="page" id="page-auction">
       <div class="nav">
         <button class="nav-back" onclick="goHome()">‹ 桌面</button>
         <div class="nav-title">身体拍卖行</div>
-        <button class="nav-right" onclick="auctionPublicMode()">公开拍</button>
+        <button class="nav-right" onclick="refreshAuctionLots()">刷新拍品</button>
+      </div>
+      <div style="padding:8px 12px;background:var(--nav);border-bottom:.5px solid var(--border);display:flex;gap:8px;">
+        <button class="btn btn-secondary" style="flex:1;padding:8px;" onclick="setAucTab('live')">正在拍卖</button>
+        <button class="btn btn-secondary" style="flex:1;padding:8px;" onclick="setAucTab('upcoming')">即将开始</button>
+        <button class="btn btn-secondary" style="flex:1;padding:8px;" onclick="setAucTab('ended')">已结束</button>
       </div>
       <div class="scroll" style="padding:12px;" id="auction-list"></div>
     </div>
+
+    <!-- 发情日历 -->
+    <div class="page" id="page-heat">
+      <div class="nav">
+        <button class="nav-back" onclick="goHome()">‹ 桌面</button>
+        <div class="nav-title">发情日历</div>
+        <button class="nav-right" onclick="shiftHeatMonth(1)">下月</button>
+      </div>
+      <div class="scroll" style="padding:12px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+          <button class="btn btn-secondary" style="flex:0;padding:8px 12px;" onclick="shiftHeatMonth(-1)">上月</button>
+          <div id="heat-month-label" style="font-weight:700;font-size:17px;"></div>
+          <button class="btn btn-secondary" style="flex:0;padding:8px 12px;" onclick="checkHeatToday()">今日检查</button>
+        </div>
+        <div class="cal-legend">
+          <span style="color:#ff6b6b;">● 易受孕日</span>
+          <span style="color:#ff9f0a;">● 求操日</span>
+          <span style="color:#bf5af2;">● 强制发情日</span>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:4px;font-size:11px;color:var(--muted);text-align:center;">
+          <span>日</span><span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span>
+        </div>
+        <div class="cal-grid" id="heat-grid"></div>
+        <div class="card" style="margin-top:14px;border-radius:16px;" id="heat-day-detail">点选日期查看</div>
+      </div>
+    </div>
+
+
 
     <!-- 设置 -->
     <div class="page" id="page-settings">
@@ -1369,6 +1491,11 @@ let auctionParts = null;
 let auctionPublic = false;
 let albumShots = [];
 let albumTab = 'all';
+let albumView = 'years'; // years | albums | grid
+let heatMonth = new Date();
+let aucTab = 'live';
+let auctionLots = [];
+
 
 
 
@@ -1475,6 +1602,8 @@ function loadAll() {
       if(Array.isArray(d.liveHistory)) liveHistory = d.liveHistory;
       if(d.auctionParts) auctionParts = d.auctionParts;
       if(Array.isArray(d.albumShots)) albumShots = d.albumShots;
+      if(Array.isArray(d.auctionLots)) auctionLots = d.auctionLots;
+      if(d.heatCycleStart) window._heatCycleStart = d.heatCycleStart;
       if(d.meProfile) meProfile = Object.assign(meProfile, d.meProfile);
       if(d.myAvatar && !meProfile.avatarImg) meProfile.avatarImg = d.myAvatar;
       if(meProfile.avatarImg) localStorage.setItem('myAvatar', meProfile.avatarImg);
@@ -1537,7 +1666,7 @@ function saveAll() {
     cor,shame,body,obey,mainFinished,bodyData,diaries,ruleVersions,
     offlineArchives,worldBooks,apiProfiles,currentProfileId,
     conversations,contacts,pendingRequests, meProfile, memorySources,
-    offlineWordCount, diaryWordCount, rulesWordCount, trainWordCount, doneTaskKeys, appIcons, evalFavorites, mediaSkin, forumPosts, liveBg, liveHistory, auctionParts, albumShots
+    offlineWordCount, diaryWordCount, rulesWordCount, trainWordCount, doneTaskKeys, appIcons, evalFavorites, mediaSkin, forumPosts, liveBg, liveHistory, auctionParts, albumShots, auctionLots, heatCycleStart: window._heatCycleStart
   }));
   // 同步头像给旧逻辑兼容
   if(meProfile.avatarImg) localStorage.setItem('myAvatar', meProfile.avatarImg);
@@ -1602,6 +1731,7 @@ function openApp(name) {
   if(name==='live') renderLiveSetup();
   if(name==='auction') renderAuction();
   if(name==='album') renderAlbum();
+  if(name==='heat'){ renderHeatCalendar(); checkHeatToday(true); }
   if(name==='forum-detail') {}
   applyAppIcons();
 }
@@ -3444,9 +3574,9 @@ async function startGuideSession(){
 你正在指导母狗「${girl}」。${modeHint}
 地点：${place}
 必须严格参考世界书常驻条目。
-一次发布 2～4 条指令，每条要具体可执行，并夹杂羞辱。
-用短句分段，像微信。不要加前缀。`;
-  const user = `【聊天记忆】\n${memMsgs}\n\n请下达第一轮指令。地点：${place}。场景：${guideMode==='offline'?'线下':'线上'}。`;
+第一轮不要直接开做，先做「准备」：让母狗摆好姿势、报状态、确认地点与道具、心理建设等。
+准备完成后再进入正式指令。用短句分段，像微信。不要加前缀。`;
+  const user = `【聊天记忆】\n${memMsgs}\n\n请下达第一轮「准备阶段」内容（不要直接开做）。地点：${place}。场景：${guideMode==='offline'?'线下':'线上'}。`;
   const reply = await callAI(system, user, 1200);
   guideMessages.push({who:'him', text:reply});
   renderGuideMsgs(c);
@@ -3473,7 +3603,7 @@ async function sendGuideReply(){
   const recent = guideMessages.slice(-8).map(m=>(m.who==='me'?girl:'主人')+'：'+m.text).join('\n');
   const modeHint = guideMode==='offline' ? '可穿插括号动作描写。' : '保持线上文字指导。';
   const system = `你是「${c.remark||c.name}」。继续指导母狗。${modeHint}
-根据她的汇报给予评价，再发 2～3 条新指令+羞辱。短句分段。`;
+根据她的汇报给予评价。若仍在准备则继续完成准备；若已就绪则发布正式指令+羞辱。短句分段。`;
   const reply = await callAI(system, recent+'\n\n请继续下达指令。地点：'+place, 1200);
   guideMessages.push({who:'him', text:reply});
   renderGuideMsgs(c);
@@ -3709,6 +3839,8 @@ async function startForceLive(){
   if($('live-title')) $('live-title').textContent = title + ' · ' + window._livePlace;
   if($('live-bg')) $('live-bg').style.backgroundImage = liveBg?`url(${liveBg})`:'';
   if($('live-viewers')) $('live-viewers').textContent = 80+Math.floor(Math.random()*400);
+  if($('live-danmaku')) $('live-danmaku').innerHTML='';
+  if($('live-narrative')) $('live-narrative').innerHTML='';
   updateLiveBodyStatus(20);
   await pushLiveCommand(true);
   startLiveDanmakuLoop();
@@ -3730,7 +3862,7 @@ async function pushLiveCommand(first){
   const voice = $('live-voice')?.checked;
   const place = window._livePlace || '未知';
   const system = `你是调教主人，正在强制母狗在「${place}」公开直播发骚。给出下一条实时指令（掰穴/揉奶/自慰/舔手指/说下贱台词等），可夹杂羞辱。${voice?'要求她叫出声。':''}${punish?'不听话就威胁提高玩具强度并全网播报。':''}${stranger?'强调有陌生路人观众。':''}必须严格参考世界书常驻条目。只输出指令本身，短句。`;
-  const text = await callAI(system, first?'开始第一轮强制指令':'根据直播继续下指令', 200);
+  const text = await callAI(system, first?'开始第一轮强制指令':'根据直播继续下指令', 800);
   if($('live-cmd')) $('live-cmd').textContent = text;
   window._liveLog.push({type:'cmd', text});
 }
@@ -3763,25 +3895,44 @@ async function sendLiveReport(){
   window._liveLog.push({type:'me', text:v});
   window._liveRound = (window._liveRound||0)+1;
   $('live-input').value='';
-  appendLiveDm('我：'+v, 'me');
-  // AI：完成任务描写 + 本轮新弹幕
+  appendLiveDm('【上报】'+v, 'me');
   const place = window._livePlace||'未知';
   const cmd = $('live-cmd')?.textContent || '';
+  const prev = (window._liveLog||[]).slice(-6).map(x=>x.type+':'+x.text).join('\n');
+  // 不限字数：详细描写 + 全新弹幕
   const raw = await callAI(
-    `你是直播系统。地点：${place}。根据母狗刚完成的汇报，输出JSON：{"action":"第三人称描写她完成指令的样子（1-3句，羞辱物化）","danmaku":["弹幕1","弹幕2","弹幕3","弹幕4"]}。弹幕要结合当前剧情新编，不要重复套话。必须参考世界书常驻。只输出JSON。`,
-    `主人指令：${cmd}\n母狗汇报：${v}\n请生成完成描写与新弹幕。`,
-    500
+    `你是直播系统与羞辱文案写手。地点：${place}。
+根据主人指令与母狗上报，输出纯 JSON：
+{"action":"第三人称详细描写她执行指令的过程（像线下任务文笔，具体、下贱、可多段，不要限制篇幅）","danmaku":["结合本轮剧情新写的观众弹幕1","弹幕2","弹幕3","弹幕4","弹幕5","弹幕6"]}
+弹幕必须每轮全新、贴合刚才发生的事，禁止复用套话模板。必须参考世界书常驻。只输出 JSON。`,
+    `主人指令：${cmd}\n母狗上报：${v}\n近期过程：\n${prev}`,
+    4000
   );
   let data=null;
   try{ const m=raw.match(/\{[\s\S]*\}/); data=m?JSON.parse(m[0]):null; }catch(_){}
-  if(data && data.action){
-    appendLiveDm('【完成】'+data.action, 'action');
-    window._liveLog.push({type:'action', text:data.action});
+  const action = (data && data.action) ? data.action : (raw||'她照做了。');
+  appendLiveNarrative(action);
+  window._liveLog.push({type:'action', text:action});
+  const dms = (data && Array.isArray(data.danmaku) && data.danmaku.length) ? data.danmaku : [];
+  if(dms.length){ dms.forEach(d => appendLiveDm(String(d), 'dm')); }
+  else {
+    // 再要一轮纯弹幕
+    const dmRaw = await callAI('只输出6条本轮直播观众弹幕，每行一条，结合剧情新写，不要编号。','指令:'+cmd+'\n上报:'+v+'\n描写:'+action.slice(0,400), 800);
+    (dmRaw||'').split('\n').map(x=>x.trim()).filter(Boolean).slice(0,8).forEach(d=>appendLiveDm(d,'dm'));
   }
-  const dms = (data && Array.isArray(data.danmaku)) ? data.danmaku : ['好骚','继续','流水了吧'];
-  dms.forEach(d => appendLiveDm(String(d), 'dm'));
+  updateLiveBodyStatus();
   await pushLiveCommand(false);
 }
+function appendLiveNarrative(text){
+  const box = $('live-narrative'); if(!box) return;
+  const el = document.createElement('div');
+  el.className = 'live-narr';
+  el.textContent = text;
+  box.appendChild(el);
+  box.scrollTop = box.scrollHeight;
+}
+
+
 async function endLive(){
   if(!confirm('结束直播？将生成主人点评')) return;
   window._liveActive=false; window._liveForced=false;
@@ -3790,7 +3941,7 @@ async function endLive(){
   const review = await callAI(
     '你是主人。直播结束，对母狗本场表现写一段点评（羞辱+评价+下次要求），参考世界书常驻。短句分段。',
     `标题：${window._liveTitle}\n地点：${window._livePlace}\n过程摘要：\n${logText}\n请点评。`,
-    400
+    2000
   );
   const pack = {
     title: window._liveTitle||'直播回放',
@@ -3832,196 +3983,278 @@ function defaultAuctionParts(){
     {id:'whole', name:'整只母狗', tag:'打包价', price:99, comment:'可过夜可调教，服从中等', deals:3}
   ];
 }
-function renderAuction(){
-  if(!auctionParts) auctionParts = defaultAuctionParts();
-  const total = auctionParts.reduce((s,p)=>s+(p.price||0),0);
-  const box = $('auction-list'); if(!box) return;
-  box.innerHTML = `
-    <div class="auction-hero">
-      <div style="font-size:13px;color:#ff8a80;margin-bottom:6px;">今日身体估值报告</div>
-      <div class="auction-price">¥${total}</div>
-      <div style="font-size:12px;color:#aaa;margin-top:6px;">${meProfile.name||'母狗'} · 可分割出售</div>
-      <div style="display:flex;gap:8px;margin-top:12px;">
-        <button class="btn btn-secondary" style="flex:1;" onclick="auctionDailyReport()">刷新估值</button>
-        <button class="btn btn-primary" style="flex:1;" onclick="auctionPoster()">生成海报</button>
-      </div>
-    </div>
-    ${auctionPublic?'<div class="card" style="border-radius:14px;color:var(--pink);font-size:13px;">公开拍卖中：弹幕竞价已开启</div><div id="auction-bids"></div>':''}
-    ${auctionParts.map((p,i)=>`
-      <div class="auction-part">
-        <div style="display:flex;justify-content:space-between;align-items:center;">
-          <div><div style="font-weight:700;color:var(--pink);">${escapeHtml(p.name)} <span style="font-size:11px;color:var(--muted);">${escapeHtml(p.tag||'')}</span></div>
-          <div style="font-size:12px;color:var(--muted);margin-top:2px;">成交 ${p.deals||0} 次</div></div>
-          <div style="font-size:22px;font-weight:800;color:var(--red);">¥${p.price}</div>
-        </div>
-        <div style="font-size:13px;color:var(--text);margin:8px 0;line-height:1.45;">「${escapeHtml(p.comment||'')}」</div>
-        <div style="display:flex;gap:6px;">
-          <button class="btn btn-secondary" style="flex:1;padding:8px;" onclick="editAuctionPrice(${i})">改价</button>
-          <button class="btn btn-secondary" style="flex:1;padding:8px;" onclick="editAuctionComment(${i})">评语</button>
-          <button class="btn btn-danger" style="flex:1;padding:8px;" onclick="dropAuctionPrice(${i})">跌价</button>
-        </div>
-      </div>`).join('')}`;
-  if(auctionPublic) startAuctionBids();
-}
-function editAuctionPrice(i){
-  const v=prompt('新估价（元）', auctionParts[i].price); if(v===null)return;
-  auctionParts[i].price=Number(v)||0; saveAll(); renderAuction();
-}
-function editAuctionComment(i){
-  const v=prompt('主人评语', auctionParts[i].comment||''); if(v===null)return;
-  auctionParts[i].comment=v; saveAll(); renderAuction();
-}
-function dropAuctionPrice(i){
-  const reason=prompt('跌价理由（羞辱）','表现太差，半价处理'); if(reason===null)return;
-  auctionParts[i].price=Math.max(1, Math.floor(auctionParts[i].price*0.5));
-  auctionParts[i].comment = reason + ' · ' + (auctionParts[i].comment||'');
-  saveAll(); renderAuction(); alert('已跌价并广播');
-}
-async function auctionDailyReport(){
-  const raw=await callAI('给母狗身体各部位重新估价，输出JSON数组，字段name,price,comment。部位：嘴巴,奶子,小穴,菊花,舌头,整只母狗。','刷新今日估值',600);
-  try{
-    const m=raw.match(/\[[\s\S]*\]/); const arr=m?JSON.parse(m[0]):null;
-    if(Array.isArray(arr)){
-      arr.forEach(a=>{
-        const p=auctionParts.find(x=>x.name===a.name || (a.name&&x.name.includes(a.name.slice(0,2))));
-        if(p){ if(a.price!=null) p.price=Number(a.price)||p.price; if(a.comment) p.comment=a.comment; }
-      });
-      saveAll(); renderAuction(); return;
-    }
-  }catch(_){}
-  auctionParts.forEach(p=>p.price=Math.max(1,p.price+Math.floor(Math.random()*11-5)));
+// ========== 身体拍卖行（真实拍卖模拟） ==========
+function setAucTab(t){ aucTab = t; renderAuction(); }
+async function refreshAuctionLots(){
+  const raw = await callAI(
+    `你是身体拍卖行的拍卖师系统。为母狗「${meProfile.name||'凌幼薇'}」生成3件正在拍卖的拍品。
+输出 JSON 数组，每项字段：
+id, title, desc, startPrice, currentBid, bidCount, endsInSec, status("live"|"upcoming"|"ended"), category(嘴巴|奶子|小穴|菊花|舌头|整只)
+文案要像真实拍卖图录：专业口吻+羞辱物化。必须参考世界书常驻。只输出 JSON 数组。`,
+    '刷新拍品列表',
+    2000
+  );
+  let arr=[]; try{ const m=raw.match(/\[[\s\S]*\]/); arr=m?JSON.parse(m[0]):[]; }catch(_){}
+  if(Array.isArray(arr) && arr.length){
+    auctionLots = arr.map((x,i)=>({
+      id: x.id || ('lot'+Date.now()+i),
+      title: x.title || '拍品',
+      desc: x.desc || '',
+      startPrice: Number(x.startPrice)||10,
+      currentBid: Number(x.currentBid)||Number(x.startPrice)||10,
+      bidCount: Number(x.bidCount)||0,
+      endsInSec: Number(x.endsInSec)||300,
+      status: x.status || 'live',
+      category: x.category || '整只',
+      feed: []
+    }));
+  } else {
+    auctionLots = [
+      {id:'lot1', title:'嘴巴 · 精液承托权', desc:'适合口部使用的长期承租。', startPrice:5, currentBid:12, bidCount:3, endsInSec:180, status:'live', category:'嘴巴', feed:[]},
+      {id:'lot2', title:'小穴 · 当夜使用权', desc:'含清理责任归属竞买方。', startPrice:30, currentBid:30, bidCount:0, endsInSec:600, status:'live', category:'小穴', feed:[]},
+      {id:'lot3', title:'整只打包 · 48小时', desc:'含服从条款。', startPrice:99, currentBid:99, bidCount:1, endsInSec:3600, status:'upcoming', category:'整只', feed:[]}
+    ];
+  }
   saveAll(); renderAuction();
 }
-function auctionPoster(){
-  const lines = auctionParts.map(p=>`${p.name} ¥${p.price} — ${p.comment}`).join('\n');
-  const total = auctionParts.reduce((s,p)=>s+p.price,0);
-  prompt('拍卖海报文案（可复制发给主人）', `【身体拍卖海报】${meProfile.name||'母狗'}\n总价¥${total}\n${lines}`);
+function renderAuction(){
+  const box = $('auction-list'); if(!box) return;
+  if(!auctionLots.length){ box.innerHTML='<div style="text-align:center;color:var(--muted);padding:40px;">暂无拍品<br>点右上角「刷新拍品」由AI生成</div>'; return; }
+  const list = auctionLots.filter(l => (l.status||'live') === aucTab || (aucTab==='live' && !l.status));
+  box.innerHTML = (list.length?list:auctionLots).map((l,i)=>`
+    <div class="auc-lot">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+        <div>
+          <div style="font-size:11px;color:var(--muted);">${escapeHtml(l.category||'')} · ${escapeHtml(l.status||'live')}</div>
+          <div style="font-size:16px;font-weight:700;margin-top:4px;color:var(--text);">${escapeHtml(l.title)}</div>
+        </div>
+        <div class="auc-timer" id="auc-timer-${l.id}">⏱ ${l.endsInSec||0}s</div>
+      </div>
+      <div style="font-size:13px;color:var(--muted);margin:8px 0;line-height:1.5;white-space:pre-wrap;">${escapeHtml(l.desc||'')}</div>
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <div><span style="font-size:12px;color:var(--muted);">当前价</span>
+          <div style="font-size:24px;font-weight:800;color:var(--red);">¥${l.currentBid}</div>
+          <div style="font-size:11px;color:var(--muted);">${l.bidCount||0} 次出价 · 起拍 ¥${l.startPrice}</div>
+        </div>
+      </div>
+      <div class="auc-feed" id="auc-feed-${l.id}">${(l.feed||[]).map(f=>`<div>${escapeHtml(f)}</div>`).join('')}</div>
+      <div class="auc-bid-row">
+        <button class="btn btn-secondary" style="flex:1;" onclick="aucWatch('${l.id}')">跟拍</button>
+        <button class="btn btn-primary" style="flex:1;" onclick="aucBid('${l.id}')">出价</button>
+        <button class="btn btn-secondary" style="flex:1;" onclick="aucAIBid('${l.id}')">AI竞价</button>
+      </div>
+    </div>`).join('');
 }
-function auctionPublicMode(){
-  auctionPublic = !auctionPublic;
+async function aucAIBid(id){
+  const lot = auctionLots.find(x=>x.id===id); if(!lot) return;
+  const raw = await callAI(
+    '你是拍卖行出价记录生成器。输出JSON：{"bid":数字,"bidder":"匿名编号或羞辱昵称","comment":"一句出价评论"}。只输出JSON。',
+    `拍品：${lot.title}\n当前价：${lot.currentBid}\n生成下一次竞价`,
+    200
+  );
+  let d={}; try{ const m=raw.match(/\{[\s\S]*\}/); d=m?JSON.parse(m[0]):{}; }catch(_){}
+  const bid = Number(d.bid)|| (lot.currentBid + Math.ceil(Math.random()*15+1));
+  lot.currentBid = Math.max(lot.currentBid+1, bid);
+  lot.bidCount = (lot.bidCount||0)+1;
+  lot.feed = lot.feed||[];
+  lot.feed.push(`${d.bidder||('买家'+Math.floor(Math.random()*90+10))} 出价 ¥${lot.currentBid} · ${d.comment||'要了'}`);
+  saveAll(); renderAuction();
+}
+function aucBid(id){
+  const lot = auctionLots.find(x=>x.id===id); if(!lot) return;
+  const v = prompt('你的出价（元）', String(lot.currentBid+5));
+  if(v===null) return;
+  const bid = Number(v);
+  if(!(bid > lot.currentBid)){ alert('必须高于当前价'); return; }
+  lot.currentBid = bid; lot.bidCount++;
+  lot.feed = lot.feed||[]; lot.feed.push(`你 出价 ¥${bid}`);
+  saveAll(); renderAuction();
+}
+function aucWatch(id){
+  const lot = auctionLots.find(x=>x.id===id); if(!lot) return;
+  lot.feed = lot.feed||[]; lot.feed.push('你正在围观…');
   renderAuction();
 }
-function startAuctionBids(){
-  const box=$('auction-bids'); if(!box) return;
-  box.innerHTML='';
-  const insults=['5块都贵','我出3块买她嘴','奶子半价我要','这穴不值','打包带走当马桶','再降点'];
-  let n=0;
-  const t=setInterval(()=>{
-    if(!auctionPublic || n++>8){ clearInterval(t); return; }
-    const el=document.createElement('div');
-    el.className='live-dm'; el.style.margin='4px 0';
-    el.textContent = insults[Math.floor(Math.random()*insults.length)] + ' · ¥'+Math.floor(Math.random()*30+1);
-    box.appendChild(el);
-  }, 1200);
-}
 
-
-// ========== 被操相册 ==========
-function setAlbumTab(tab, btn){
-  albumTab = tab;
-  document.querySelectorAll('#page-album .forum-tab').forEach(b=>b.classList.remove('on'));
-  if(btn) btn.classList.add('on');
-  renderAlbum();
+// ========== 被操相册（苹果相册风格） ==========
+function albumNavBack(){
+  if(albumView==='grid' || albumView==='detail'){ albumView='albums'; renderAlbum(); return; }
+  if(albumView==='albums'){ albumView='years'; renderAlbum(); return; }
+  goHome();
 }
 function renderAlbum(){
-  const box = $('album-list'); if(!box) return;
-  let list = albumShots.slice();
-  if(albumTab==='creampie') list = list.filter(x=>x.cat==='creampie');
-  else if(albumTab==='toy') list = list.filter(x=>x.cat==='toy');
-  else if(albumTab==='finger') list = list.filter(x=>x.cat==='finger');
-  else if(albumTab==='public') list = list.filter(x=>x.cat==='public');
-  else if(albumTab==='partner'){
-    const groups={};
-    list.forEach(x=>{ const k=x.partner||'未知'; (groups[k]=groups[k]||[]).push(x); });
-    box.innerHTML = Object.keys(groups).map(k=>`
-      <div style="font-size:13px;color:var(--pink);font-weight:600;margin:10px 0 6px;">${escapeHtml(k)}</div>
-      ${groups[k].map((x,i)=>albumCardHtml(x)).join('')}
-    `).join('') || '<div style="text-align:center;color:var(--muted);padding:40px;">暂无</div>';
-    bindAlbumCards(); return;
-  } else if(albumTab==='date'){
-    const groups={};
-    list.forEach(x=>{ const k=new Date(x.time).toLocaleDateString(); (groups[k]=groups[k]||[]).push(x); });
-    box.innerHTML = Object.keys(groups).sort().reverse().map(k=>`
-      <div style="font-size:13px;color:var(--muted);font-weight:600;margin:10px 0 6px;">${k}</div>
-      ${groups[k].map(x=>albumCardHtml(x)).join('')}
-    `).join('') || '<div style="text-align:center;color:var(--muted);padding:40px;">暂无</div>';
-    bindAlbumCards(); return;
+  const box=$('album-list'); if(!box) return;
+  const title=$('alb-title'); const back=$('alb-back');
+  if(albumView==='years'){
+    if(title) title.textContent='相册';
+    if(back) back.textContent='‹ 桌面';
+    const years={};
+    albumShots.forEach(x=>{ const y=new Date(x.time).getFullYear(); (years[y]=years[y]||[]).push(x); });
+    const ys = Object.keys(years).sort((a,b)=>b-a);
+    box.innerHTML = `
+      <div style="font-size:28px;font-weight:700;margin-bottom:12px;">照片</div>
+      <div class="alb-years">${ys.map(y=>`<button class="alb-year-chip" onclick="albumOpenYear(${y})">${y}</button>`).join('')||'<span style="color:var(--muted)">还没有照片</span>'}</div>
+      <div style="font-size:13px;color:var(--muted);margin:16px 0 8px;">相簿</div>
+      <div class="card" style="border-radius:14px;cursor:pointer;" onclick="albumView='albums';renderAlbum();">
+        <div style="font-weight:600;">全部被操记录</div>
+        <div style="font-size:12px;color:var(--muted);">${albumShots.length} 张</div>
+      </div>
+      <div class="card" style="border-radius:14px;cursor:pointer;" onclick="albumView='albums';window._albFilter='partner';renderAlbum();">
+        <div style="font-weight:600;">按对象</div>
+        <div style="font-size:12px;color:var(--muted);">分类浏览</div>
+      </div>
+      <button class="action-btn blue" style="width:100%;margin-top:12px;" onclick="genAlbumShot()">从聊天生成新照片</button>
+    `;
+    return;
   }
-  box.innerHTML = list.map(x=>albumCardHtml(x)).join('') || '<div style="text-align:center;color:var(--muted);padding:40px;">还没有被操记录<br>点右上角 AI生成</div>';
-  bindAlbumCards();
-}
-function albumCardHtml(x){
-  const catMap={creampie:'内射后',toy:'玩具撑开',finger:'手指高潮',public:'当众玩弄'};
-  return `<div class="card album-card" data-id="${x.id}" style="border-radius:16px;cursor:pointer;">
-    <div style="height:120px;border-radius:12px;background:linear-gradient(145deg,#2a1520,#1a0a12);display:flex;align-items:center;justify-content:center;color:#ff8a9a;font-size:13px;text-align:center;padding:12px;line-height:1.4;margin-bottom:8px;${x.img?`background-image:url(${x.img});background-size:cover;background-position:center;color:transparent;`:''}">${x.img?'':escapeHtml((x.caption||'').slice(0,60))}</div>
-    <div style="font-size:12px;color:var(--pink);margin-bottom:4px;">${escapeHtml(catMap[x.cat]||x.cat||'')} · ${escapeHtml(x.partner||'')}</div>
-    <div style="font-size:13.5px;font-weight:600;color:var(--text);">${escapeHtml(x.rating||'')}</div>
-    <div style="font-size:11px;color:var(--muted);margin-top:4px;">${new Date(x.time).toLocaleString()}</div>
-  </div>`;
-}
-function bindAlbumCards(){
-  document.querySelectorAll('.album-card').forEach(el=>{
+  if(albumView==='albums'){
+    if(title) title.textContent='相簿';
+    if(back) back.onclick=()=>{ albumView='years'; renderAlbum(); };
+    if(back) back.textContent='‹ 照片';
+    if(window._albFilter==='partner'){
+      const g={}; albumShots.forEach(x=>{ const k=x.partner||'未知'; (g[k]=g[k]||[]).push(x); });
+      box.innerHTML = Object.keys(g).map(k=>`
+        <div class="card" style="border-radius:14px;cursor:pointer;" onclick="window._albPartner='${escapeHtml(k)}';albumView='grid';renderAlbum();">
+          <div style="font-weight:600;">${escapeHtml(k)}</div>
+          <div style="font-size:12px;color:var(--muted);">${g[k].length} 张</div>
+        </div>`).join('')||'<div style="color:var(--muted);padding:20px;">空</div>';
+      return;
+    }
+    box.innerHTML = `<div class="card" style="border-radius:14px;cursor:pointer;" onclick="window._albPartner=null;albumView='grid';renderAlbum();">
+      <div style="font-weight:600;">全部</div><div style="font-size:12px;color:var(--muted);">${albumShots.length} 张</div></div>`;
+    return;
+  }
+  // grid
+  if(title) title.textContent = window._albPartner || '全部';
+  if(back){ back.textContent='‹ 相簿'; back.onclick=()=>{ albumView='albums'; renderAlbum(); }; }
+  let list = albumShots.slice();
+  if(window._albPartner) list = list.filter(x=>x.partner===window._albPartner);
+  if(window._albYear) list = list.filter(x=>new Date(x.time).getFullYear()===window._albYear);
+  box.innerHTML = `<div class="alb-grid">${list.map(x=>`
+    <div class="alb-cell" data-id="${x.id}">
+      <div class="cap">${escapeHtml((x.rating||x.caption||'').slice(0,28))}</div>
+    </div>`).join('')}</div>` || '<div style="color:var(--muted);padding:40px;text-align:center;">空相簿</div>';
+  box.querySelectorAll('.alb-cell').forEach(el=>{
     el.onclick = ()=>{
-      if(window._albumEdit){ el.classList.toggle('msel'); el.style.outline = el.classList.contains('msel')?'2px solid var(--blue)':''; return; }
+      if(window._albumEdit){ el.classList.toggle('msel'); return; }
+      openAlbDetail(el.dataset.id);
     };
-    el.ondblclick = (ev)=>{
-      ev.preventDefault();
-      window._albumEdit = true;
-      $('album-edit-bar')?.classList.add('show');
-      el.classList.add('msel'); el.style.outline='2px solid var(--blue)';
-    };
+    el.ondblclick = (ev)=>{ ev.preventDefault(); window._albumEdit=true; $('album-edit-bar')?.classList.add('show'); el.classList.add('msel'); };
   });
 }
-function exitAlbumEdit(){
-  window._albumEdit=false;
-  $('album-edit-bar')?.classList.remove('show');
-  document.querySelectorAll('.album-card.msel').forEach(el=>{ el.classList.remove('msel'); el.style.outline=''; });
+function albumOpenYear(y){ window._albYear=y; window._albPartner=null; albumView='grid'; renderAlbum(); }
+function openAlbDetail(id){
+  const x = albumShots.find(a=>a.id===id); if(!x) return;
+  const sheet=$('alb-detail'); const body=$('alb-detail-body');
+  if(!sheet||!body) return;
+  sheet.classList.add('show');
+  body.innerHTML = `
+    <div style="min-height:200px;border-radius:16px;background:linear-gradient(145deg,#2a1520,#12080c);padding:16px;color:#ffd0da;line-height:1.6;white-space:pre-wrap;margin-bottom:12px;">${escapeHtml(x.caption||'')}</div>
+    <div style="color:#fff;font-size:15px;font-weight:600;margin-bottom:6px;">${escapeHtml(x.rating||'')}</div>
+    <div style="color:#aaa;font-size:13px;">${escapeHtml(x.partner||'')} · ${new Date(x.time).toLocaleString()}</div>
+  `;
 }
+function closeAlbDetail(){ $('alb-detail')?.classList.remove('show'); }
+function exitAlbumEdit(){ window._albumEdit=false; $('album-edit-bar')?.classList.remove('show'); document.querySelectorAll('.alb-cell.msel').forEach(el=>el.classList.remove('msel')); }
 function deleteAlbumSelected(){
-  const ids = [...document.querySelectorAll('.album-card.msel')].map(el=>el.dataset.id);
+  const ids=[...document.querySelectorAll('.alb-cell.msel')].map(el=>el.dataset.id);
   if(!ids.length){ alert('请先选择'); return; }
-  if(!confirm('删除选中的 '+ids.length+' 张？')) return;
-  albumShots = albumShots.filter(x=>!ids.includes(x.id));
-  saveAll(); exitAlbumEdit(); renderAlbum();
+  if(!confirm('删除 '+ids.length+' 项？')) return;
+  albumShots=albumShots.filter(x=>!ids.includes(x.id)); saveAll(); exitAlbumEdit(); renderAlbum();
 }
 async function genAlbumShot(){
   const partners = Object.entries(conversations).map(([id,c])=>({id, name:c.remark||c.name||id}));
   if(!partners.length){ alert('请先有聊天角色'); return; }
   const names = partners.map((p,i)=>`${i+1}.${p.name}`).join('\n');
-  const pick = prompt('选择做爱对象（输入序号）:\n'+names, '1');
-  if(pick===null) return;
-  const idx = parseInt(pick,10)-1;
-  const partner = partners[idx] || partners[0];
+  const pick = prompt('选择对象（序号）:\n'+names, '1'); if(pick===null) return;
+  const partner = partners[parseInt(pick,10)-1] || partners[0];
   const c = conversations[partner.id];
-  const mem = (c.messages||[]).slice(-15).map(m=>{
+  const mem = (c.messages||[]).slice(-20).map(m=>{
     const who=m.who==='me'?(meProfile.name||'凌幼薇'):(c.remark||c.name);
-    return who+'：'+(typeof m.text==='string'?m.text.slice(0,80):'');
+    return who+'：'+(typeof m.text==='string'?m.text.slice(0,100):'');
   }).join('\n');
-  const catChoices = 'creampie=被主人内射后 / toy=玩具撑开 / finger=手指扣到高潮 / public=当众玩弄';
-  const catIn = prompt('分类（输入英文key）\n'+catChoices, 'creampie') || 'creampie';
-  const cat = ['creampie','toy','finger','public'].includes(catIn)?catIn:'creampie';
-  const n = albumShots.filter(x=>x.partner===partner.name).length + 1;
+  const n = albumShots.filter(x=>x.partner===partner.name).length+1;
   const raw = await callAI(
-    `你是调教记录助手。根据聊天记忆，生成一张「被插入瞬间」的文字写真描述。输出JSON：{"caption":"画面描述（2-4句，具体下贱）","rating":"强制评价，如第${n}次被当成肉便器使用 / 精液还在往外流"}。必须参考世界书常驻。只输出JSON。`,
-    `对象：${partner.name}\n分类：${cat}\n聊天记忆：\n${mem}\n这是与该对象的第${n}次记录。`,
-    500
+    `根据聊天记忆生成一张「被插入瞬间」相册条目。输出JSON：{"caption":"详细画面描写，可多段","rating":"评价语，如第${n}次被当成肉便器使用","cat":"creampie|toy|finger|public"}。必须参考世界书常驻。不限字数。只输出JSON。`,
+    `对象：${partner.name}\n记忆：\n${mem}`,
+    2000
   );
-  let data={}; try{ const m=raw.match(/\{[\s\S]*\}/); data=m?JSON.parse(m[0]):{}; }catch(_){}
+  let data={}; try{ const mm=raw.match(/\{[\s\S]*\}/); data=mm?JSON.parse(mm[0]):{}; }catch(_){}
   albumShots.unshift({
-    id: 'alb'+Date.now(),
-    partner: partner.name,
-    partnerId: partner.id,
-    cat,
-    caption: data.caption || '被插入的瞬间，腿在抖。',
-    rating: data.rating || `第${n}次被当成肉便器使用`,
-    time: Date.now(),
-    img: ''
+    id:'alb'+Date.now(), partner:partner.name, partnerId:partner.id,
+    cat: data.cat||'creampie', caption: data.caption||'被插入的瞬间。',
+    rating: data.rating||`第${n}次被当成肉便器使用`, time: Date.now(), img:''
   });
-  saveAll();
-  renderAlbum();
-  alert('已生成并加入相册（不会清除旧记录）');
+  saveAll(); albumView='grid'; window._albPartner=partner.name; renderAlbum();
+  alert('已加入相册');
 }
 
+// ========== 发情日历 ==========
+function heatCycleDay(date){
+  // 28天周期，从 heatCycleStart
+  if(!window._heatCycleStart) window._heatCycleStart = Date.now() - 7*86400000;
+  const start = new Date(window._heatCycleStart); start.setHours(0,0,0,0);
+  const d = new Date(date); d.setHours(0,0,0,0);
+  const diff = Math.floor((d - start)/86400000);
+  const day = ((diff % 28) + 28) % 28; // 0-27
+  // 易受孕约 11-16，求操 18-22，强制发情 13-15 与 20
+  let type = null;
+  if(day>=11 && day<=16) type='fertile';
+  if(day>=18 && day<=22) type = type || 'want';
+  if(day===13 || day===14 || day===15 || day===20) type='force';
+  return { day, type };
+}
+function shiftHeatMonth(delta){
+  heatMonth = new Date(heatMonth.getFullYear(), heatMonth.getMonth()+delta, 1);
+  renderHeatCalendar();
+}
+function renderHeatCalendar(){
+  const label=$('heat-month-label'); const grid=$('heat-grid');
+  if(!grid) return;
+  const y=heatMonth.getFullYear(), m=heatMonth.getMonth();
+  if(label) label.textContent = `${y}年${m+1}月`;
+  const first = new Date(y,m,1);
+  const startPad = first.getDay();
+  const days = new Date(y,m+1,0).getDate();
+  const today = new Date(); today.setHours(0,0,0,0);
+  let html='';
+  for(let i=0;i<startPad;i++) html+='<div></div>';
+  for(let d=1;d<=days;d++){
+    const dt = new Date(y,m,d);
+    const {type} = heatCycleDay(dt);
+    const isToday = dt.getTime()===today.getTime();
+    const cls = ['cal-cell', type||'', isToday?'today':''].filter(Boolean).join(' ');
+    const mark = type==='fertile'?'易受孕': type==='want'?'求操': type==='force'?'强制':'';
+    html += `<div class="${cls}" onclick="selectHeatDay(${y},${m},${d})"><div>${d}</div>${mark?`<div class="mark">${mark}</div>`:''}</div>`;
+  }
+  grid.innerHTML = html;
+}
+function selectHeatDay(y,m,d){
+  const dt = new Date(y,m,d);
+  const {type, day} = heatCycleDay(dt);
+  const box=$('heat-day-detail'); if(!box) return;
+  const map={fertile:'易受孕日：身体更容易被标记。主人可能会要求无套汇报。', want:'求操日：下身发空虚，适合强制求操话术。', force:'强制发情日：系统将催促你向主人汇报状态。'};
+  box.innerHTML = `<div style="font-weight:700;margin-bottom:6px;">${y}-${m+1}-${d} · 周期第${day+1}天</div>
+    <div style="font-size:13.5px;line-height:1.5;color:var(--text);">${type?map[type]:'普通日。保持湿润待命即可。'}</div>
+    ${type?`<button class="action-btn red" style="width:100%;margin-top:10px;" onclick="heatForceReport('${type}')">向主人汇报身体</button>`:''}`;
+}
+async function checkHeatToday(silent){
+  const t=new Date(); const {type}=heatCycleDay(t);
+  if(!type){ if(!silent) alert('今天不是特殊发情标记日'); return; }
+  if(silent && sessionStorage.getItem('heatPop'+t.toDateString())) return;
+  sessionStorage.setItem('heatPop'+t.toDateString(), '1');
+  const map={fertile:'【易受孕日提醒】今天是危险日，主人的精液会更『有用』。立刻汇报你的小穴状态。', want:'【求操日提醒】空虚的母狗不配夹腿。打开聊天向主人求操。', force:'【强制发情日】系统要求你立刻向主人汇报：湿润度、乳头、是否在流水。'};
+  alert(map[type]||'发情提醒');
+  if(confirm('是否现在生成汇报文案？')) heatForceReport(type);
+}
+async function heatForceReport(type){
+  const raw = await callAI(
+    '你是发情日历系统，替母狗写一段向主人汇报身体状态的话，口语短句，下贱诚实。参考世界书常驻。不要限制篇幅。',
+    `今日类型：${type}。以${meProfile.name||'凌幼薇'}口吻汇报。`,
+    1000
+  );
+  prompt('可复制发给主人：', raw||'');
+}
 
 function exportData(){
   // 全量备份：API、聊天、世界书、任务、日记、论坛、美化、收藏等一切本地数据
@@ -4035,7 +4268,8 @@ function exportData(){
     meProfile, memorySources,
     offlineWordCount, diaryWordCount, rulesWordCount, trainWordCount,
     doneTaskKeys, appIcons, evalFavorites, mediaSkin, forumPosts,
-    liveBg, liveHistory, auctionParts, albumShots,
+    liveBg, liveHistory, auctionParts, albumShots, auctionLots,
+    heatCycleStart: window._heatCycleStart,
     uiTheme, guideMode,
     wallpaper: localStorage.getItem('wallpaper') || '',
     myAvatar: meProfile.avatarImg || '',
@@ -4066,6 +4300,8 @@ function doImport(e){
       if(Array.isArray(d.liveHistory)) liveHistory = d.liveHistory;
       if(d.auctionParts) auctionParts = d.auctionParts;
       if(Array.isArray(d.albumShots)) albumShots = d.albumShots;
+      if(Array.isArray(d.auctionLots)) auctionLots = d.auctionLots;
+      if(d.heatCycleStart) window._heatCycleStart = d.heatCycleStart;
       if(Array.isArray(d.doneTaskKeys)) doneTaskKeys = d.doneTaskKeys;
       if(d.appIcons) appIcons = d.appIcons;
       if(Array.isArray(d.evalFavorites)) evalFavorites = d.evalFavorites;
