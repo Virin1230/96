@@ -171,9 +171,9 @@
   .b-redpack, .b-transfer {
     width: 210px; border-radius: 10px; overflow: hidden; font-size: 13px;
   }
-  .b-redpack-top { background: linear-gradient(135deg,#f54b4b,#e03b3b); color: #ffe9b0; padding: 12px; }
+  .b-redpack-top { background: var(--redpack-bg-img, linear-gradient(135deg, var(--redpack-from), var(--redpack-to))); background-size:cover; background-position:center; color: var(--redpack-text); padding: 12px; }
   .b-redpack-bot { background: #fff8e8; color: #996; padding: 6px 12px; font-size: 11px; }
-  .b-transfer-top { background: linear-gradient(135deg,#f5a623,#f7c948); color: #fff; padding: 12px; }
+  .b-transfer-top { background: var(--transfer-bg-img, linear-gradient(135deg, var(--transfer-from), var(--transfer-to))); background-size:cover; background-position:center; color: var(--transfer-text); padding: 12px; }
   .b-transfer-bot { background: #fffaf0; color: #996; padding: 6px 12px; font-size: 11px; }
   [data-theme="dark"] .b-redpack-bot, [data-theme="dark"] .b-transfer-bot { background: #2a2218; color: #c9a86c; }
 
@@ -460,6 +460,68 @@
     padding: 8px; border-radius: 8px; font-size: 13px; cursor: pointer; font-weight: 500;
   }
   .seg button.active { background: var(--card); color: var(--text); box-shadow: 0 1px 3px rgba(0,0,0,.12); }
+
+  :root {
+    --redpack-from: #f54b4b;
+    --redpack-to: #e03b3b;
+    --redpack-text: #ffe9b0;
+    --transfer-from: #f5a623;
+    --transfer-to: #f7c948;
+    --transfer-text: #ffffff;
+  }
+  .b-redpack-top {
+    background: var(--redpack-bg-img, linear-gradient(135deg, var(--redpack-from), var(--redpack-to)));
+    background-size: cover; background-position: center;
+    color: var(--redpack-text); padding: 12px;
+  }
+  .b-transfer-top {
+    background: var(--transfer-bg-img, linear-gradient(135deg, var(--transfer-from), var(--transfer-to)));
+    background-size: cover; background-position: center;
+    color: var(--transfer-text); padding: 12px;
+  }
+  .b-voice { cursor: pointer; user-select: none; }
+  .b-voice.playing .b-voice-bars i { animation: voicePulse .6s ease infinite alternate; }
+  @keyframes voicePulse { from { opacity: .4; } to { opacity: 1; } }
+  .b-text-img {
+    background: var(--card2); border-radius: 12px; padding: 10px 12px;
+    font-size: 13px; color: var(--muted); border: .5px dashed var(--border);
+    max-width: 200px; line-height: 1.4;
+  }
+  .b-text-img::before { content: '🖼️ '; }
+  .icon-btn {
+    width: 36px; height: 36px; border-radius: 50%; border: none; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; font-size: 18px;
+    flex: 0 0 auto; background: var(--input); color: var(--text);
+  }
+  #chat-reply.icon-btn {
+    opacity: .45; border: 1px solid var(--green); background: transparent; color: var(--green);
+    font-size: 18px; width: 36px; min-width: 36px; height: 36px; border-radius: 50%;
+    padding: 0; display: flex; align-items: center; justify-content: center; font-weight: 600;
+  }
+  #chat-reply.icon-btn.ready { opacity: 1; background: var(--green); color: #fff; }
+  #chat-send.icon-btn {
+    background: var(--green); color: #fff; font-size: 18px; width: 36px; min-width: 36px;
+    height: 36px; border-radius: 50%; padding: 0; display: flex; align-items: center; justify-content: center; font-weight: 700;
+  }
+  .guide-setup-card {
+    background: var(--card); border-radius: 18px; padding: 16px;
+    margin-bottom: 12px; border: .5px solid var(--border);
+    box-shadow: 0 2px 12px rgba(0,0,0,.06);
+  }
+  .guide-setup-card h4 { font-size: 13px; color: var(--muted); font-weight: 600; margin-bottom: 10px; letter-spacing: -.2px; }
+  .forum-post {
+    background: var(--card); border-radius: 16px; padding: 14px; margin-bottom: 12px;
+    border: .5px solid var(--border);
+  }
+  .forum-tag {
+    display: inline-block; font-size: 10px; padding: 2px 8px; border-radius: 8px;
+    background: rgba(255,45,85,.12); color: var(--pink); margin-right: 4px; font-weight: 600;
+  }
+  .forum-meta { font-size: 11px; color: var(--muted); margin-top: 8px; }
+  .forum-compose {
+    background: var(--card); border-radius: 16px; padding: 12px; margin-bottom: 12px;
+    border: .5px solid var(--border);
+  }
 </style>
 </head>
 <body data-theme="dark">
@@ -481,6 +543,7 @@
         <div class="app" onclick="openApp('rules')"><div class="app-icon" id="icon-rules" style="background:linear-gradient(180deg,#30d158,#248a3d);">📋</div><div class="app-name">守则</div></div>
         <div class="app" onclick="openApp('me')"><div class="app-icon" id="icon-me" style="background:linear-gradient(180deg,#ff8a80,#ff375f);">🐶</div><div class="app-name">母狗</div></div>
         <div class="app" onclick="openApp('guide')"><div class="app-icon" id="icon-guide" style="background:linear-gradient(180deg,#64d2ff,#0a84ff);">🎀</div><div class="app-name">小狗乖乖</div></div>
+        <div class="app" onclick="openApp('forum')"><div class="app-icon" id="icon-forum" style="background:linear-gradient(180deg,#ff375f,#ff9f0a);">🔥</div><div class="app-name">约炮论坛</div></div>
         <div class="app" onclick="openApp('beautify')"><div class="app-icon" id="icon-beautify" style="background:linear-gradient(180deg,#bf5af2,#5e5ce6);">✨</div><div class="app-name">美化</div></div>
         <div class="app" onclick="openApp('settings')"><div class="app-icon" id="icon-settings" style="background:linear-gradient(180deg,#8e8e93,#636366);">⚙️</div><div class="app-name">设置</div></div>
       </div>
@@ -518,10 +581,10 @@
         <button class="chat-tool-btn" onclick="sendMediaMsg('transfer')"><span>💸</span>转账</button>
       </div>
       <div class="input-bar" id="input-bar">
-        <button id="chat-reply" title="让对方回复" onclick="requestAIReply()" disabled>响应</button>
+        <button id="chat-reply" class="icon-btn" title="响应" onclick="requestAIReply()" disabled>↻</button>
         <button type="button" onclick="toggleChatTools()" style="border:0;background:var(--input);color:var(--text);width:36px;height:36px;border-radius:50%;font-size:18px;cursor:pointer;flex:0 0 auto;">+</button>
         <input type="text" id="chat-input" placeholder="输入消息…">
-        <button id="chat-send">发送</button>
+        <button id="chat-send" class="icon-btn" title="发送">↑</button>
       </div>
     </div>
 
@@ -705,6 +768,7 @@
           <button class="btn btn-primary" style="flex:0;padding:0 14px;" onclick="submitStoryAction()">发送</button>
         </div>
         <div style="display:flex;gap:8px;">
+          <button class="btn btn-secondary" style="flex:1;" onclick="refreshStoryOptions()">换一批选项</button>
           <button class="btn btn-secondary" style="flex:1;" onclick="continueStory()">直接续写</button>
           <button class="btn btn-secondary" style="flex:0;padding:0 14px;" onclick="saveCurrentStory()">存档</button>
         </div>
@@ -821,9 +885,30 @@
       <div class="nav">
         <button class="nav-back" onclick="goHome()">‹ 桌面</button>
         <div class="nav-title">美化</div>
-        <div style="width:44px"></div>
+        <button class="nav-right" onclick="saveMediaSkin()">保存</button>
       </div>
-      <div class="scroll" style="padding:12px;" id="beautify-list"></div>
+      <div class="scroll" style="padding:12px;">
+        <div class="card">
+          <h4>红包样式</h4>
+          <label style="font-size:12px;color:var(--muted);">主色</label>
+          <input type="color" id="skin-rp1" value="#e03b3b" style="width:100%;height:36px;border:none;margin:4px 0 8px;">
+          <label style="font-size:12px;color:var(--muted);">渐变色</label>
+          <input type="color" id="skin-rp2" value="#f54b4b" style="width:100%;height:36px;border:none;margin:4px 0 8px;">
+          <button class="btn btn-secondary" style="width:100%;margin-bottom:6px;" onclick="pickSkinImg('redpack')">插入红包背景图</button>
+          <button class="btn btn-secondary" style="width:100%;" onclick="clearSkinImg('redpack')">清除红包图</button>
+        </div>
+        <div class="card">
+          <h4>转账样式</h4>
+          <label style="font-size:12px;color:var(--muted);">主色</label>
+          <input type="color" id="skin-tf1" value="#f5a623" style="width:100%;height:36px;border:none;margin:4px 0 8px;">
+          <label style="font-size:12px;color:var(--muted);">渐变色</label>
+          <input type="color" id="skin-tf2" value="#f7c948" style="width:100%;height:36px;border:none;margin:4px 0 8px;">
+          <button class="btn btn-secondary" style="width:100%;margin-bottom:6px;" onclick="pickSkinImg('transfer')">插入转账背景图</button>
+          <button class="btn btn-secondary" style="width:100%;" onclick="clearSkinImg('transfer')">清除转账图</button>
+        </div>
+        <div style="font-size:13px;font-weight:600;margin:8px 0;color:var(--text);">桌面图标</div>
+        <div id="beautify-list"></div>
+      </div>
     </div>
 
     <!-- 小狗乖乖 -->
@@ -833,9 +918,9 @@
         <div class="nav-title">小狗乖乖</div>
         <button class="nav-right" onclick="startGuideSession()">开始</button>
       </div>
-      <div class="scroll" style="padding:12px;" id="guide-setup">
-        <div class="card">
-          <h4>今天的主人</h4>
+      <div class="scroll" style="padding:16px;" id="guide-setup">
+        <div class="card" style="border-radius:18px;padding:16px;box-shadow:var(--shadow);">
+          <h4 style="margin-bottom:4px;">今天的主人</h4>
           <select id="guide-master" style="width:100%;background:var(--input);border:none;border-radius:10px;padding:10px;color:var(--text);font-size:16px;margin-top:6px;"></select>
         </div>
         <div class="card">
@@ -867,7 +952,7 @@
         <div class="msg-list" id="guide-msg-list" style="flex:1;"></div>
         <div class="input-bar show" style="display:flex;">
           <input type="text" id="guide-input" placeholder="汇报完成情况…">
-          <button id="chat-send" onclick="sendGuideReply()">发送</button>
+          <button class="icon-btn" style="background:var(--green);color:#fff;width:36px;min-width:36px;height:36px;border-radius:50%;border:none;font-size:18px;font-weight:700;" onclick="sendGuideReply()">↑</button>
         </div>
       </div>
     </div>
@@ -880,6 +965,31 @@
         <div style="width:44px"></div>
       </div>
       <div class="scroll" style="padding:12px;" id="fav-list"></div>
+    </div>
+
+
+    <!-- 约炮论坛 -->
+    <div class="page" id="page-forum">
+      <div class="nav">
+        <button class="nav-back" onclick="goHome()">‹ 桌面</button>
+        <div class="nav-title">约炮论坛</div>
+        <button class="nav-right" onclick="newForumPost()">发帖</button>
+      </div>
+      <div style="padding:8px 12px;display:flex;gap:8px;border-bottom:.5px solid var(--border);background:var(--nav);">
+        <button class="btn btn-secondary" style="flex:1;padding:8px;" onclick="refreshForum('hot')">热门</button>
+        <button class="btn btn-secondary" style="flex:1;padding:8px;" onclick="refreshForum('new')">最新</button>
+        <button class="btn btn-secondary" style="flex:1;padding:8px;" onclick="refreshForum('nearby')">附近</button>
+      </div>
+      <div class="scroll" style="padding:12px;" id="forum-list"></div>
+    </div>
+
+    <div class="page" id="page-forum-detail">
+      <div class="nav">
+        <button class="nav-back" onclick="openApp('forum')">‹ 返回</button>
+        <div class="nav-title">帖子</div>
+        <button class="nav-right" onclick="forumReply()">回复</button>
+      </div>
+      <div class="scroll" style="padding:12px;" id="forum-detail"></div>
     </div>
 
     <!-- 设置 -->
@@ -1000,6 +1110,16 @@ let evalFavorites = []; // 收藏的主人评价
 let guideMode = 'offline';
 let guideMessages = [];
 let chatFxTemp = 'normal';
+let mediaSkin = {
+  redpackColor: '#e03b3b',
+  redpackColor2: '#f54b4b',
+  transferColor: '#f5a623',
+  transferColor2: '#f7c948',
+  redpackImg: '',
+  transferImg: ''
+};
+let forumPosts = [];
+
 
 // 用户自己（母狗）的资料，会注入到所有聊天
 let meProfile = {
@@ -1097,6 +1217,8 @@ function loadAll() {
       if(Array.isArray(d.doneTaskKeys)) doneTaskKeys = d.doneTaskKeys;
       if(d.appIcons) appIcons = d.appIcons;
       if(Array.isArray(d.evalFavorites)) evalFavorites = d.evalFavorites;
+      if(d.mediaSkin) mediaSkin = Object.assign(mediaSkin, d.mediaSkin);
+      if(Array.isArray(d.forumPosts)) forumPosts = d.forumPosts;
       if(d.meProfile) meProfile = Object.assign(meProfile, d.meProfile);
       if(d.myAvatar && !meProfile.avatarImg) meProfile.avatarImg = d.myAvatar;
       if(meProfile.avatarImg) localStorage.setItem('myAvatar', meProfile.avatarImg);
@@ -1159,7 +1281,7 @@ function saveAll() {
     cor,shame,body,obey,mainFinished,bodyData,diaries,ruleVersions,
     offlineArchives,worldBooks,apiProfiles,currentProfileId,
     conversations,contacts,pendingRequests, meProfile, memorySources,
-    offlineWordCount, diaryWordCount, rulesWordCount, trainWordCount, doneTaskKeys, appIcons, evalFavorites
+    offlineWordCount, diaryWordCount, rulesWordCount, trainWordCount, doneTaskKeys, appIcons, evalFavorites, mediaSkin, forumPosts
   }));
   // 同步头像给旧逻辑兼容
   if(meProfile.avatarImg) localStorage.setItem('myAvatar', meProfile.avatarImg);
@@ -1209,9 +1331,11 @@ function openApp(name) {
   }
   if(name==='settings'){ renderApiSelect(); loadCurrentProfile(); }
   if(name==='me') loadMePage();
-  if(name==='beautify') renderBeautify();
+  if(name==='beautify'){ loadMediaSkinUI(); renderBeautify(); }
   if(name==='guide'){ renderGuideSetup(); $('guide-setup').style.display='block'; const gc=$('page-guide-chat'); if(gc) gc.style.display='none'; }
   if(name==='favs') renderFavs();
+  if(name==='forum') renderForum();
+  if(name==='forum-detail') {}
   applyAppIcons();
 }
 
@@ -1631,17 +1755,27 @@ function renderMessages(){
     const quote=m.replyTo?`<div class="quote">回复：${escapeHtml(m.replyTo.text||'')}</div>`:'';
     let body = '';
     if(m.type==='image'){
-      body = `${quote}<div class="b-media"><img src="${m.text}" alt="图片"></div>`;
+      // text image or real image
+      let d=null; try{ if(m.text && m.text[0]==='{') d=JSON.parse(m.text);}catch(_){}
+      if(d && d.mode==='text'){
+        body = `${quote}<div class="b-media" style="padding:14px;background:linear-gradient(145deg,#2a2a2e,#1a1a1c);color:#eee;min-width:140px;border-radius:12px;font-size:14px;line-height:1.45;white-space:pre-wrap;">${escapeHtml(d.caption||'')}</div>`;
+      } else {
+        const src = d && d.src ? d.src : m.text;
+        body = `${quote}<div class="b-media"><img src="${src}" alt="图片"></div>`;
+      }
     } else if(m.type==='voice'){
-      const sec = parseInt(m.text,10)||3;
+      let d={sec:3, transcript:'', audio:''}; try{ if(m.text && m.text[0]==='{') d=Object.assign(d, JSON.parse(m.text)); else d.sec=parseInt(m.text,10)||3;}catch(_){ d.sec=parseInt(m.text,10)||3; }
       const bars = [8,14,10,16,9,13,7].map(h=>`<i style="height:${h}px"></i>`).join('');
-      body = `${quote}<div class="b-voice"><div class="b-voice-bars">${bars}</div><span>${sec}"</span></div>`;
+      const showText = m._showText && d.transcript ? `<div style="font-size:12px;margin-top:6px;opacity:.85;">${escapeHtml(d.transcript)}</div>` : '';
+      body = `${quote}<div class="b-voice" data-voice-idx="${i}" style="cursor:pointer;"><div class="b-voice-bars">${bars}</div><span>${d.sec||3}"</span></div>${showText}`;
     } else if(m.type==='redpack'){
       let d={amount:'0.00',blessing:'恭喜发财'}; try{d=JSON.parse(m.text);}catch(_){}
-      body = `${quote}<div class="b-redpack"><div class="b-redpack-top">🧧 ${escapeHtml(d.blessing||'恭喜发财')}<div style="font-size:18px;margin-top:6px;color:#fff;">¥${escapeHtml(String(d.amount))}</div></div><div class="b-redpack-bot">微信红包</div></div>`;
+      const bg = mediaSkin.redpackImg ? `background-image:url(${mediaSkin.redpackImg});background-size:cover;` : `background:linear-gradient(135deg,${mediaSkin.redpackColor2||'#f54b4b'},${mediaSkin.redpackColor||'#e03b3b'});`;
+      body = `${quote}<div class="b-redpack"><div class="b-redpack-top" style="${bg}color:#ffe9b0;">🧧 ${escapeHtml(d.blessing||'恭喜发财')}<div style="font-size:18px;margin-top:6px;color:#fff;">¥${escapeHtml(String(d.amount))}</div></div><div class="b-redpack-bot">微信红包</div></div>`;
     } else if(m.type==='transfer'){
       let d={amount:'0.00',note:'转账给你'}; try{d=JSON.parse(m.text);}catch(_){}
-      body = `${quote}<div class="b-transfer"><div class="b-transfer-top">💸 ${escapeHtml(d.note||'转账')}<div style="font-size:18px;margin-top:6px;">¥${escapeHtml(String(d.amount))}</div></div><div class="b-transfer-bot">微信转账</div></div>`;
+      const bg = mediaSkin.transferImg ? `background-image:url(${mediaSkin.transferImg});background-size:cover;` : `background:linear-gradient(135deg,${mediaSkin.transferColor||'#f5a623'},${mediaSkin.transferColor2||'#f7c948'});`;
+      body = `${quote}<div class="b-transfer"><div class="b-transfer-top" style="${bg}">💸 ${escapeHtml(d.note||'转账')}<div style="font-size:18px;margin-top:6px;">¥${escapeHtml(String(d.amount))}</div></div><div class="b-transfer-bot">微信转账</div></div>`;
     } else {
       body = `${quote}${escapeHtml(m.text)}`;
     }
@@ -1652,6 +1786,52 @@ function renderMessages(){
   });
   list.scrollTop=list.scrollHeight;
   updateReplyButton();
+  // 语音：单击播放，双击转文字
+  list.querySelectorAll('.b-voice').forEach(el=>{
+    let t=0;
+    el.onclick = (ev)=>{
+      ev.stopPropagation();
+      const idx = parseInt(el.dataset.voiceIdx,10);
+      const now = Date.now();
+      if(now - t < 320){
+        // double
+        const msg = (conversations[currentChatId].messages||[])[idx];
+        if(!msg) return;
+        let d={transcript:''}; try{ d=Object.assign(d, JSON.parse(msg.text)); }catch(_){}
+        if(!d.transcript) d.transcript = d.sec ? `（${d.sec}秒语音）` : '（语音消息）';
+        msg._showText = !msg._showText;
+        if(!msg._showText) { /* hide */ }
+        // ensure transcript stored
+        try{
+          const obj = JSON.parse(msg.text);
+          if(!obj.transcript) { obj.transcript = d.transcript; msg.text = JSON.stringify(obj); }
+        }catch(_){
+          msg.text = JSON.stringify({ sec: parseInt(msg.text,10)||3, transcript: d.transcript, audio: '' });
+        }
+        saveAll(); renderMessages();
+      } else {
+        t = now;
+        setTimeout(()=>{
+          if(Date.now()-t >= 300){
+            const msg = (conversations[currentChatId].messages||[])[idx];
+            playVoiceMsg(msg);
+          }
+        }, 300);
+      }
+    };
+  });
+}
+function playVoiceMsg(msg){
+  if(!msg) return;
+  let d={}; try{ d=JSON.parse(msg.text);}catch(_){ return alert('播放语音…（文字语音无音频）'); }
+  if(d.audio){
+    const a = new Audio(d.audio);
+    a.play().catch(()=>alert('无法播放'));
+  } else {
+    // 模拟播放
+    const sec = d.sec || 3;
+    alert('▶ 播放语音 ' + sec + '″' + (d.transcript ? '\n内容：'+d.transcript : ''));
+  }
 }
 function delMessage(i){
   const c=conversations[currentChatId]; if(!c||!c.messages||!c.messages[i]) return;
@@ -1668,7 +1848,7 @@ function updateReplyButton(){
   const ready = !!last && last.who === 'me' && !pendingReply;
   btn.disabled = !ready;
   btn.classList.toggle('ready', ready);
-  if(!pendingReply) btn.textContent = '响应';
+  if(!pendingReply) btn.textContent = '↻';
 }
 function replyToMessage(i){
   const m=conversations[currentChatId]?.messages?.[i]; if(!m)return;
@@ -1846,7 +2026,7 @@ ${meProfile.persona || ''}
   } finally {
     pendingReply = false;
     updateReplyButton();
-    if(btn){ btn.textContent = '响应'; }
+    if(btn){ btn.textContent = '↻'; }
   }
 }
 
@@ -2593,6 +2773,30 @@ function selectStoryOption(idx){
   }
 }
 
+
+async function refreshStoryOptions(){
+  const t = window._currentOfflineTask;
+  if(!t){ alert('没有进行中的任务'); return; }
+  const prev = currentStoryRounds.map(r => typeof r==='string'?r:(r.text||'')).slice(-2).join('\n');
+  const girlName = meProfile.name || '凌幼薇';
+  const raw = await callAI(
+    `根据当前剧情，为母狗「${girlName}」生成3个下一步可执行的行动选项。只要选项，不要正文。格式：\n1. xxx\n2. xxx\n3. xxx`,
+    `任务：${t.title}\n近况：\n${prev}\n请给出3个新选项。`,
+    400
+  );
+  let options = (raw||'').split('\n').map(l=>l.replace(/^\s*\d+[\.\)、]\s*/,'').trim()).filter(Boolean).slice(0,3);
+  if(options.length < 3){
+    options = ['继续把任务做完，再下贱一点','先停下来汇报身体反应','故意制造可能被发现的风险'];
+  }
+  // 写入最新一轮
+  if(currentStoryRounds.length){
+    const last = currentStoryRounds[currentStoryRounds.length-1];
+    if(typeof last === 'object') last.options = options;
+  }
+  window._storyOptions = options;
+  showStoryOptions(options, true);
+  renderStoryView();
+}
 async function submitStoryAction(){
   const action = ($('story-action-input')?.value || '').trim();
   if(!action){ alert('先选一个行动，或自己输入'); return; }
@@ -2769,7 +2973,7 @@ function renderBeautify(){
     {id:'messages',name:'消息'},{id:'contacts',name:'通讯录'},{id:'offline',name:'线下'},
     {id:'train',name:'主人的母狗'},{id:'worldbook',name:'世界书'},{id:'diary',name:'日记'},
     {id:'rules',name:'守则'},{id:'me',name:'母狗'},{id:'guide',name:'小狗乖乖'},
-    {id:'beautify',name:'美化'},{id:'settings',name:'设置'}
+    {id:'forum',name:'约炮论坛'},{id:'beautify',name:'美化'},{id:'settings',name:'设置'}
   ];
   const box = $('beautify-list'); if(!box) return;
   box.innerHTML = apps.map(a=>`
@@ -2780,6 +2984,38 @@ function renderBeautify(){
       <button class="btn btn-secondary" style="flex:0;padding:8px 12px;" onclick="resetAppIcon('${a.id}')">重置</button>
     </div>`).join('');
 }
+
+function loadMediaSkinUI(){
+  if($('skin-rp1')) $('skin-rp1').value = mediaSkin.redpackColor || '#e03b3b';
+  if($('skin-rp2')) $('skin-rp2').value = mediaSkin.redpackColor2 || '#f54b4b';
+  if($('skin-tf1')) $('skin-tf1').value = mediaSkin.transferColor || '#f5a623';
+  if($('skin-tf2')) $('skin-tf2').value = mediaSkin.transferColor2 || '#f7c948';
+}
+function saveMediaSkin(){
+  mediaSkin.redpackColor = $('skin-rp1')?.value || '#e03b3b';
+  mediaSkin.redpackColor2 = $('skin-rp2')?.value || '#f54b4b';
+  mediaSkin.transferColor = $('skin-tf1')?.value || '#f5a623';
+  mediaSkin.transferColor2 = $('skin-tf2')?.value || '#f7c948';
+  saveAll();
+  alert('红包/转账样式已保存');
+}
+function pickSkinImg(kind){
+  const input=document.createElement('input'); input.type='file'; input.accept='image/*';
+  input.onchange=async e=>{
+    const f=e.target.files?.[0]; if(!f)return;
+    const data=await compressImage(f, 800, 0.75);
+    if(kind==='redpack') mediaSkin.redpackImg=data;
+    else mediaSkin.transferImg=data;
+    saveAll(); alert('已插入背景图');
+  };
+  input.click();
+}
+function clearSkinImg(kind){
+  if(kind==='redpack') mediaSkin.redpackImg='';
+  else mediaSkin.transferImg='';
+  saveAll(); alert('已清除');
+}
+
 function pickAppIcon(id){
   const input=document.createElement('input'); input.type='file'; input.accept='image/*';
   input.onchange=async e=>{
@@ -2801,20 +3037,59 @@ function toggleChatTools(){
 function sendMediaMsg(type){
   const c = conversations[currentChatId]; if(!c) return;
   if(type==='image'){
+    const mode = confirm('确定=从本地选图\\n取消=发送文字图片') ? 'local' : 'text';
+    if(mode==='text'){
+      const caption = prompt('文字图片内容（会显示成一张卡片）', '');
+      if(caption===null || !caption.trim()) return;
+      addBubble('me', JSON.stringify({mode:'text', caption: caption.trim()}), 'image');
+      updateReplyButton();
+      return;
+    }
     const input=document.createElement('input'); input.type='file'; input.accept='image/*';
     input.onchange=async e=>{
       const f=e.target.files?.[0]; if(!f)return;
       const data = await compressImage(f, 1280, 0.72);
-      addBubble('me', data, 'image');
+      addBubble('me', JSON.stringify({mode:'local', src:data}), 'image');
       updateReplyButton();
     };
     input.click();
     return;
   }
   if(type==='voice'){
-    const sec = Math.floor(2+Math.random()*12);
-    addBubble('me', String(sec), 'voice');
-    updateReplyButton();
+    const mode = confirm('确定=录音（需麦克风）\\n取消=发文字语音') ? 'rec' : 'text';
+    if(mode==='text'){
+      const transcript = prompt('语音转写内容（对方双击可见）', '');
+      if(transcript===null) return;
+      const sec = Math.max(1, Math.min(60, parseInt(prompt('时长（秒）','3')||'3',10)));
+      addBubble('me', JSON.stringify({sec, transcript: transcript.trim(), audio:''}), 'voice');
+      updateReplyButton();
+      return;
+    }
+    // 录音
+    if(!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia){
+      alert('当前环境不支持录音，请用文字语音'); return;
+    }
+    navigator.mediaDevices.getUserMedia({audio:true}).then(stream=>{
+      const rec = new MediaRecorder(stream);
+      const chunks=[];
+      rec.ondataavailable = e => chunks.push(e.data);
+      rec.onstop = ()=>{
+        stream.getTracks().forEach(t=>t.stop());
+        const blob = new Blob(chunks, {type:'audio/webm'});
+        const reader = new FileReader();
+        reader.onload = ()=>{
+          const sec = Math.max(1, Math.round((Date.now()-window._recStart)/1000));
+          const transcript = prompt('可选：补一段转写文字（双击语音可看）', '') || '';
+          addBubble('me', JSON.stringify({sec, transcript, audio: reader.result}), 'voice');
+          updateReplyButton();
+        };
+        reader.readAsDataURL(blob);
+      };
+      window._recStart = Date.now();
+      rec.start();
+      alert('开始录音，点确定结束');
+      rec.stop();
+    }).catch(()=>alert('无法使用麦克风'));
     return;
   }
   if(type==='redpack'){
@@ -2936,10 +3211,117 @@ function renderFavs(){
     </div>`).join('') : '<div style="text-align:center;color:var(--muted);padding:40px;">暂无收藏<br>在评价结果上双击可收藏</div>';
 }
 
+
+// ========== 约炮论坛 ==========
+let currentForumId = null;
+function renderForum(){
+  const box = $('forum-list'); if(!box) return;
+  if(!forumPosts.length){
+    // 种子帖
+    forumPosts = [
+      {id:'p1', user:'夜色大叔', title:'今晚滨江空房，求附近母狗过来跪好', body:'有图有真相，会调会骂。自备绳和跳蛋。报年龄胸围。', tags:['线下','调教'], time:Date.now()-3600000, replies:[{user:'路过', text:'位置私', time:Date.now()-3000000}], hot:12},
+      {id:'p2', user:'匿名母畜', title:'被同事在茶水间用过两次，好想再被发现', body:'今天故意没穿内裤上班，坐着开会一直在流水……有没有人教我怎么更下贱', tags:['露出','办公室'], time:Date.now()-7200000, replies:[], hot:28},
+      {id:'p3', user:'教练阿凯', title:'私教课可以加时，愿意被录像的优先', body:'健身房更衣室有盲区。第一次的会从轻的开始。', tags:['健身房','拍摄'], time:Date.now()-86400000, replies:[{user:'小狗', text:'多少钱', time:Date.now()-80000000}], hot:9}
+    ];
+  }
+  const list = [...forumPosts].sort((a,b)=>(b.hot||0)-(a.hot||0));
+  box.innerHTML = list.map(p=>`
+    <div class="card" style="border-radius:16px;cursor:pointer;" onclick="openForumPost('${p.id}')">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+        <span style="font-weight:600;color:var(--pink);">${escapeHtml(p.user)}</span>
+        <span style="font-size:11px;color:var(--muted);">${new Date(p.time).toLocaleString()}</span>
+      </div>
+      <div style="font-size:15px;font-weight:600;margin-bottom:6px;color:var(--text);">${escapeHtml(p.title)}</div>
+      <div style="font-size:13px;color:var(--muted);line-height:1.45;max-height:40px;overflow:hidden;">${escapeHtml(p.body)}</div>
+      <div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap;">
+        ${(p.tags||[]).map(t=>`<span class="wb-pill">#${escapeHtml(t)}</span>`).join('')}
+        <span class="wb-pill">🔥${p.hot||0}</span>
+        <span class="wb-pill">💬${(p.replies||[]).length}</span>
+      </div>
+    </div>`).join('');
+}
+function refreshForum(tab){
+  if(tab==='new') forumPosts.sort((a,b)=>b.time-a.time);
+  else if(tab==='hot') forumPosts.sort((a,b)=>(b.hot||0)-(a.hot||0));
+  else if(tab==='nearby') forumPosts.sort(()=>Math.random()-0.5);
+  renderForum();
+}
+function openForumPost(id){
+  currentForumId = id;
+  const p = forumPosts.find(x=>x.id===id); if(!p) return;
+  openApp('forum-detail');
+  const box = $('forum-detail');
+  box.innerHTML = `
+    <div class="card" style="border-radius:18px;">
+      <div style="font-size:12px;color:var(--muted);margin-bottom:6px;">${escapeHtml(p.user)} · ${new Date(p.time).toLocaleString()}</div>
+      <div style="font-size:17px;font-weight:700;margin-bottom:10px;">${escapeHtml(p.title)}</div>
+      <div style="font-size:14.5px;line-height:1.6;white-space:pre-wrap;color:var(--text);">${escapeHtml(p.body)}</div>
+      <div style="margin-top:10px;display:flex;gap:6px;flex-wrap:wrap;">${(p.tags||[]).map(t=>`<span class="wb-pill">#${escapeHtml(t)}</span>`).join('')}</div>
+    </div>
+    <div style="font-size:13px;font-weight:600;margin:12px 0 8px;color:var(--muted);">回复</div>
+    ${(p.replies||[]).map(r=>`<div class="card" style="border-radius:14px;padding:12px;"><b style="color:var(--pink);">${escapeHtml(r.user)}</b><div style="font-size:13.5px;margin-top:4px;">${escapeHtml(r.text)}</div><div style="font-size:11px;color:var(--muted);margin-top:4px;">${new Date(r.time).toLocaleString()}</div></div>`).join('')||'<div style="color:var(--muted);font-size:13px;padding:12px;">还没有回复</div>'}
+    <button class="action-btn blue" style="width:100%;" onclick="forumPrivateChat('${escapeHtml(p.user)}')">私聊楼主</button>
+  `;
+}
+function newForumPost(){
+  const title = prompt('标题（越下贱越容易上热门）');
+  if(!title||!title.trim()) return;
+  const body = prompt('正文');
+  if(!body||!body.trim()) return;
+  const tags = (prompt('标签，逗号分隔', '线下,调教')||'').split(/[,，]/).map(x=>x.trim()).filter(Boolean);
+  forumPosts.unshift({ id:'p'+Date.now(), user: meProfile.name||'匿名母狗', title: title.trim(), body: body.trim(), tags, time: Date.now(), replies: [], hot: 1 });
+  saveAll(); renderForum();
+}
+function forumReply(){
+  const p = forumPosts.find(x=>x.id===currentForumId); if(!p) return;
+  const text = prompt('回复内容');
+  if(!text||!text.trim()) return;
+  p.replies = p.replies||[];
+  p.replies.push({ user: meProfile.name||'匿名', text: text.trim(), time: Date.now() });
+  p.hot = (p.hot||0)+1;
+  saveAll(); openForumPost(p.id);
+}
+function forumPrivateChat(name){
+  // 创建临时角色并进入聊天
+  const id = 'forum_'+Date.now();
+  conversations[id] = {
+    name, remark: name, avatar: name[0]||'约',
+    messages: [], last: '从约炮论坛来的', time: Date.now(),
+    persona: `你是约炮论坛用户「${name}」，说话直接、下流、会约线下，把对方当泄欲工具。不要突然变得纯洁。`,
+    gender: 'unknown'
+  };
+  if(!contacts.find(c=>c.id===id)) contacts.push({id, name, remark:name, gender:'unknown', relation:'论坛'});
+  saveAll(); openChat(id);
+}
+
 function exportData(){
-  const data={cor,shame,body,obey,mainFinished,bodyData,diaries,ruleVersions,offlineArchives,worldBooks,apiProfiles,currentProfileId,conversations,contacts,pendingRequests,meProfile,memorySources,offlineWordCount,diaryWordCount,rulesWordCount,trainWordCount,doneTaskKeys,appIcons,evalFavorites,myAvatar:meProfile.avatarImg||''};
-  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
-  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='母狗手机数据.json'; a.click();
+  // 全量备份：API、聊天、世界书、任务、日记、论坛、美化、收藏等一切本地数据
+  const data = {
+    version: 4,
+    exportedAt: Date.now(),
+    cor, shame, body, obey, mainFinished,
+    bodyData, diaries, ruleVersions, offlineArchives, worldBooks,
+    apiProfiles, currentProfileId,
+    conversations, contacts, pendingRequests,
+    meProfile, memorySources,
+    offlineWordCount, diaryWordCount, rulesWordCount, trainWordCount,
+    doneTaskKeys, appIcons, evalFavorites, mediaSkin, forumPosts,
+    uiTheme, guideMode,
+    wallpaper: localStorage.getItem('wallpaper') || '',
+    myAvatar: meProfile.avatarImg || '',
+    currentTasks,
+    extraLocal: {
+      bitchPhoneV3: localStorage.getItem('bitchPhoneV3'),
+      uiTheme: localStorage.getItem('uiTheme'),
+      wallpaper: localStorage.getItem('wallpaper'),
+      myAvatar: localStorage.getItem('myAvatar')
+    }
+  };
+  const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = '母狗手机_全量备份_' + new Date().toISOString().slice(0,10) + '.json';
+  a.click();
 }
 function importData(){ $('import-file').click(); }
 function doImport(e){
@@ -2948,6 +3330,11 @@ function doImport(e){
     try{
       const d=JSON.parse(ev.target.result);
       if(d.meProfile) meProfile = Object.assign(meProfile, d.meProfile);
+      if(d.mediaSkin) mediaSkin = Object.assign(mediaSkin, d.mediaSkin);
+      if(Array.isArray(d.forumPosts)) forumPosts = d.forumPosts;
+      if(Array.isArray(d.doneTaskKeys)) doneTaskKeys = d.doneTaskKeys;
+      if(d.appIcons) appIcons = d.appIcons;
+      if(Array.isArray(d.evalFavorites)) evalFavorites = d.evalFavorites;
       Object.assign(window, d);
       if(d.myAvatar && !meProfile.avatarImg) meProfile.avatarImg = d.myAvatar;
       saveAll(); loadAll(); alert('导入成功'); goHome();
