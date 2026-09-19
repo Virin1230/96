@@ -422,7 +422,21 @@
         <div class="nav-title">线下任务</div>
         <button class="nav-right" onclick="refreshTasks()">刷新</button>
       </div>
-      <div class="scroll" style="padding:12px;" id="task-container"></div>
+      <div class="scroll" style="padding:12px;">
+        <div class="card" style="margin-bottom:12px;">
+          <div style="font-size:13px;color:#ff8a80;margin-bottom:8px;">每轮生成字数</div>
+          <div style="display:flex;gap:8px;align-items:center;">
+            <input type="number" id="offline-word-count" value="800" min="200" max="4000" step="100" style="flex:1;background:#2c2c2e;border:none;border-radius:10px;padding:10px 12px;color:#fff;font-size:16px;outline:none;">
+            <button class="btn btn-secondary" style="flex:0;padding:8px 12px;" onclick="saveOfflineWordCount()">保存</button>
+          </div>
+          <div style="font-size:11px;color:#888;margin-top:6px;">第一轮固定从接到任务后凌幼薇的准备工作开始描写</div>
+        </div>
+        <div class="card" style="margin-bottom:12px;">
+          <div style="font-size:13px;color:#ff8a80;margin-bottom:8px;">记忆来源（勾选聊天记录）</div>
+          <div id="offline-memory-list" style="max-height:120px;overflow-y:auto;"></div>
+        </div>
+        <div id="task-container"></div>
+      </div>
       <div style="padding:10px 12px; border-top:.5px solid var(--border); display:flex; gap:8px;">
         <button class="btn btn-secondary" style="flex:1;" onclick="wishTask()">许愿</button>
         <button class="btn btn-secondary" style="flex:1;" onclick="showArchive()">存档</button>
@@ -433,10 +447,20 @@
     <div class="page" id="page-story">
       <div class="nav">
         <button class="nav-back" onclick="openApp('offline')">‹ 返回</button>
-        <div class="nav-title">任务进行中</div>
+        <div class="nav-title" id="story-nav-title">任务进行中</div>
         <button class="nav-right" id="save-story-btn" style="display:none;" onclick="saveCurrentStory()">存档</button>
       </div>
       <div class="story-view" id="story-content"></div>
+      <div id="story-continue-bar" style="display:none;padding:10px 12px;border-top:.5px solid var(--border);gap:8px;flex-direction:column;">
+        <div style="display:flex;gap:8px;align-items:center;">
+          <span style="font-size:12px;color:#aaa;white-space:nowrap;">本轮字数</span>
+          <input type="number" id="story-round-words" value="800" min="200" max="4000" step="100" style="flex:1;background:#2c2c2e;border:none;border-radius:10px;padding:8px 10px;color:#fff;font-size:14px;outline:none;">
+        </div>
+        <div style="display:flex;gap:8px;">
+          <button class="btn btn-primary" style="flex:1;" onclick="continueStory()">继续下一轮</button>
+          <button class="btn btn-secondary" style="flex:0;padding:0 14px;" onclick="saveCurrentStory()">存档</button>
+        </div>
+      </div>
     </div>
 
     <!-- 调教 -->
@@ -447,7 +471,13 @@
         <div></div>
       </div>
       <div class="status-bar" id="train-status"></div>
-      <div class="scroll" style="padding:12px;" id="body-parts"></div>
+      <div class="scroll" style="padding:12px;">
+        <div class="card" style="margin-bottom:12px;">
+          <div style="font-size:13px;color:#ff8a80;margin-bottom:8px;">记忆来源（勾选聊天记录）</div>
+          <div id="train-memory-list" style="max-height:120px;overflow-y:auto;"></div>
+        </div>
+        <div id="body-parts"></div>
+      </div>
     </div>
 
     <!-- 日记 -->
@@ -457,7 +487,13 @@
         <div class="nav-title">母狗日记</div>
         <button class="nav-right" onclick="genDiary()">写新篇</button>
       </div>
-      <div class="scroll" style="padding:12px;" id="diary-list"></div>
+      <div class="scroll" style="padding:12px;">
+        <div class="card" style="margin-bottom:12px;">
+          <div style="font-size:13px;color:#ff8a80;margin-bottom:8px;">记忆来源（勾选聊天记录）</div>
+          <div id="diary-memory-list" style="max-height:120px;overflow-y:auto;"></div>
+        </div>
+        <div id="diary-list"></div>
+      </div>
     </div>
 
     <!-- 守则 -->
@@ -467,7 +503,13 @@
         <div class="nav-title">母狗守则</div>
         <button class="nav-right" onclick="addRuleVersion()">更新</button>
       </div>
-      <div class="scroll" style="padding:12px;" id="rules-list"></div>
+      <div class="scroll" style="padding:12px;">
+        <div class="card" style="margin-bottom:12px;">
+          <div style="font-size:13px;color:#ff8a80;margin-bottom:8px;">记忆来源（勾选聊天记录）</div>
+          <div id="rules-memory-list" style="max-height:120px;overflow-y:auto;"></div>
+        </div>
+        <div id="rules-list"></div>
+      </div>
     </div>
 
     <!-- 母狗（用户自己） -->
@@ -577,6 +619,9 @@ let waiting = null;
 let currentChatId = null;
 let currentTasks = [];
 let currentStory = '', currentStoryTitle = '';
+let currentStoryRounds = []; // 多轮故事内容
+let currentStoryRound = 0;
+let offlineWordCount = 800; // 每轮生成字数（可自定义）
 let bodyData = {};
 let diaries = [];
 let ruleVersions = [];
@@ -590,12 +635,19 @@ let pendingRequests = [];
 let pendingReply = false;
 let wbScanDepth = 6;
 let wbMaxEntries = 12;
+// 各功能勾选的聊天记忆来源（聊天id数组）
+let memorySources = {
+  offline: [],
+  diary: [],
+  train: [],
+  rules: []
+};
 // 用户自己（母狗）的资料，会注入到所有聊天
 let meProfile = {
-  name: '母狗',
-  avatarText: '狗',
+  name: '凌幼薇',
+  avatarText: '薇',
   avatarImg: '',
-  persona: '我是一只已经被主人彻底调教的下贱母狗，身体敏感，喜欢被羞辱和命令，会乖乖听话并主动讨好。'
+  persona: '我是凌幼薇，一只已经被主人彻底调教的下贱母狗，身体敏感，喜欢被羞辱和命令，会乖乖听话并主动讨好。'
 };
 
 const defaultParts = ['奶子','乳头','逼','阴蒂','嘴巴','舌头','屁股','后穴','大腿','全身'];
@@ -644,6 +696,8 @@ function loadAll() {
       apiProfiles=d.apiProfiles||[]; currentProfileId=d.currentProfileId;
       conversations=d.conversations||{}; contacts=d.contacts||[];
       pendingRequests=d.pendingRequests||[];
+      if(d.memorySources) memorySources = Object.assign(memorySources, d.memorySources);
+      if(typeof d.offlineWordCount === 'number') offlineWordCount = d.offlineWordCount;
       if(d.meProfile) meProfile = Object.assign(meProfile, d.meProfile);
       if(d.myAvatar && !meProfile.avatarImg) meProfile.avatarImg = d.myAvatar;
       if(meProfile.avatarImg) localStorage.setItem('myAvatar', meProfile.avatarImg);
@@ -687,7 +741,7 @@ function saveAll() {
   localStorage.setItem('bitchPhoneV3', JSON.stringify({
     cor,shame,body,obey,mainFinished,bodyData,diaries,ruleVersions,
     offlineArchives,worldBooks,apiProfiles,currentProfileId,
-    conversations,contacts,pendingRequests, meProfile
+    conversations,contacts,pendingRequests, meProfile, memorySources, offlineWordCount
   }));
   // 同步头像给旧逻辑兼容
   if(meProfile.avatarImg) localStorage.setItem('myAvatar', meProfile.avatarImg);
@@ -713,12 +767,43 @@ function openApp(name) {
   if(name==='messages') renderConvList();
   if(name==='contacts') renderContacts();
   if(name==='worldbook') renderWorldBooks();
-  if(name==='offline') renderTasks();
-  if(name==='train') renderBodyParts();
-  if(name==='diary') renderDiaries();
-  if(name==='rules') renderRules();
+  if(name==='offline'){ renderMemoryList('offline'); renderTasks(); if($('offline-word-count')) $('offline-word-count').value = offlineWordCount; }
+  if(name==='train'){ renderMemoryList('train'); renderBodyParts(); }
+  if(name==='diary'){ renderMemoryList('diary'); renderDiaries(); }
+  if(name==='rules'){ renderMemoryList('rules'); renderRules(); }
   if(name==='settings'){ renderApiSelect(); loadCurrentProfile(); }
   if(name==='me') loadMePage();
+}
+
+function renderMemoryList(feature){
+  const box = $(feature + '-memory-list');
+  if(!box) return;
+  const ids = memorySources[feature] || [];
+  const list = Object.entries(conversations);
+  if(!list.length){ box.innerHTML = '<div style="font-size:12px;color:#666;">暂无聊天记录可勾选</div>'; return; }
+  box.innerHTML = list.map(([id,c])=>{
+    const checked = ids.includes(id) ? 'checked' : '';
+    return `<label style="display:flex;align-items:center;gap:8px;padding:5px 0;font-size:13px;color:#ddd;cursor:pointer;">
+      <input type="checkbox" ${checked} onchange="toggleMemorySource('${feature}','${id}',this.checked)" style="width:16px;height:16px;">
+      <span>${escapeHtml(c.remark||c.name||id)}</span>
+      <span style="font-size:11px;color:#666;margin-left:auto;">${(c.messages||[]).length}条</span>
+    </label>`;
+  }).join('');
+}
+function toggleMemorySource(feature, id, on){
+  if(!memorySources[feature]) memorySources[feature] = [];
+  const arr = memorySources[feature];
+  const i = arr.indexOf(id);
+  if(on && i<0) arr.push(id);
+  if(!on && i>=0) arr.splice(i,1);
+  saveAll();
+}
+function saveOfflineWordCount(){
+  const v = parseInt($('offline-word-count')?.value, 10);
+  offlineWordCount = isNaN(v) ? 800 : Math.max(200, Math.min(4000, v));
+  if($('offline-word-count')) $('offline-word-count').value = offlineWordCount;
+  saveAll();
+  alert('已保存：每轮约 ' + offlineWordCount + ' 字');
 }
 
 // ========== API ==========
@@ -885,8 +970,14 @@ function collectWBText(context){
 }
 function getWorldBookPrompt(extraNames=[], context=''){
   worldBooks=worldBooks.map(wbNormalize);
-  const text=collectWBText(context), linked=new Set(extraNames||[]), picked=new Map(), nowCount=(conversations[currentChatId]?.messages||[]).length;
-  const eligible=worldBooks.filter(w=>w.enabled && nowCount>=w.delay);
+  const text=collectWBText(context), linked=new Set(extraNames||[]), picked=new Map();
+  const nowCount=(conversations[currentChatId]?.messages||[]).length;
+  // 常驻条目：无论有没有聊天上下文，只要启用就强制注入（线下/日记/调教/守则都会走这里）
+  const eligible=worldBooks.filter(w=>{
+    if(!w.enabled) return false;
+    if(w.constant) return true; // 常驻无视 delay
+    return nowCount >= (w.delay||0);
+  });
   eligible.forEach(w=>{
     const explicit=linked.has(w.name);
     const main=w.constant || explicit || (w.keywords||[]).some(k=>k && text.includes(String(k).toLowerCase()));
@@ -907,6 +998,24 @@ function getWorldBookPrompt(extraNames=[], context=''){
   const arr=[...picked.values()].sort((a,b)=>Number(a.priority||50)-Number(b.priority||50)).slice(0,wbMaxEntries);
   if(!arr.length)return '';
   return '【世界书·当前生效条目】\n'+arr.map(w=>`【${w.name}】\n${w.content}`).join('\n\n')+'\n\n';
+}
+
+// 从勾选的聊天记录里收集记忆上下文
+function getMemoryContext(feature){
+  const ids = memorySources[feature] || [];
+  if(!ids.length) return '';
+  let parts = [];
+  ids.forEach(id=>{
+    const c = conversations[id];
+    if(!c || !c.messages || !c.messages.length) return;
+    const recent = c.messages.slice(-12).map(m=>{
+      const who = m.who==='me' ? (meProfile.name||'凌幼薇') : (c.remark||c.name||'对方');
+      return who + '：' + (m.text||'');
+    }).join('\n');
+    parts.push(`【与${c.remark||c.name}的近期聊天记忆】\n${recent}`);
+  });
+  if(!parts.length) return '';
+  return '【勾选的聊天记忆】\n' + parts.join('\n\n') + '\n\n';
 }
 
 // ========== AI ==========
@@ -1520,7 +1629,9 @@ function updateTrainStatus(){
 }
 function renderBodyParts(){
   updateTrainStatus();
-  $('body-parts').innerHTML = defaultParts.map(p=>{
+  const box = $('body-parts');
+  if(!box) return;
+  box.innerHTML = defaultParts.map(p=>{
     const d=bodyData[p]||{status:'尚未记录',img:''};
     return `<div class="body-part">
       <img class="part-img" src="${d.img||''}" onclick="uploadImg('${p}')">
@@ -1544,7 +1655,12 @@ function uploadImg(part){
 }
 async function genShameScore(part){
   const d=bodyData[part]||{status:'尚未记录'};
-  const text=await callAI('你是主人，对母狗身体部位做刻薄羞辱评分与点评。',`部位：${part}\n状态：${d.status}`);
+  const mem = getMemoryContext('train');
+  const girlName = meProfile.name || '凌幼薇';
+  const text=await callAI(
+    `你是主人，对母狗「${girlName}」的身体部位做刻薄羞辱评分与点评。必须严格参考世界书常驻条目。`,
+    `${mem}部位：${part}\n状态：${d.status}\n请给出羞辱评分与点评。`
+  );
   alert(text);
 }
 
@@ -1637,17 +1753,94 @@ async function wishTask(){
   renderTasks();
 }
 async function acceptTask(i){
-  const t=currentTasks[i]; currentStoryTitle=t.title;
+  const t=currentTasks[i];
+  currentStoryTitle = t.title;
+  currentStoryRounds = [];
+  currentStoryRound = 0;
+  currentStory = '';
+  window._currentOfflineTask = t;
   openApp('story');
-  $('story-content').innerHTML='<div style="text-align:center;padding:40px;color:#888;">生成中（至少800字，恶俗重口）…</div>';
-  $('save-story-btn').style.display='none';
-  const text=await callAI(
-    '根据任务生成一段完整的线下任务剧情。用第一人称或第三人称详细描写母狗执行任务的过程，重点刻画羞耻、身体反应、下流想法、被发现的风险。语言要恶俗、物化、重口，至少800字。保持与任务目标一致。',
-    `任务：${t.title}\n类型：${t.type||''}\n难度：${t.difficulty||'普通'}\n愿望：${t.wish||''}\n说明：${t.desc}`
-  );
-  currentStory=text; $('story-content').textContent=text; $('save-story-btn').style.display='block';
+  if($('story-nav-title')) $('story-nav-title').textContent = t.title + ' · 第1轮';
+  if($('story-continue-bar')) $('story-continue-bar').style.display = 'none';
+  if($('save-story-btn')) $('save-story-btn').style.display = 'none';
+  if($('story-round-words')) $('story-round-words').value = offlineWordCount;
+  $('story-content').innerHTML = '<div style="text-align:center;padding:40px;color:#888;">第一轮生成中…（从接到任务后凌幼薇的准备工作开始）</div>';
+
+  const words = offlineWordCount || 800;
+  const mem = getMemoryContext('offline');
+  const girlName = meProfile.name || '凌幼薇';
+  const system = `你正在写线下任务剧情。必须严格遵守世界书常驻条目。
+角色名：${girlName}
+本轮是【第一轮】，必须从她「接到任务之后」开始写，重点描写她的准备工作过程（换衣服/真空/涂药/塞道具/心理挣扎/出门前检查身体等），不要直接跳到执行高潮。
+用第三人称或第一人称均可，语言恶俗、物化、重口，重点刻画羞耻、身体反应、下流想法。
+本轮目标字数约 ${words} 字，写满即可，不要提前结束任务。
+不要写「第一轮结束」之类的元叙述。`;
+  const userPrompt = `${mem}任务标题：${t.title}
+类型：${t.type||''}
+难度：${t.difficulty||'普通'}
+愿望：${t.wish||''}
+任务说明：${t.desc}
+
+请开始写第一轮：接到任务后，${girlName}开始做准备工作……`;
+
+  const text = await callAI(system, userPrompt, Math.max(1200, Math.ceil(words * 1.6)));
+  currentStoryRounds.push(text);
+  currentStoryRound = 1;
+  currentStory = text;
+  $('story-content').textContent = text;
+  if($('save-story-btn')) $('save-story-btn').style.display = 'block';
+  if($('story-continue-bar')) $('story-continue-bar').style.display = 'flex';
+  if($('story-nav-title')) $('story-nav-title').textContent = t.title + ' · 第1轮';
 }
-function saveCurrentStory(){ offlineArchives.unshift({title:currentStoryTitle,content:currentStory,time:Date.now()}); saveAll(); alert('已存档'); }
+
+async function continueStory(){
+  const t = window._currentOfflineTask;
+  if(!t){ alert('没有进行中的任务'); return; }
+  const words = parseInt($('story-round-words')?.value, 10) || offlineWordCount || 800;
+  offlineWordCount = words;
+  const nextRound = currentStoryRound + 1;
+  if($('story-nav-title')) $('story-nav-title').textContent = t.title + ' · 第' + nextRound + '轮生成中…';
+  $('story-content').innerHTML = '<div style="text-align:center;padding:40px;color:#888;">第' + nextRound + '轮生成中…</div>';
+  if($('story-continue-bar')) $('story-continue-bar').style.display = 'none';
+
+  const mem = getMemoryContext('offline');
+  const girlName = meProfile.name || '凌幼薇';
+  const prev = currentStoryRounds.join('\n\n————\n\n');
+  const system = `你正在续写线下任务剧情。必须严格遵守世界书常驻条目。
+角色名：${girlName}
+这是第 ${nextRound} 轮续写。请紧接上一轮内容继续往下写，不要重复已写过的情节，推进任务执行过程。
+语言恶俗、物化、重口，重点刻画羞耻、身体反应、被发现风险、下流想法。
+本轮目标字数约 ${words} 字。不要写「第x轮结束」等元叙述。`;
+  const userPrompt = `${mem}任务：${t.title}
+说明：${t.desc}
+
+【已写内容】
+${prev}
+
+请继续第 ${nextRound} 轮……`;
+
+  const text = await callAI(system, userPrompt, Math.max(1200, Math.ceil(words * 1.6)));
+  currentStoryRounds.push(text);
+  currentStoryRound = nextRound;
+  currentStory = currentStoryRounds.join('\n\n———— 第' + nextRound + '轮 ————\n\n');
+  // 重新渲染全部轮次
+  let full = '';
+  currentStoryRounds.forEach((r, idx)=>{
+    full += (idx > 0 ? '\n\n———— 第' + (idx+1) + '轮 ————\n\n' : '') + r;
+  });
+  currentStory = full;
+  $('story-content').textContent = full;
+  if($('story-nav-title')) $('story-nav-title').textContent = t.title + ' · 第' + nextRound + '轮';
+  if($('save-story-btn')) $('save-story-btn').style.display = 'block';
+  if($('story-continue-bar')) $('story-continue-bar').style.display = 'flex';
+  $('story-content').scrollTop = $('story-content').scrollHeight;
+}
+
+function saveCurrentStory(){
+  offlineArchives.unshift({title:currentStoryTitle, content:currentStory, time:Date.now(), rounds: currentStoryRounds.length});
+  saveAll();
+  alert('已存档（共 ' + currentStoryRounds.length + ' 轮）');
+}
 function showArchive(){
   openApp('archive');
   $('archive-list').innerHTML=offlineArchives.map((a,i)=>`
@@ -1660,13 +1853,20 @@ function viewArch(i){ openApp('story'); $('story-content').textContent=offlineAr
 function delArch(i){ if(confirm('删除？')){ offlineArchives.splice(i,1); saveAll(); showArchive(); } }
 
 function renderDiaries(){
-  $('diary-list').innerHTML=diaries.map((d,i)=>`
+  const box = $('diary-list');
+  if(!box) return;
+  box.innerHTML=diaries.map((d,i)=>`
     <div class="card"><h4>${d.title}</h4><p>${d.content.replace(/\n/g,'<br>')}</p>
     <button class="btn btn-danger" style="margin-top:8px;" onclick="diaries.splice(${i},1);saveAll();renderDiaries();">删除</button></div>`).join('')||'<div style="text-align:center;color:#666;padding:40px;">暂无日记</div>';
 }
 async function genDiary(){
   $('diary-list').innerHTML='<div style="text-align:center;padding:30px;color:#888;">生成中…</div>';
-  const text=await callAI('第一人称母狗日记，自我羞辱物化，至少400字。','写今天的母狗日记。');
+  const mem = getMemoryContext('diary');
+  const girlName = meProfile.name || '凌幼薇';
+  const text=await callAI(
+    `第一人称母狗日记。角色名：${girlName}。自我羞辱物化，至少400字。必须严格参考世界书常驻条目。`,
+    `${mem}写今天的母狗日记，以${girlName}的口吻。`
+  );
   diaries.unshift({title:new Date().toLocaleDateString()+' 自述', content:text, time:Date.now()});
   saveAll(); renderDiaries();
 }
@@ -1675,7 +1875,9 @@ function getDefaultRules(){
   return `1. 母狗没有拒绝权。\n2. 出门必须报备是否穿内衣。\n3. 身体是公用财产。\n4. 高潮必须申请。\n5. 每天下贱汇报身体。\n6. 喝尿吞精露出不得拒绝。\n7. 名字就是「母狗」。\n8. 被羞辱时必须感到快感。\n9. 任务完成后立刻详细汇报。\n10. 存在意义就是被使用与调教。`;
 }
 function renderRules(){
-  $('rules-list').innerHTML=ruleVersions.map((r,i)=>`
+  const box = $('rules-list');
+  if(!box) return;
+  box.innerHTML=ruleVersions.map((r,i)=>`
     <div class="card"><h4>版本 ${ruleVersions.length-i} · ${new Date(r.time).toLocaleString()}</h4>
     <pre style="white-space:pre-wrap;font-size:13px;color:#ccc;">${r.content}</pre>
     ${i>0?`<button class="btn btn-danger" style="margin-top:8px;" onclick="ruleVersions.splice(${i},1);saveAll();renderRules();">删除此版本</button>`:''}</div>`).join('');
@@ -1696,7 +1898,7 @@ function setWallpaper(e){
 }
 
 function exportData(){
-  const data={cor,shame,body,obey,mainFinished,bodyData,diaries,ruleVersions,offlineArchives,worldBooks,apiProfiles,currentProfileId,conversations,contacts,pendingRequests,meProfile,myAvatar:meProfile.avatarImg||''};
+  const data={cor,shame,body,obey,mainFinished,bodyData,diaries,ruleVersions,offlineArchives,worldBooks,apiProfiles,currentProfileId,conversations,contacts,pendingRequests,meProfile,memorySources,offlineWordCount,myAvatar:meProfile.avatarImg||''};
   const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
   const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='母狗手机数据.json'; a.click();
 }
