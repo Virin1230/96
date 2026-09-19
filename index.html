@@ -522,6 +522,127 @@
     background: var(--card); border-radius: 16px; padding: 12px; margin-bottom: 12px;
     border: .5px solid var(--border);
   }
+
+  /* multi desktop */
+  .home-wrap {
+    width: 100%; height: 100%; position: relative; overflow: hidden;
+    display: none; flex-direction: column;
+    background: var(--wallpaper, linear-gradient(160deg, #1a1033 0%, #2d1b4e 40%, #0f2744 100%));
+    background-size: cover; background-position: center;
+  }
+  .home-wrap.show { display: flex; }
+  .home-wrap::before {
+    content:''; position:absolute; inset:0; background:var(--home-overlay); pointer-events:none; z-index:0;
+  }
+  .home-top { position: relative; z-index: 2; padding: 62px 18px 0; }
+  .home-pages {
+    position: relative; z-index: 1; flex: 1; display: flex;
+    width: 200%; height: 100%;
+    transition: transform .35s cubic-bezier(.22,.61,.36,1);
+    will-change: transform;
+  }
+  .home-pages.page1 { transform: translateX(0); }
+  .home-pages.page2 { transform: translateX(-50%); }
+  .home-page {
+    width: 50%; height: 100%;
+    padding: 12px 18px 10px;
+    display: flex; flex-direction: column;
+    box-sizing: border-box;
+  }
+  .home-dots {
+    position: relative; z-index: 2;
+    display: flex; justify-content: center; gap: 7px; padding: 6px 0 10px;
+  }
+  .home-dots i {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: rgba(255,255,255,.35); display: block;
+  }
+  .home-dots i.on { background: #fff; width: 16px; border-radius: 4px; }
+  .home-wrap .dock { position: relative; z-index: 2; margin: 0 18px 26px; }
+
+  /* live stream */
+  .live-stage {
+    position: relative; flex: 1; background: #111; overflow: hidden;
+    display: flex; flex-direction: column;
+  }
+  .live-bg {
+    position: absolute; inset: 0; background-size: cover; background-position: center;
+    background-color: #1a0a12;
+  }
+  .live-overlay { position: absolute; inset: 0; background: linear-gradient(180deg,rgba(0,0,0,.45),transparent 30%,transparent 60%,rgba(0,0,0,.7)); pointer-events: none; }
+  .live-top {
+    position: relative; z-index: 2; padding: 40px 12px 8px;
+    display: flex; justify-content: space-between; align-items: flex-start; gap: 8px;
+  }
+  .live-title {
+    flex: 1; background: rgba(0,0,0,.45); backdrop-filter: blur(10px);
+    border-radius: 12px; padding: 8px 10px; color: #fff; font-size: 13px; font-weight: 600;
+  }
+  .live-badge {
+    background: #ff2d55; color: #fff; font-size: 11px; font-weight: 700;
+    padding: 4px 8px; border-radius: 8px; white-space: nowrap;
+  }
+  .live-status {
+    position: relative; z-index: 2; margin: 8px 12px;
+    background: rgba(0,0,0,.5); border-radius: 14px; padding: 10px 12px;
+    color: #ffb4c0; font-size: 12.5px; line-height: 1.5;
+    border: 1px solid rgba(255,100,130,.25);
+  }
+  .live-danmaku {
+    position: relative; z-index: 2; flex: 1; overflow-y: auto; padding: 8px 12px;
+    display: flex; flex-direction: column; gap: 6px;
+  }
+  .live-dm {
+    align-self: flex-start; max-width: 85%;
+    background: rgba(0,0,0,.4); color: #fff; font-size: 12.5px;
+    padding: 5px 10px; border-radius: 12px; line-height: 1.4;
+  }
+  .live-cmd {
+    position: relative; z-index: 2; margin: 0 12px 8px;
+    background: rgba(255,45,85,.18); border: 1px solid rgba(255,45,85,.35);
+    border-radius: 12px; padding: 10px; color: #ffd0da; font-size: 13.5px; white-space: pre-wrap;
+  }
+  .live-bar {
+    position: relative; z-index: 2; padding: 8px 10px 14px;
+    display: flex; gap: 8px; background: rgba(0,0,0,.55);
+  }
+
+  /* auction */
+  .auction-hero {
+    background: linear-gradient(135deg,#3a0a12,#1a0508);
+    border-radius: 18px; padding: 18px; margin-bottom: 12px;
+    border: 1px solid rgba(255,80,100,.25); text-align: center;
+  }
+  .auction-price {
+    font-size: 36px; font-weight: 800; color: #ff3b30;
+    letter-spacing: -1px; text-shadow: 0 0 20px rgba(255,59,48,.4);
+  }
+  .auction-part {
+    background: var(--card); border-radius: 16px; padding: 14px; margin-bottom: 10px;
+    border: .5px solid var(--border);
+  }
+
+  /* forum night */
+  .forum-night { background: #0c0a0e; }
+  .forum-tabs {
+    display: flex; gap: 6px; padding: 8px 10px; overflow-x: auto;
+    background: #120e14; border-bottom: .5px solid rgba(255,80,120,.15);
+  }
+  .forum-tab {
+    flex: 0 0 auto; border: 0; background: #1c151c; color: #c9b;
+    padding: 7px 12px; border-radius: 16px; font-size: 12px; cursor: pointer; white-space: nowrap;
+  }
+  .forum-tab.on { background: linear-gradient(135deg,#ff2d55,#ff6482); color: #fff; }
+  .forum-ticker {
+    background: #1a1016; color: #ff8a9a; font-size: 11px; padding: 6px 12px;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    border-bottom: .5px solid rgba(255,80,120,.12);
+  }
+  .forum-card {
+    background: #161218; border-radius: 16px; padding: 14px; margin-bottom: 10px;
+    border: .5px solid rgba(255,100,130,.12);
+  }
+
 </style>
 </head>
 <body data-theme="dark">
@@ -530,23 +651,36 @@
   <div class="screen">
 
     <!-- 桌面 -->
-    <div class="home show" id="home">
-      <div class="time" id="clock">22:16</div>
-      <div class="date" id="date">9月17日 周四</div>
-      <div class="apps">
-        <div class="app" onclick="openApp('messages')"><div class="app-icon" id="icon-messages" style="background:linear-gradient(180deg,#5ac8fa,#007aff);">💬</div><div class="app-name">消息</div></div>
-        <div class="app" onclick="openApp('contacts')"><div class="app-icon" id="icon-contacts" style="background:linear-gradient(180deg,#ff9f0a,#ff375f);">👤</div><div class="app-name">通讯录</div></div>
-        <div class="app" onclick="openApp('offline')"><div class="app-icon" id="icon-offline" style="background:linear-gradient(180deg,#ffd60a,#ff9f0a);">📍</div><div class="app-name">线下</div></div>
-        <div class="app" onclick="openApp('train')"><div class="app-icon" id="icon-train" style="background:linear-gradient(180deg,#ff6482,#ff2d55);">🔒</div><div class="app-name">主人的母狗</div></div>
-        <div class="app" onclick="openApp('worldbook')"><div class="app-icon" id="icon-worldbook" style="background:linear-gradient(180deg,#bf5af2,#5856d6);">📖</div><div class="app-name">世界书</div></div>
-        <div class="app" onclick="openApp('diary')"><div class="app-icon" id="icon-diary" style="background:linear-gradient(180deg,#da8fff,#af52de);">📓</div><div class="app-name">日记</div></div>
-        <div class="app" onclick="openApp('rules')"><div class="app-icon" id="icon-rules" style="background:linear-gradient(180deg,#30d158,#248a3d);">📋</div><div class="app-name">守则</div></div>
-        <div class="app" onclick="openApp('me')"><div class="app-icon" id="icon-me" style="background:linear-gradient(180deg,#ff8a80,#ff375f);">🐶</div><div class="app-name">母狗</div></div>
-        <div class="app" onclick="openApp('guide')"><div class="app-icon" id="icon-guide" style="background:linear-gradient(180deg,#64d2ff,#0a84ff);">🎀</div><div class="app-name">小狗乖乖</div></div>
-        <div class="app" onclick="openApp('forum')"><div class="app-icon" id="icon-forum" style="background:linear-gradient(180deg,#ff375f,#ff9f0a);">🔥</div><div class="app-name">约炮论坛</div></div>
-        <div class="app" onclick="openApp('beautify')"><div class="app-icon" id="icon-beautify" style="background:linear-gradient(180deg,#bf5af2,#5e5ce6);">✨</div><div class="app-name">美化</div></div>
-        <div class="app" onclick="openApp('settings')"><div class="app-icon" id="icon-settings" style="background:linear-gradient(180deg,#8e8e93,#636366);">⚙️</div><div class="app-name">设置</div></div>
+    <div class="home-wrap show" id="home">
+      <div class="home-top">
+        <div class="time" id="clock">22:16</div>
+        <div class="date" id="date">9月17日 周四</div>
       </div>
+      <div class="home-pages page1" id="home-pages">
+        <div class="home-page" id="home-page-1">
+          <div class="apps">
+            <div class="app" onclick="openApp('messages')"><div class="app-icon" id="icon-messages" style="background:linear-gradient(180deg,#5ac8fa,#007aff);">💬</div><div class="app-name">消息</div></div>
+            <div class="app" onclick="openApp('contacts')"><div class="app-icon" id="icon-contacts" style="background:linear-gradient(180deg,#ff9f0a,#ff375f);">👤</div><div class="app-name">通讯录</div></div>
+            <div class="app" onclick="openApp('offline')"><div class="app-icon" id="icon-offline" style="background:linear-gradient(180deg,#ffd60a,#ff9f0a);">📍</div><div class="app-name">线下</div></div>
+            <div class="app" onclick="openApp('train')"><div class="app-icon" id="icon-train" style="background:linear-gradient(180deg,#ff6482,#ff2d55);">🔒</div><div class="app-name">主人的母狗</div></div>
+            <div class="app" onclick="openApp('worldbook')"><div class="app-icon" id="icon-worldbook" style="background:linear-gradient(180deg,#bf5af2,#5856d6);">📖</div><div class="app-name">世界书</div></div>
+            <div class="app" onclick="openApp('diary')"><div class="app-icon" id="icon-diary" style="background:linear-gradient(180deg,#da8fff,#af52de);">📓</div><div class="app-name">日记</div></div>
+            <div class="app" onclick="openApp('rules')"><div class="app-icon" id="icon-rules" style="background:linear-gradient(180deg,#30d158,#248a3d);">📋</div><div class="app-name">守则</div></div>
+            <div class="app" onclick="openApp('me')"><div class="app-icon" id="icon-me" style="background:linear-gradient(180deg,#ff8a80,#ff375f);">🐶</div><div class="app-name">母狗</div></div>
+            <div class="app" onclick="openApp('guide')"><div class="app-icon" id="icon-guide" style="background:linear-gradient(180deg,#64d2ff,#0a84ff);">🎀</div><div class="app-name">小狗乖乖</div></div>
+            <div class="app" onclick="openApp('beautify')"><div class="app-icon" id="icon-beautify" style="background:linear-gradient(180deg,#bf5af2,#5e5ce6);">✨</div><div class="app-name">美化</div></div>
+            <div class="app" onclick="openApp('settings')"><div class="app-icon" id="icon-settings" style="background:linear-gradient(180deg,#8e8e93,#636366);">⚙️</div><div class="app-name">设置</div></div>
+          </div>
+        </div>
+        <div class="home-page" id="home-page-2">
+          <div class="apps">
+            <div class="app" onclick="openApp('forum')"><div class="app-icon" id="icon-forum" style="background:linear-gradient(180deg,#ff375f,#ff9f0a);">🔥</div><div class="app-name">今夜可约</div></div>
+            <div class="app" onclick="openApp('live')"><div class="app-icon" id="icon-live" style="background:linear-gradient(180deg,#ff453a,#ff2d55);">📡</div><div class="app-name">发骚直播</div></div>
+            <div class="app" onclick="openApp('auction')"><div class="app-icon" id="icon-auction" style="background:linear-gradient(180deg,#ffd60a,#ff9f0a);">💰</div><div class="app-name">身体拍卖</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="home-dots" id="home-dots"><i class="on"></i><i></i></div>
       <div class="dock">
         <div class="app" onclick="openApp('messages')"><div class="app-icon" style="background:linear-gradient(180deg,#5ac8fa,#007aff);">💬</div></div>
         <div class="app" onclick="openApp('train')"><div class="app-icon" style="background:linear-gradient(180deg,#ff6482,#ff2d55);">🔒</div></div>
@@ -968,28 +1102,92 @@
     </div>
 
 
-    <!-- 约炮论坛 -->
-    <div class="page" id="page-forum">
-      <div class="nav">
+    
+    <!-- 今夜可约（约炮论坛） -->
+    <div class="page forum-night" id="page-forum">
+      <div class="nav" style="background:rgba(18,12,18,.92);">
         <button class="nav-back" onclick="goHome()">‹ 桌面</button>
-        <div class="nav-title">约炮论坛</div>
+        <div class="nav-title">今夜可约</div>
         <button class="nav-right" onclick="newForumPost()">发帖</button>
       </div>
-      <div style="padding:8px 12px;display:flex;gap:8px;border-bottom:.5px solid var(--border);background:var(--nav);">
-        <button class="btn btn-secondary" style="flex:1;padding:8px;" onclick="refreshForum('hot')">热门</button>
-        <button class="btn btn-secondary" style="flex:1;padding:8px;" onclick="refreshForum('new')">最新</button>
-        <button class="btn btn-secondary" style="flex:1;padding:8px;" onclick="refreshForum('nearby')">附近</button>
+      <div class="forum-ticker" id="forum-ticker">刚刚有人约成功 · 滨江区 · 女找男</div>
+      <div class="forum-tabs" id="forum-tabs">
+        <button class="forum-tab on" onclick="setForumTab('city',this)">同城约炮</button>
+        <button class="forum-tab" onclick="setForumTab('today',this)">今日可约</button>
+        <button class="forum-tab" onclick="setForumTab('diary',this)">约炮日记</button>
+        <button class="forum-tab" onclick="setForumTab('special',this)">特殊需求</button>
+        <button class="forum-tab" onclick="setForumTab('auth',this)">认证曝光</button>
+        <button class="forum-tab" onclick="setForumTab('plaza',this)">求约大厅</button>
       </div>
-      <div class="scroll" style="padding:12px;" id="forum-list"></div>
+      <div style="padding:8px 10px;display:flex;gap:6px;background:#120e14;">
+        <button class="btn btn-secondary" style="flex:1;padding:7px;font-size:12px;border-radius:12px;" onclick="forumPartialRefresh('list')">刷新本区</button>
+        <button class="btn btn-secondary" style="flex:1;padding:7px;font-size:12px;border-radius:12px;" onclick="forumPartialRefresh('ticker')">刷新动态</button>
+        <button class="btn btn-secondary" style="flex:1;padding:7px;font-size:12px;border-radius:12px;" onclick="forumPartialRefresh('filters')">筛选</button>
+      </div>
+      <div class="scroll" style="padding:12px;background:#0c0a0e;" id="forum-list"></div>
     </div>
 
-    <div class="page" id="page-forum-detail">
-      <div class="nav">
+    <div class="page forum-night" id="page-forum-detail">
+      <div class="nav" style="background:rgba(18,12,18,.92);">
         <button class="nav-back" onclick="openApp('forum')">‹ 返回</button>
-        <div class="nav-title">帖子</div>
+        <div class="nav-title">帖子详情</div>
         <button class="nav-right" onclick="forumReply()">回复</button>
       </div>
-      <div class="scroll" style="padding:12px;" id="forum-detail"></div>
+      <div class="scroll" style="padding:12px;background:#0c0a0e;" id="forum-detail"></div>
+    </div>
+
+    <!-- 公开发骚直播间 -->
+    <div class="page" id="page-live">
+      <div class="nav">
+        <button class="nav-back" id="live-back-btn" onclick="tryExitLive()">‹ 桌面</button>
+        <div class="nav-title">发骚直播</div>
+        <button class="nav-right" onclick="toggleLiveSettings()">设置</button>
+      </div>
+      <div id="live-setup" class="scroll" style="padding:12px;">
+        <div class="card" style="border-radius:16px;">
+          <h4>直播背景</h4>
+          <div id="live-bg-preview" style="height:100px;border-radius:12px;background:#222;margin:8px 0;background-size:cover;background-position:center;"></div>
+          <div style="display:flex;gap:8px;">
+            <button class="btn btn-secondary" style="flex:1;" onclick="pickLiveBg()">换照片</button>
+            <button class="btn btn-secondary" style="flex:1;" onclick="clearLiveBg()">清除</button>
+          </div>
+        </div>
+        <div class="card" style="border-radius:16px;">
+          <h4>选项</h4>
+          <div class="wb-switch"><span>强制露脸</span><input type="checkbox" id="live-face"></div>
+          <div class="wb-switch"><span>开启声音（必须叫）</span><input type="checkbox" id="live-voice" checked></div>
+          <div class="wb-switch"><span>路人模式（陌生观众）</span><input type="checkbox" id="live-stranger"></div>
+          <div class="wb-switch"><span>惩罚模式</span><input type="checkbox" id="live-punish"></div>
+        </div>
+        <button class="action-btn red" style="width:calc(100% - 0px);margin:8px 0;" onclick="startForceLive()">🔴 主人强制开启直播</button>
+        <div id="live-history" style="margin-top:12px;"></div>
+      </div>
+      <div id="live-room" class="live-stage" style="display:none;">
+        <div class="live-bg" id="live-bg"></div>
+        <div class="live-overlay"></div>
+        <div class="live-top">
+          <div class="live-title" id="live-title">欠操母狗正在发情自慰</div>
+          <div class="live-badge">LIVE · <span id="live-viewers">128</span></div>
+        </div>
+        <div class="live-status" id="live-body-status">小穴湿润度 37% · 奶子微颤 · 呼吸急促</div>
+        <div class="live-cmd" id="live-cmd">等待主人指令…</div>
+        <div class="live-danmaku" id="live-danmaku"></div>
+        <div class="live-bar">
+          <input type="text" id="live-input" placeholder="汇报你正在做的事…" style="flex:1;background:rgba(255,255,255,.12);border:none;border-radius:18px;padding:9px 14px;color:#fff;font-size:15px;outline:none;">
+          <button class="btn btn-primary" style="flex:0;padding:0 14px;border-radius:18px;" onclick="sendLiveReport()">上报</button>
+          <button class="btn btn-secondary" style="flex:0;padding:0 12px;border-radius:18px;" onclick="endLive()">结束</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 身体拍卖行 -->
+    <div class="page" id="page-auction">
+      <div class="nav">
+        <button class="nav-back" onclick="goHome()">‹ 桌面</button>
+        <div class="nav-title">身体拍卖行</div>
+        <button class="nav-right" onclick="auctionPublicMode()">公开拍</button>
+      </div>
+      <div class="scroll" style="padding:12px;" id="auction-list"></div>
     </div>
 
     <!-- 设置 -->
@@ -1119,6 +1317,14 @@ let mediaSkin = {
   transferImg: ''
 };
 let forumPosts = [];
+let homePageIndex = 0;
+let forumTab = 'city';
+let liveBg = '';
+let liveHistory = [];
+let liveDanmakuTimer = null;
+let auctionParts = null;
+let auctionPublic = false;
+
 
 
 // 用户自己（母狗）的资料，会注入到所有聊天
@@ -1219,6 +1425,9 @@ function loadAll() {
       if(Array.isArray(d.evalFavorites)) evalFavorites = d.evalFavorites;
       if(d.mediaSkin) mediaSkin = Object.assign(mediaSkin, d.mediaSkin);
       if(Array.isArray(d.forumPosts)) forumPosts = d.forumPosts;
+      if(d.liveBg) liveBg = d.liveBg;
+      if(Array.isArray(d.liveHistory)) liveHistory = d.liveHistory;
+      if(d.auctionParts) auctionParts = d.auctionParts;
       if(d.meProfile) meProfile = Object.assign(meProfile, d.meProfile);
       if(d.myAvatar && !meProfile.avatarImg) meProfile.avatarImg = d.myAvatar;
       if(meProfile.avatarImg) localStorage.setItem('myAvatar', meProfile.avatarImg);
@@ -1281,7 +1490,7 @@ function saveAll() {
     cor,shame,body,obey,mainFinished,bodyData,diaries,ruleVersions,
     offlineArchives,worldBooks,apiProfiles,currentProfileId,
     conversations,contacts,pendingRequests, meProfile, memorySources,
-    offlineWordCount, diaryWordCount, rulesWordCount, trainWordCount, doneTaskKeys, appIcons, evalFavorites, mediaSkin, forumPosts
+    offlineWordCount, diaryWordCount, rulesWordCount, trainWordCount, doneTaskKeys, appIcons, evalFavorites, mediaSkin, forumPosts, liveBg, liveHistory, auctionParts
   }));
   // 同步头像给旧逻辑兼容
   if(meProfile.avatarImg) localStorage.setItem('myAvatar', meProfile.avatarImg);
@@ -1298,12 +1507,20 @@ setInterval(updateClock,1000); updateClock();
 
 function goHome() {
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('show'));
-  $('home').classList.add('show');
+  const h = $('home');
+  if(h){ h.classList.add('show'); }
+  // 直播强制模式不能退出
+  if(window._liveForced && window._liveActive){
+    openApp('live');
+    alert('强制直播中，无法回到桌面');
+  }
 }
 function openApp(name) {
-  $('home').classList.remove('show');
+  const h=$('home'); if(h) h.classList.remove('show');
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('show'));
-  $(`page-${name}`).classList.add('show');
+  const pg = $(`page-${name}`);
+  if(!pg){ console.warn('no page', name); return; }
+  pg.classList.add('show');
   // 关闭所有设置面板
   document.querySelectorAll('.feature-settings').forEach(el=>el.style.display='none');
   if(name==='messages') renderConvList();
@@ -1335,6 +1552,8 @@ function openApp(name) {
   if(name==='guide'){ renderGuideSetup(); $('guide-setup').style.display='block'; const gc=$('page-guide-chat'); if(gc) gc.style.display='none'; }
   if(name==='favs') renderFavs();
   if(name==='forum') renderForum();
+  if(name==='live') renderLiveSetup();
+  if(name==='auction') renderAuction();
   if(name==='forum-detail') {}
   applyAppIcons();
 }
@@ -2973,7 +3192,7 @@ function renderBeautify(){
     {id:'messages',name:'消息'},{id:'contacts',name:'通讯录'},{id:'offline',name:'线下'},
     {id:'train',name:'主人的母狗'},{id:'worldbook',name:'世界书'},{id:'diary',name:'日记'},
     {id:'rules',name:'守则'},{id:'me',name:'母狗'},{id:'guide',name:'小狗乖乖'},
-    {id:'forum',name:'约炮论坛'},{id:'beautify',name:'美化'},{id:'settings',name:'设置'}
+    {id:'forum',name:'今夜可约'},{id:'live',name:'发骚直播'},{id:'auction',name:'身体拍卖'},{id:'beautify',name:'美化'},{id:'settings',name:'设置'}
   ];
   const box = $('beautify-list'); if(!box) return;
   box.innerHTML = apps.map(a=>`
@@ -3212,86 +3431,385 @@ function renderFavs(){
 }
 
 
-// ========== 约炮论坛 ==========
-let currentForumId = null;
-function renderForum(){
-  const box = $('forum-list'); if(!box) return;
-  if(!forumPosts.length){
-    // 种子帖
-    forumPosts = [
-      {id:'p1', user:'夜色大叔', title:'今晚滨江空房，求附近母狗过来跪好', body:'有图有真相，会调会骂。自备绳和跳蛋。报年龄胸围。', tags:['线下','调教'], time:Date.now()-3600000, replies:[{user:'路过', text:'位置私', time:Date.now()-3000000}], hot:12},
-      {id:'p2', user:'匿名母畜', title:'被同事在茶水间用过两次，好想再被发现', body:'今天故意没穿内裤上班，坐着开会一直在流水……有没有人教我怎么更下贱', tags:['露出','办公室'], time:Date.now()-7200000, replies:[], hot:28},
-      {id:'p3', user:'教练阿凯', title:'私教课可以加时，愿意被录像的优先', body:'健身房更衣室有盲区。第一次的会从轻的开始。', tags:['健身房','拍摄'], time:Date.now()-86400000, replies:[{user:'小狗', text:'多少钱', time:Date.now()-80000000}], hot:9}
-    ];
+// ========== 桌面左右滑 ==========
+function setHomePage(i){
+  homePageIndex = i ? 1 : 0;
+  const pages = $('home-pages');
+  if(!pages) return;
+  pages.classList.toggle('page1', homePageIndex===0);
+  pages.classList.toggle('page2', homePageIndex===1);
+  const dots = $('home-dots');
+  if(dots){
+    const is = dots.querySelectorAll('i');
+    is.forEach((el,idx)=>el.classList.toggle('on', idx===homePageIndex));
   }
-  const list = [...forumPosts].sort((a,b)=>(b.hot||0)-(a.hot||0));
-  box.innerHTML = list.map(p=>`
-    <div class="card" style="border-radius:16px;cursor:pointer;" onclick="openForumPost('${p.id}')">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
-        <span style="font-weight:600;color:var(--pink);">${escapeHtml(p.user)}</span>
-        <span style="font-size:11px;color:var(--muted);">${new Date(p.time).toLocaleString()}</span>
-      </div>
-      <div style="font-size:15px;font-weight:600;margin-bottom:6px;color:var(--text);">${escapeHtml(p.title)}</div>
-      <div style="font-size:13px;color:var(--muted);line-height:1.45;max-height:40px;overflow:hidden;">${escapeHtml(p.body)}</div>
-      <div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap;">
-        ${(p.tags||[]).map(t=>`<span class="wb-pill">#${escapeHtml(t)}</span>`).join('')}
-        <span class="wb-pill">🔥${p.hot||0}</span>
-        <span class="wb-pill">💬${(p.replies||[]).length}</span>
-      </div>
-    </div>`).join('');
 }
-function refreshForum(tab){
-  if(tab==='new') forumPosts.sort((a,b)=>b.time-a.time);
-  else if(tab==='hot') forumPosts.sort((a,b)=>(b.hot||0)-(a.hot||0));
-  else if(tab==='nearby') forumPosts.sort(()=>Math.random()-0.5);
+(function initHomeSwipe(){
+  const el = () => $('home-pages');
+  let startX=0, dx=0, tracking=false;
+  document.addEventListener('touchstart', e=>{
+    const p = el(); if(!p || !$('home')?.classList.contains('show')) return;
+    if(!e.target.closest('#home')) return;
+    startX = e.touches[0].clientX; dx=0; tracking=true;
+  }, {passive:true});
+  document.addEventListener('touchmove', e=>{
+    if(!tracking) return;
+    dx = e.touches[0].clientX - startX;
+  }, {passive:true});
+  document.addEventListener('touchend', ()=>{
+    if(!tracking) return; tracking=false;
+    if(dx < -50) setHomePage(1);
+    else if(dx > 50) setHomePage(0);
+    dx=0;
+  });
+})();
+
+// ========== 今夜可约（论坛） ==========
+let currentForumId = null;
+const FORUM_SEED = {
+  city: [
+    {id:'c1', board:'city', type:'女找男', user:'小鹿', age:23, height:'165/48', place:'滨江区', time:'今晚22点后', play:'过夜·可多次', title:'女，今晚有空，求靠谱不矫情', body:'已认证。接受酒店，不接受奇怪变态第一次见面就上绳。聊天先。', auth:true, online:'当前在线', hot:19, replies:[], time:Date.now()-1e6},
+    {id:'c2', board:'city', type:'男找女', user:'阿凯', age:28, height:'178/70', place:'西湖区', time:'随时', play:'纯约·有车', title:'男，有车有房，今晚可接', body:'车震或酒店都行。卫生干净，能给车票。不找伴游。', auth:true, online:'今日活跃', hot:11, replies:[], time:Date.now()-2e6},
+    {id:'c3', board:'city', type:'3P/多人', user:'夫妻号', age:30, height:'-', place:'下城区', time:'周末', play:'3P', title:'夫妻找女，温柔不勉强', body:'先见面吃饭再决定。女的主导也可以。', auth:false, online:'今日活跃', hot:7, replies:[], time:Date.now()-5e6}
+  ],
+  today: [
+    {id:'t1', board:'today', type:'女找男', user:'今晚有空', age:25, height:'160/50', place:'近地铁', time:'今天', play:'一次', title:'今晚两小时空窗，速约', body:'只能到11点前。附近最好。', auth:true, online:'当前在线', hot:22, replies:[], time:Date.now()-3e5}
+  ],
+  diary: [
+    {id:'d1', board:'diary', type:'精华', user:'匿名', title:'第一次约到同城，意外很干净', body:'颜值7 身材8 技术6 卫生9 准时10。会回约。', scores:{颜值:7,身材:8,技术:6,卫生:9,准时:10}, hot:30, replies:[], time:Date.now()-8e6},
+    {id:'d2', board:'diary', type:'翻车', user:'匿名', title:'照片骗子，到场完全不是一个人', body:'已举报。大家看认证。', scores:{颜值:2,身材:3,技术:1,卫生:5,准时:2}, hot:15, replies:[], time:Date.now()-9e6}
+  ],
+  special: [
+    {id:'s1', board:'special', type:'车震/户外', user:'夜驾', age:27, place:'沿江', time:'深夜', play:'车震', title:'有SUV，求敢玩的', body:'窗膜很深。安全第一。', auth:true, online:'今日活跃', hot:9, replies:[], time:Date.now()-4e6},
+    {id:'s2', board:'special', type:'出差旅约', user:'出差狗', age:32, place:'酒店', time:'周三周四', play:'过夜', title:'外地来两天，求同城陪睡', body:'可给房号，先视频验证。', auth:false, online:'当前在线', hot:6, replies:[], time:Date.now()-6e6}
+  ],
+  auth: [
+    {id:'a1', board:'auth', type:'骗子曝光', user:'管理员', title:'曝光：用户「温柔学长」盗图', body:'多地举报照片是网图。已封禁。', auth:true, hot:40, replies:[], time:Date.now()-1e7},
+    {id:'a2', board:'auth', type:'已认证', user:'小鹿', title:'真人认证通过', body:'已完成照片验证。', auth:true, hot:5, replies:[], time:Date.now()-2e6}
+  ],
+  plaza: [
+    {id:'p1', board:'plaza', type:'求约', user:'匿名', title:'女，25，今晚求靠谱男', body:'一句话贴。私信报年龄位置。', online:'当前在线', hot:18, replies:[], time:Date.now()-2e5},
+    {id:'p2', board:'plaza', type:'求约', user:'匿名', title:'男，28，今晚可约，有车', body:'可接送。', online:'今日活跃', hot:10, replies:[], time:Date.now()-4e5}
+  ]
+};
+
+function ensureForumData(){
+  if(!forumPosts || !forumPosts.length){
+    forumPosts = Object.values(FORUM_SEED).flat();
+  }
+}
+function setForumTab(tab, btn){
+  forumTab = tab;
+  document.querySelectorAll('.forum-tab').forEach(b=>b.classList.remove('on'));
+  if(btn) btn.classList.add('on');
   renderForum();
+}
+function renderForum(){
+  ensureForumData();
+  const box = $('forum-list'); if(!box) return;
+  let list = forumPosts.filter(p => (p.board||'city') === forumTab);
+  if(!list.length) list = (FORUM_SEED[forumTab]||[]).slice();
+  box.innerHTML = list.map(p=>`
+    <div class="forum-card" onclick="openForumPost('${p.id}')">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+        <span style="color:#ff8a9a;font-weight:600;">${escapeHtml(p.user||'')}${p.auth?' <span class="wb-pill">已认证</span>':''}</span>
+        <span style="font-size:11px;color:#887;">${p.online||''}</span>
+      </div>
+      <div style="font-size:15px;font-weight:700;color:#f5e6ea;margin-bottom:6px;">${escapeHtml(p.title||'')}</div>
+      <div style="font-size:12.5px;color:#a89;line-height:1.45;max-height:38px;overflow:hidden;">${escapeHtml(p.body||'')}</div>
+      <div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap;font-size:11px;color:#978;">
+        ${p.type?`<span class="wb-pill">${escapeHtml(p.type)}</span>`:''}
+        ${p.place?`<span class="wb-pill">${escapeHtml(p.place)}</span>`:''}
+        ${p.age?`<span class="wb-pill">${p.age}岁</span>`:''}
+        ${p.play?`<span class="wb-pill">${escapeHtml(p.play)}</span>`:''}
+        <span class="wb-pill">🔥${p.hot||0}</span>
+      </div>
+    </div>`).join('') || '<div style="text-align:center;color:#665;padding:40px;">本区暂无帖子</div>';
+}
+async function forumPartialRefresh(part){
+  if(part==='ticker'){
+    const raw = await callAI('只输出一句「刚刚有人约成功」风格的滚动提示，15字内，不要引号。','生成一句约炮论坛氛围提示', 40);
+    if($('forum-ticker')) $('forum-ticker').textContent = (raw||'').replace(/["「」]/g,'').trim().slice(0,40) || '刚刚有人约成功 · 同城';
+    return;
+  }
+  if(part==='filters'){
+    alert('筛选：距离 / 年龄 / 是否认证 / 是否过夜（演示版已记录偏好）');
+    return;
+  }
+  // 只刷新当前板块若干帖
+  const raw = await callAI(
+    '你是约炮论坛内容助手。只生成当前板块的2条新帖，输出JSON数组，字段：user,title,body,type,age,place,play,auth(boolean),online,hot。不要其他文字。风格真实低门槛、偏夜晚暧昧，不要极端暴力。',
+    `板块：${forumTab}。生成2条新帖。`,
+    800
+  );
+  let arr=[]; try{ const m=raw.match(/\[[\s\S]*\]/); arr=m?JSON.parse(m[0]):[]; }catch(_){}
+  if(Array.isArray(arr)){
+    arr.forEach(p=>{
+      forumPosts.unshift({
+        id:'f'+Date.now()+Math.random().toString(36).slice(2,5),
+        board: forumTab,
+        type: p.type||'求约', user: p.user||'匿名', title: p.title||'无题', body: p.body||'',
+        age: p.age, place: p.place, play: p.play, auth: !!p.auth,
+        online: p.online||'今日活跃', hot: p.hot||1, replies: [], time: Date.now()
+      });
+    });
+    saveAll(); renderForum();
+  } else alert('刷新失败，请检查API');
 }
 function openForumPost(id){
   currentForumId = id;
+  ensureForumData();
   const p = forumPosts.find(x=>x.id===id); if(!p) return;
   openApp('forum-detail');
   const box = $('forum-detail');
   box.innerHTML = `
-    <div class="card" style="border-radius:18px;">
-      <div style="font-size:12px;color:var(--muted);margin-bottom:6px;">${escapeHtml(p.user)} · ${new Date(p.time).toLocaleString()}</div>
-      <div style="font-size:17px;font-weight:700;margin-bottom:10px;">${escapeHtml(p.title)}</div>
-      <div style="font-size:14.5px;line-height:1.6;white-space:pre-wrap;color:var(--text);">${escapeHtml(p.body)}</div>
-      <div style="margin-top:10px;display:flex;gap:6px;flex-wrap:wrap;">${(p.tags||[]).map(t=>`<span class="wb-pill">#${escapeHtml(t)}</span>`).join('')}</div>
+    <div class="forum-card">
+      <div style="font-size:12px;color:#887;margin-bottom:6px;">${escapeHtml(p.user||'')} ${p.auth?'· 已认证':''} · ${p.online||''}</div>
+      <div style="font-size:17px;font-weight:700;color:#f5e6ea;margin-bottom:10px;">${escapeHtml(p.title||'')}</div>
+      <div style="font-size:14px;line-height:1.65;color:#d8c8ce;white-space:pre-wrap;">${escapeHtml(p.body||'')}</div>
+      <div style="margin-top:10px;display:flex;gap:6px;flex-wrap:wrap;">
+        ${p.type?`<span class="wb-pill">${escapeHtml(p.type)}</span>`:''}
+        ${p.place?`<span class="wb-pill">${escapeHtml(p.place)}</span>`:''}
+        ${p.play?`<span class="wb-pill">${escapeHtml(p.play)}</span>`:''}
+      </div>
     </div>
-    <div style="font-size:13px;font-weight:600;margin:12px 0 8px;color:var(--muted);">回复</div>
-    ${(p.replies||[]).map(r=>`<div class="card" style="border-radius:14px;padding:12px;"><b style="color:var(--pink);">${escapeHtml(r.user)}</b><div style="font-size:13.5px;margin-top:4px;">${escapeHtml(r.text)}</div><div style="font-size:11px;color:var(--muted);margin-top:4px;">${new Date(r.time).toLocaleString()}</div></div>`).join('')||'<div style="color:var(--muted);font-size:13px;padding:12px;">还没有回复</div>'}
-    <button class="action-btn blue" style="width:100%;" onclick="forumPrivateChat('${escapeHtml(p.user)}')">私聊楼主</button>
+    <div style="color:#887;font-size:13px;margin:12px 0 8px;">回复</div>
+    ${(p.replies||[]).map(r=>`<div class="forum-card" style="padding:12px;"><b style="color:#ff8a9a;">${escapeHtml(r.user)}</b><div style="margin-top:4px;color:#d8c8ce;">${escapeHtml(r.text)}</div></div>`).join('')||'<div style="color:#665;padding:8px;">还没有回复</div>'}
+    <button class="action-btn red" style="width:100%;" onclick="forumPrivateChat('${escapeHtml(p.user||'楼主')}')">私信楼主</button>
   `;
 }
 function newForumPost(){
-  const title = prompt('标题（越下贱越容易上热门）');
-  if(!title||!title.trim()) return;
-  const body = prompt('正文');
-  if(!body||!body.trim()) return;
-  const tags = (prompt('标签，逗号分隔', '线下,调教')||'').split(/[,，]/).map(x=>x.trim()).filter(Boolean);
-  forumPosts.unshift({ id:'p'+Date.now(), user: meProfile.name||'匿名母狗', title: title.trim(), body: body.trim(), tags, time: Date.now(), replies: [], hot: 1 });
+  const title = prompt('一句话标题'); if(!title||!title.trim()) return;
+  const body = prompt('补充说明（位置/时间/玩法）')||'';
+  forumPosts.unshift({
+    id:'f'+Date.now(), board: forumTab==='plaza'?'plaza':forumTab, type:'求约',
+    user: meProfile.name||'匿名', title: title.trim(), body: body.trim(),
+    auth:false, online:'当前在线', hot:1, replies:[], time:Date.now(), place:'同城', play:'面议'
+  });
   saveAll(); renderForum();
 }
 function forumReply(){
   const p = forumPosts.find(x=>x.id===currentForumId); if(!p) return;
-  const text = prompt('回复内容');
-  if(!text||!text.trim()) return;
-  p.replies = p.replies||[];
-  p.replies.push({ user: meProfile.name||'匿名', text: text.trim(), time: Date.now() });
-  p.hot = (p.hot||0)+1;
-  saveAll(); openForumPost(p.id);
+  const text = prompt('回复'); if(!text||!text.trim()) return;
+  p.replies=p.replies||[]; p.replies.push({user:meProfile.name||'匿名', text:text.trim(), time:Date.now()});
+  p.hot=(p.hot||0)+1; saveAll(); openForumPost(p.id);
 }
 function forumPrivateChat(name){
-  // 创建临时角色并进入聊天
   const id = 'forum_'+Date.now();
   conversations[id] = {
-    name, remark: name, avatar: name[0]||'约',
-    messages: [], last: '从约炮论坛来的', time: Date.now(),
-    persona: `你是约炮论坛用户「${name}」，说话直接、下流、会约线下，把对方当泄欲工具。不要突然变得纯洁。`,
-    gender: 'unknown'
+    name, remark:name, avatar:(name||'约')[0],
+    messages:[], last:'从今夜可约来的', time:Date.now(),
+    persona:`你是约炮软件用户「${name}」，说话直接、想约线下，先确认时间地点安全。`,
+    gender:'unknown'
   };
-  if(!contacts.find(c=>c.id===id)) contacts.push({id, name, remark:name, gender:'unknown', relation:'论坛'});
+  if(!contacts.find(c=>c.id===id)) contacts.push({id,name,remark:name,gender:'unknown',relation:'论坛'});
   saveAll(); openChat(id);
+}
+
+// ========== 公开发骚直播间 ==========
+const LIVE_TITLES = ['欠操母狗正在发情自慰','今天把这骚穴玩给大家看','精液马桶公开表演','直播给主人发骚求操','当众流水的下贱玩具'];
+function renderLiveSetup(){
+  window._liveActive = false;
+  window._liveForced = false;
+  if($('live-setup')) $('live-setup').style.display='block';
+  if($('live-room')) $('live-room').style.display='none';
+  if($('live-back-btn')) $('live-back-btn').style.display='';
+  const prev=$('live-bg-preview');
+  if(prev) prev.style.backgroundImage = liveBg?`url(${liveBg})`:'';
+  const hist=$('live-history');
+  if(hist){
+    hist.innerHTML = liveHistory.length? '<div style="font-size:13px;color:var(--muted);margin-bottom:8px;">历史回放</div>'+liveHistory.map((h,i)=>`
+      <div class="card" style="border-radius:14px;"><div style="font-weight:600;color:var(--pink);">${escapeHtml(h.title)}</div>
+      <div style="font-size:12px;color:var(--muted);">${new Date(h.time).toLocaleString()} · 弹幕${(h.danmaku||[]).length}条</div>
+      <button class="btn btn-secondary" style="margin-top:8px;width:100%;" onclick="openLiveReplay(${i})">看回放+写观后感</button></div>`).join('') : '';
+  }
+}
+function pickLiveBg(){
+  const input=document.createElement('input'); input.type='file'; input.accept='image/*';
+  input.onchange=async e=>{ const f=e.target.files?.[0]; if(!f)return; liveBg=await compressImage(f,1400,0.72); saveAll(); renderLiveSetup(); };
+  input.click();
+}
+function clearLiveBg(){ liveBg=''; saveAll(); renderLiveSetup(); }
+function toggleLiveSettings(){ alert('可在开播前设置：露脸 / 声音 / 路人模式 / 惩罚模式'); }
+async function startForceLive(){
+  window._liveActive = true;
+  window._liveForced = true;
+  window._liveDanmaku = [];
+  window._liveLog = [];
+  if($('live-setup')) $('live-setup').style.display='none';
+  if($('live-room')) $('live-room').style.display='flex';
+  if($('live-back-btn')) $('live-back-btn').style.display='none';
+  const title = LIVE_TITLES[Math.floor(Math.random()*LIVE_TITLES.length)];
+  window._liveTitle = title;
+  if($('live-title')) $('live-title').textContent = title;
+  if($('live-bg')) $('live-bg').style.backgroundImage = liveBg?`url(${liveBg})`:'';
+  if($('live-viewers')) $('live-viewers').textContent = 80+Math.floor(Math.random()*400);
+  updateLiveBodyStatus(20);
+  await pushLiveCommand(true);
+  startLiveDanmakuLoop();
+}
+function tryExitLive(){
+  if(window._liveForced && window._liveActive){ alert('强制直播中，无法退出'); return; }
+  goHome();
+}
+function updateLiveBodyStatus(base){
+  const wet = Math.min(99, (base||30)+Math.floor(Math.random()*50));
+  const shake = ['微颤','轻晃','明显抖动','发情般乱颤'][Math.floor(Math.random()*4)];
+  const face = $('live-face')?.checked ? '镜头正对脸 · ' : '';
+  if($('live-body-status')) $('live-body-status').textContent = `${face}小穴湿润度 ${wet}% · 奶子${shake} · 呼吸急促`;
+}
+async function pushLiveCommand(first){
+  const stranger = $('live-stranger')?.checked;
+  const punish = $('live-punish')?.checked;
+  const voice = $('live-voice')?.checked;
+  const system = `你是调教主人，正在强制母狗公开直播发骚。给出下一条实时指令（掰穴/揉奶/自慰/舔手指/说下贱台词等），可夹杂羞辱。${voice?'要求她叫出声。':''}${punish?'不听话就威胁提高玩具强度并全网播报。':''}${stranger?'强调有陌生路人观众。':''}只输出指令本身，短句。`;
+  const text = await callAI(system, first?'开始第一轮强制指令':'根据直播继续下指令', 200);
+  if($('live-cmd')) $('live-cmd').textContent = text;
+  window._liveLog.push({type:'cmd', text});
+}
+function startLiveDanmakuLoop(){
+  if(liveDanmakuTimer) clearInterval(liveDanmakuTimer);
+  const box = $('live-danmaku'); if(!box) return;
+  box.innerHTML='';
+  const presets = ['这黑穴真能流水','小奶子晃得跟发情母狗一样','求操的表情好下贱','这嘴就该天天含着鸡巴','公开自慰好骚','主人好会调','给观众看看穴','流水了吧','叫大声点','真下贱'];
+  liveDanmakuTimer = setInterval(async ()=>{
+    if(!window._liveActive) return;
+    let dm = presets[Math.floor(Math.random()*presets.length)];
+    if(Math.random()>0.65){
+      const raw = await callAI('只输出一句直播间羞辱弹幕，15字内。','弹幕', 30);
+      if(raw && raw.length<40) dm = raw.replace(/["「」\n]/g,'').trim();
+    }
+    window._liveDanmaku.push(dm);
+    const el=document.createElement('div'); el.className='live-dm'; el.textContent=dm;
+    box.appendChild(el); box.scrollTop=box.scrollHeight;
+    updateLiveBodyStatus();
+    if($('live-viewers')) $('live-viewers').textContent = 80+Math.floor(Math.random()*500);
+  }, 2800);
+}
+async function sendLiveReport(){
+  const v=($('live-input')?.value||'').trim(); if(!v) return;
+  window._liveLog.push({type:'me', text:v});
+  $('live-input').value='';
+  const el=document.createElement('div'); el.className='live-dm'; el.style.background='rgba(10,132,255,.35)'; el.textContent='我：'+v;
+  $('live-danmaku')?.appendChild(el);
+  await pushLiveCommand(false);
+}
+function endLive(){
+  if(!confirm('结束直播？将生成回放并要求写观后感')) return;
+  window._liveActive=false; window._liveForced=false;
+  if(liveDanmakuTimer) clearInterval(liveDanmakuTimer);
+  const pack = {
+    title: window._liveTitle||'直播回放',
+    time: Date.now(),
+    danmaku: (window._liveDanmaku||[]).slice(-30),
+    log: window._liveLog||[]
+  };
+  liveHistory.unshift(pack); saveAll();
+  renderLiveSetup();
+  setTimeout(()=>openLiveReplay(0), 200);
+}
+function openLiveReplay(i){
+  const h = liveHistory[i]; if(!h) return;
+  const selected = (h.danmaku||[]).slice(0,8).map((d,idx)=>`${idx+1}. ${d}`).join('\n');
+  const feel = prompt(`【强制回放·弹幕精选】\n${selected}\n\n请写下观后感上交主人：`);
+  if(feel && feel.trim()){
+    h.reflection = feel.trim(); saveAll();
+    alert('观后感已记录，可在与主人的聊天中汇报');
+  }
+}
+
+// ========== 身体拍卖行 ==========
+function defaultAuctionParts(){
+  return [
+    {id:'mouth', name:'嘴巴', tag:'专吃精液', price:5, comment:'已经彻底变成精液马桶', deals:12},
+    {id:'breast', name:'奶子', tag:'揉玩/夹子专用', price:18, comment:'很会晃，适合当肉便器使用', deals:9},
+    {id:'pussy', name:'小穴', tag:'已开发程度', price:25, comment:'被操过，仍会流水服务', deals:20},
+    {id:'ass', name:'菊花', tag:'松紧度', price:15, comment:'训练中，可加价开苞服务', deals:4},
+    {id:'tongue', name:'舌头', tag:'舔舐服务', price:8, comment:'会讨好，适合鞋与身体', deals:7},
+    {id:'whole', name:'整只母狗', tag:'打包价', price:99, comment:'可过夜可调教，服从中等', deals:3}
+  ];
+}
+function renderAuction(){
+  if(!auctionParts) auctionParts = defaultAuctionParts();
+  const total = auctionParts.reduce((s,p)=>s+(p.price||0),0);
+  const box = $('auction-list'); if(!box) return;
+  box.innerHTML = `
+    <div class="auction-hero">
+      <div style="font-size:13px;color:#ff8a80;margin-bottom:6px;">今日身体估值报告</div>
+      <div class="auction-price">¥${total}</div>
+      <div style="font-size:12px;color:#aaa;margin-top:6px;">${meProfile.name||'母狗'} · 可分割出售</div>
+      <div style="display:flex;gap:8px;margin-top:12px;">
+        <button class="btn btn-secondary" style="flex:1;" onclick="auctionDailyReport()">刷新估值</button>
+        <button class="btn btn-primary" style="flex:1;" onclick="auctionPoster()">生成海报</button>
+      </div>
+    </div>
+    ${auctionPublic?'<div class="card" style="border-radius:14px;color:var(--pink);font-size:13px;">公开拍卖中：弹幕竞价已开启</div><div id="auction-bids"></div>':''}
+    ${auctionParts.map((p,i)=>`
+      <div class="auction-part">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <div><div style="font-weight:700;color:var(--pink);">${escapeHtml(p.name)} <span style="font-size:11px;color:var(--muted);">${escapeHtml(p.tag||'')}</span></div>
+          <div style="font-size:12px;color:var(--muted);margin-top:2px;">成交 ${p.deals||0} 次</div></div>
+          <div style="font-size:22px;font-weight:800;color:var(--red);">¥${p.price}</div>
+        </div>
+        <div style="font-size:13px;color:var(--text);margin:8px 0;line-height:1.45;">「${escapeHtml(p.comment||'')}」</div>
+        <div style="display:flex;gap:6px;">
+          <button class="btn btn-secondary" style="flex:1;padding:8px;" onclick="editAuctionPrice(${i})">改价</button>
+          <button class="btn btn-secondary" style="flex:1;padding:8px;" onclick="editAuctionComment(${i})">评语</button>
+          <button class="btn btn-danger" style="flex:1;padding:8px;" onclick="dropAuctionPrice(${i})">跌价</button>
+        </div>
+      </div>`).join('')}`;
+  if(auctionPublic) startAuctionBids();
+}
+function editAuctionPrice(i){
+  const v=prompt('新估价（元）', auctionParts[i].price); if(v===null)return;
+  auctionParts[i].price=Number(v)||0; saveAll(); renderAuction();
+}
+function editAuctionComment(i){
+  const v=prompt('主人评语', auctionParts[i].comment||''); if(v===null)return;
+  auctionParts[i].comment=v; saveAll(); renderAuction();
+}
+function dropAuctionPrice(i){
+  const reason=prompt('跌价理由（羞辱）','表现太差，半价处理'); if(reason===null)return;
+  auctionParts[i].price=Math.max(1, Math.floor(auctionParts[i].price*0.5));
+  auctionParts[i].comment = reason + ' · ' + (auctionParts[i].comment||'');
+  saveAll(); renderAuction(); alert('已跌价并广播');
+}
+async function auctionDailyReport(){
+  const raw=await callAI('给母狗身体各部位重新估价，输出JSON数组，字段name,price,comment。部位：嘴巴,奶子,小穴,菊花,舌头,整只母狗。','刷新今日估值',600);
+  try{
+    const m=raw.match(/\[[\s\S]*\]/); const arr=m?JSON.parse(m[0]):null;
+    if(Array.isArray(arr)){
+      arr.forEach(a=>{
+        const p=auctionParts.find(x=>x.name===a.name || (a.name&&x.name.includes(a.name.slice(0,2))));
+        if(p){ if(a.price!=null) p.price=Number(a.price)||p.price; if(a.comment) p.comment=a.comment; }
+      });
+      saveAll(); renderAuction(); return;
+    }
+  }catch(_){}
+  auctionParts.forEach(p=>p.price=Math.max(1,p.price+Math.floor(Math.random()*11-5)));
+  saveAll(); renderAuction();
+}
+function auctionPoster(){
+  const lines = auctionParts.map(p=>`${p.name} ¥${p.price} — ${p.comment}`).join('\n');
+  const total = auctionParts.reduce((s,p)=>s+p.price,0);
+  prompt('拍卖海报文案（可复制发给主人）', `【身体拍卖海报】${meProfile.name||'母狗'}\n总价¥${total}\n${lines}`);
+}
+function auctionPublicMode(){
+  auctionPublic = !auctionPublic;
+  renderAuction();
+}
+function startAuctionBids(){
+  const box=$('auction-bids'); if(!box) return;
+  box.innerHTML='';
+  const insults=['5块都贵','我出3块买她嘴','奶子半价我要','这穴不值','打包带走当马桶','再降点'];
+  let n=0;
+  const t=setInterval(()=>{
+    if(!auctionPublic || n++>8){ clearInterval(t); return; }
+    const el=document.createElement('div');
+    el.className='live-dm'; el.style.margin='4px 0';
+    el.textContent = insults[Math.floor(Math.random()*insults.length)] + ' · ¥'+Math.floor(Math.random()*30+1);
+    box.appendChild(el);
+  }, 1200);
 }
 
 function exportData(){
@@ -3306,6 +3824,7 @@ function exportData(){
     meProfile, memorySources,
     offlineWordCount, diaryWordCount, rulesWordCount, trainWordCount,
     doneTaskKeys, appIcons, evalFavorites, mediaSkin, forumPosts,
+    liveBg, liveHistory, auctionParts,
     uiTheme, guideMode,
     wallpaper: localStorage.getItem('wallpaper') || '',
     myAvatar: meProfile.avatarImg || '',
@@ -3332,6 +3851,9 @@ function doImport(e){
       if(d.meProfile) meProfile = Object.assign(meProfile, d.meProfile);
       if(d.mediaSkin) mediaSkin = Object.assign(mediaSkin, d.mediaSkin);
       if(Array.isArray(d.forumPosts)) forumPosts = d.forumPosts;
+      if(d.liveBg) liveBg = d.liveBg;
+      if(Array.isArray(d.liveHistory)) liveHistory = d.liveHistory;
+      if(d.auctionParts) auctionParts = d.auctionParts;
       if(Array.isArray(d.doneTaskKeys)) doneTaskKeys = d.doneTaskKeys;
       if(d.appIcons) appIcons = d.appIcons;
       if(Array.isArray(d.evalFavorites)) evalFavorites = d.evalFavorites;
