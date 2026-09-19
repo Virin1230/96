@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-CN" data-theme="dark">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
@@ -11,257 +11,375 @@
 <meta name="format-detection" content="telephone=no">
 <title>母狗的手机</title>
 <style>
-  :root {
-    --bg: #000; --card: #1c1c1e; --blue: #0095f6; --text: #f5f5f7; --muted: #8e8e93; --border: #38383a;
+  
+  :root, [data-theme="dark"] {
+    --bg: #000000;
+    --bg2: #0b0b0d;
+    --card: #1c1c1e;
+    --card2: #2c2c2e;
+    --blue: #0a84ff;
+    --green: #30d158;
+    --red: #ff453a;
+    --pink: #ff6b8a;
+    --text: #f5f5f7;
+    --muted: #8e8e93;
+    --border: rgba(255,255,255,.12);
+    --nav: rgba(28,28,30,.88);
+    --input: #2c2c2e;
+    --bubble-him: #2c2c2e;
+    --bubble-me: #0a84ff;
+    --shadow: 0 8px 32px rgba(0,0,0,.45);
+    --glass: rgba(255,255,255,.08);
+    --glass-border: rgba(255,255,255,.14);
+    --dock: rgba(30,30,32,.55);
+    --danger-bg: #3a1515;
+    --danger-text: #ff8a80;
+    --home-overlay: rgba(0,0,0,.25);
+    color-scheme: dark;
+  }
+  [data-theme="light"] {
+    --bg: #f2f2f7;
+    --bg2: #ffffff;
+    --card: #ffffff;
+    --card2: #f2f2f7;
+    --blue: #007aff;
+    --green: #34c759;
+    --red: #ff3b30;
+    --pink: #ff2d55;
+    --text: #1c1c1e;
+    --muted: #8e8e93;
+    --border: rgba(0,0,0,.1);
+    --nav: rgba(255,255,255,.86);
+    --input: #e9e9eb;
+    --bubble-him: #e9e9eb;
+    --bubble-me: #007aff;
+    --shadow: 0 8px 28px rgba(0,0,0,.12);
+    --glass: rgba(255,255,255,.65);
+    --glass-border: rgba(0,0,0,.08);
+    --dock: rgba(255,255,255,.55);
+    --danger-bg: #ffe5e5;
+    --danger-text: #d70015;
+    --home-overlay: rgba(255,255,255,.15);
+    color-scheme: light;
   }
   * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
   html, body { height:100%; height:100dvh; }
   body {
-    background:#111; color:var(--text);
-    font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","PingFang SC",sans-serif;
-    height:100vh; height:100dvh; display:flex; justify-content:center; align-items:center; overflow:hidden;
+    background: #1a1a1c;
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "PingFang SC", "Helvetica Neue", sans-serif;
+    height: 100vh; height: 100dvh;
+    display: flex; justify-content: center; align-items: center; overflow: hidden;
     padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+    -webkit-font-smoothing: antialiased;
   }
+  [data-theme="light"] body, body[data-theme="light"] { background: #c8c8d0; }
   .phone {
-    width:390px; height:844px; max-height:95vh; max-height:95dvh; background:#000;
-    border-radius:44px; border:10px solid #1a1a1a; position:relative; overflow:hidden;
-    box-shadow:0 0 0 1px #333, 0 25px 80px rgba(0,0,0,.85);
+    width: 390px; height: 844px; max-height: 95vh; max-height: 95dvh;
+    background: var(--bg);
+    border-radius: 44px; border: 10px solid #2a2a2c;
+    position: relative; overflow: hidden;
+    box-shadow: 0 0 0 1px #3a3a3c, 0 30px 90px rgba(0,0,0,.55);
   }
+  [data-theme="light"] .phone { border-color: #d0d0d4; box-shadow: 0 0 0 1px #bbb, 0 30px 90px rgba(0,0,0,.2); }
   .notch {
-    position:absolute; top:0; left:50%; transform:translateX(-50%);
-    width:126px; height:32px; background:#000; border-radius:0 0 20px 20px; z-index:200;
+    position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+    width: 118px; height: 34px; background: #000; border-radius: 0 0 22px 22px; z-index: 200;
   }
-  /* 从桌面图标打开：全屏，去掉外框，真正像原生 App */
-  @media all and (display-mode: standalone),
-         all and (display-mode: fullscreen) {
-    body {
-      background: #000;
-      padding: 0;
-      align-items: stretch;
-      justify-content: stretch;
-    }
-    .phone {
-      width: 100%;
-      height: 100%;
-      max-height: 100%;
-      border-radius: 0;
-      border: none;
-      box-shadow: none;
-    }
+  [data-theme="light"] .notch { background: #1c1c1e; }
+  @media all and (display-mode: standalone), all and (display-mode: fullscreen) {
+    body { background: var(--bg); padding: 0; align-items: stretch; justify-content: stretch; }
+    .phone { width: 100%; height: 100%; max-height: 100%; border-radius: 0; border: none; box-shadow: none; }
     .notch { display: none; }
   }
-  body.standalone-mode {
-    background: #000;
-    padding: 0;
-    align-items: stretch;
-    justify-content: stretch;
-  }
-  body.standalone-mode .phone {
-    width: 100%;
-    height: 100%;
-    max-height: 100%;
-    border-radius: 0;
-    border: none;
-    box-shadow: none;
-  }
+  body.standalone-mode { background: var(--bg); padding: 0; align-items: stretch; justify-content: stretch; }
+  body.standalone-mode .phone { width: 100%; height: 100%; max-height: 100%; border-radius: 0; border: none; box-shadow: none; }
   body.standalone-mode .notch { display: none; }
-  .screen { width:100%; height:100%; position:relative; overflow:hidden; background:#000; }
+  .screen { width: 100%; height: 100%; position: relative; overflow: hidden; background: var(--bg); }
 
   .home {
-    width:100%; height:100%;
-    background:var(--wallpaper, linear-gradient(165deg,#0f0c29,#302b63,#24243e));
-    background-size:cover; background-position:center;
-    padding:62px 20px 28px; display:none; flex-direction:column;
+    width: 100%; height: 100%;
+    background: var(--wallpaper, linear-gradient(160deg, #1a1033 0%, #2d1b4e 40%, #0f2744 100%));
+    background-size: cover; background-position: center;
+    padding: 62px 18px 26px; display: none; flex-direction: column;
+    position: relative;
   }
-  .home.show { display:flex; }
-  .time { text-align:center; font-size:52px; font-weight:200; margin-bottom:2px; }
-  .date { text-align:center; font-size:15px; color:rgba(255,255,255,.65); margin-bottom:32px; }
-  .apps { display:grid; grid-template-columns:repeat(4,1fr); gap:18px 8px; flex:1; align-content:start; }
-  .app { display:flex; flex-direction:column; align-items:center; gap:5px; cursor:pointer; }
+  .home::before {
+    content: ''; position: absolute; inset: 0;
+    background: var(--home-overlay); pointer-events: none;
+  }
+  .home > * { position: relative; z-index: 1; }
+  .home.show { display: flex; }
+  .time { text-align: center; font-size: 56px; font-weight: 200; letter-spacing: -1.5px; margin-bottom: 2px; color: #fff; text-shadow: 0 2px 12px rgba(0,0,0,.35); }
+  .date { text-align: center; font-size: 15px; color: rgba(255,255,255,.78); margin-bottom: 28px; font-weight: 500; }
+  .apps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px 6px; flex: 1; align-content: start; }
+  .app { display: flex; flex-direction: column; align-items: center; gap: 6px; cursor: pointer; user-select: none; }
+  .app:active { transform: scale(.92); transition: transform .12s; }
   .app-icon {
-    width:60px; height:60px; border-radius:16px;
-    display:flex; align-items:center; justify-content:center; font-size:26px;
-    box-shadow:0 4px 14px rgba(0,0,0,.3);
+    width: 60px; height: 60px; border-radius: 16px;
+    display: flex; align-items: center; justify-content: center; font-size: 28px;
+    box-shadow: 0 6px 18px rgba(0,0,0,.28), inset 0 1px 0 rgba(255,255,255,.22);
+    position: relative; overflow: hidden;
   }
-  .app-name { font-size:11px; color:rgba(255,255,255,.92); text-align:center; }
+  .app-icon::after {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(180deg, rgba(255,255,255,.2), transparent 45%);
+    pointer-events: none;
+  }
+  .app-name { font-size: 11px; color: rgba(255,255,255,.95); text-align: center; text-shadow: 0 1px 4px rgba(0,0,0,.45); font-weight: 500; }
   .dock {
-    background:rgba(255,255,255,.13); backdrop-filter:blur(24px);
-    border-radius:28px; padding:12px 18px; display:flex; justify-content:space-around; margin-top:auto;
+    background: var(--dock); backdrop-filter: blur(28px) saturate(160%);
+    -webkit-backdrop-filter: blur(28px) saturate(160%);
+    border-radius: 28px; padding: 12px 16px;
+    display: flex; justify-content: space-around; margin-top: auto;
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 8px 32px rgba(0,0,0,.25);
   }
-  .dock .app-icon { width:52px; height:52px; font-size:22px; }
+  .dock .app-icon { width: 52px; height: 52px; font-size: 24px; border-radius: 14px; }
 
-  .page { position:absolute; inset:0; background:#000; display:none; flex-direction:column; }
-  .page.show { display:flex; }
+  .page { position: absolute; inset: 0; background: var(--bg); display: none; flex-direction: column; }
+  .page.show { display: flex; }
   .nav {
-    height:54px; padding:0 14px; display:flex; align-items:center; justify-content:space-between;
-    background:rgba(28,28,30,.94); backdrop-filter:blur(20px);
-    border-bottom:.5px solid var(--border); margin-top:32px; flex-shrink:0;
+    height: 52px; padding: 0 12px; display: flex; align-items: center; justify-content: space-between;
+    background: var(--nav); backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    border-bottom: .5px solid var(--border); margin-top: 32px; flex-shrink: 0;
   }
-  .nav-back, .nav-right { color:var(--blue); font-size:16px; background:none; border:none; cursor:pointer; }
-  .nav-title { font-weight:600; font-size:16px; }
-  .scroll { flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch; }
+  .nav-back, .nav-right {
+    color: var(--blue); font-size: 16px; background: none; border: none; cursor: pointer;
+    font-weight: 400; padding: 6px 4px; min-width: 44px;
+  }
+  .nav-back { text-align: left; }
+  .nav-right { text-align: right; }
+  .nav-title { font-weight: 600; font-size: 16px; color: var(--text); letter-spacing: -.2px; }
+
+  .scroll { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; background: var(--bg); }
 
   .conv-item {
-    display:flex; align-items:center; gap:12px; padding:12px 16px;
-    border-bottom:.5px solid #222; cursor:pointer;
+    display: flex; align-items: center; gap: 12px; padding: 12px 16px;
+    border-bottom: .5px solid var(--border); cursor: pointer; background: var(--bg);
   }
-  .conv-item:active { background:#1a1a1a; }
+  .conv-item:active { background: var(--card2); }
   .conv-av {
-    width:48px; height:48px; border-radius:50%;
-    background:linear-gradient(135deg,#3a1a1a,#5a2020);
-    display:flex; align-items:center; justify-content:center;
-    font-weight:700; color:#ff8a80; flex-shrink:0; font-size:18px;
+    width: 50px; height: 50px; border-radius: 50%;
+    background: linear-gradient(145deg, #3a1a1a, #5a2020);
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; color: #ff8a80; flex-shrink: 0; font-size: 18px;
+    overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,.2);
   }
-  .conv-info { flex:1; min-width:0; }
-  .conv-top { display:flex; justify-content:space-between; margin-bottom:3px; }
-  .conv-name { font-weight:600; font-size:15px; }
-  .conv-time { font-size:12px; color:var(--muted); }
-  .conv-last { font-size:13px; color:var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .conv-info { flex: 1; min-width: 0; }
+  .conv-top { display: flex; justify-content: space-between; margin-bottom: 3px; }
+  .conv-name { font-weight: 600; font-size: 16px; color: var(--text); }
+  .conv-time { font-size: 12px; color: var(--muted); }
+  .conv-last { font-size: 13px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-  .msg-list { flex:1; overflow-y:auto; padding:12px; display:flex; flex-direction:column; gap:10px; }
-  .bubble-row { display:flex; gap:8px; max-width:85%; }
-  .bubble-row.him { align-self:flex-start; }
-  .bubble-row.me { align-self:flex-end; flex-direction:row-reverse; }
+  .msg-list {
+    flex: 1; overflow-y: auto; padding: 12px;
+    display: flex; flex-direction: column; gap: 10px;
+    background: var(--chat-bg, var(--bg));
+    background-size: cover; background-position: center;
+  }
+  .bubble-row { display: flex; gap: 8px; max-width: 82%; position: relative; }
+  .bubble-row.him { align-self: flex-start; }
+  .bubble-row.me { align-self: flex-end; flex-direction: row-reverse; }
   .b-av {
-    width:28px; height:28px; border-radius:50%; background:#2a2a2a;
-    display:flex; align-items:center; justify-content:center; font-size:11px; flex-shrink:0;
+    width: 30px; height: 30px; border-radius: 50%; background: var(--card2);
+    display: flex; align-items: center; justify-content: center; font-size: 11px; flex-shrink: 0;
+    overflow: hidden;
   }
-  .bubble-row.him .b-av { color:#ff8a80; background:#3a1a1a; }
-  .bubble-row.me .b-av { color:#f8a; background:#3a2020; }
+  .bubble-row.him .b-av { color: #ff8a80; background: #3a1a1a; }
+  .bubble-row.me .b-av { color: #f8a; background: #3a2020; }
   .b-text {
-    padding:9px 12px; border-radius:16px; font-size:14.5px; line-height:1.45; white-space:pre-wrap;
+    padding: 9px 13px; border-radius: 18px; font-size: 15px; line-height: 1.45; white-space: pre-wrap;
+    box-shadow: 0 1px 2px rgba(0,0,0,.08);
   }
-  .bubble-row.him .b-text { background:#2c2c2e; border-bottom-left-radius:4px; color:#eee; }
-  .bubble-row.me .b-text { background:#07c160; border-bottom-right-radius:4px; color:#fff; }
-  .shame .b-text { background:#2a1010!important; color:#ffab91!important; }
-  .task .b-text { background:#101428!important; border-left:3px solid #5c9eff; color:#cce; }
-  .opts { display:flex; flex-direction:column; gap:6px; margin:4px 0 4px 36px; }
+  .bubble-row.him .b-text { background: var(--bubble-him); border-bottom-left-radius: 5px; color: var(--text); }
+  .bubble-row.me .b-text { background: var(--bubble-me); border-bottom-right-radius: 5px; color: #fff; }
+  .shame .b-text { background: #2a1010 !important; color: #ffab91 !important; }
+  .task .b-text { background: #101428 !important; border-left: 3px solid #5c9eff; color: #cce; }
+  [data-theme="light"] .shame .b-text { background: #ffe8e0 !important; color: #a33 !important; }
+  [data-theme="light"] .task .b-text { background: #e8f0ff !important; color: #234; }
+
+  .opts { display: flex; flex-direction: column; gap: 6px; margin: 4px 0 4px 36px; }
   .opt {
-    background:#1c1c1e; border:1px solid #333; color:#ddd;
-    padding:9px 12px; border-radius:10px; text-align:left; font-size:13.5px; cursor:pointer;
+    background: var(--card); border: 1px solid var(--border); color: var(--text);
+    padding: 10px 12px; border-radius: 12px; text-align: left; font-size: 13.5px; cursor: pointer;
+    transition: background .15s;
   }
+  .opt:active { background: var(--card2); }
+
   .input-bar {
-    padding:8px 10px; background:#1c1c1e; border-top:.5px solid var(--border);
-    display:none; gap:8px; flex-shrink:0; align-items:center;
+    padding: 8px 10px; background: var(--nav); border-top: .5px solid var(--border);
+    display: none; gap: 8px; flex-shrink: 0; align-items: center;
+    backdrop-filter: blur(20px);
   }
-  .input-bar.show { display:flex; }
+  .input-bar.show { display: flex; }
   #chat-input {
-    flex:1; background:#2c2c2e; border:none; border-radius:18px;
-    padding:9px 14px; color:#fff; outline:none; font-size:16px;
+    flex: 1; background: var(--input); border: none; border-radius: 20px;
+    padding: 9px 14px; color: var(--text); outline: none; font-size: 16px;
   }
   #chat-send {
-    background:#07c160; border:none; color:#fff;
-    height:36px; min-width:56px; border-radius:6px; font-size:14px; cursor:pointer; padding:0 12px;
+    background: var(--green); border: none; color: #fff;
+    height: 36px; min-width: 56px; border-radius: 18px; font-size: 14px; cursor: pointer; padding: 0 14px; font-weight: 600;
   }
   #chat-reply {
-    border:0; background:#2c2c2e; color:#07c160; border-radius:6px;
-    height:36px; min-width:52px; font-size:13px; cursor:pointer; padding:0 10px;
-    flex:0 0 auto; opacity:.45; border:1px solid #07c160;
+    border: 1px solid var(--green); background: transparent; color: var(--green); border-radius: 18px;
+    height: 36px; min-width: 52px; font-size: 13px; cursor: pointer; padding: 0 10px;
+    flex: 0 0 auto; opacity: .45;
   }
-  #chat-reply.ready { opacity:1; background:#07c160; color:#fff; }
-  #chat-reply:disabled { cursor:default; opacity:.4; }
+  #chat-reply.ready { opacity: 1; background: var(--green); color: #fff; border-color: var(--green); }
+  #chat-reply:disabled { cursor: default; opacity: .4; }
 
-  .card { background:var(--card); border-radius:14px; padding:14px; margin-bottom:12px; }
-  .card h4 { color:#ff8a80; margin-bottom:6px; font-size:15px; }
-  .card p { font-size:13.5px; color:#bbb; line-height:1.5; }
-  .btn-row { display:flex; gap:8px; margin-top:10px; }
+  .card {
+    background: var(--card); border-radius: 14px; padding: 14px; margin-bottom: 12px;
+    border: .5px solid var(--border); box-shadow: 0 1px 3px rgba(0,0,0,.06);
+  }
+  .card h4 { color: var(--pink); margin-bottom: 6px; font-size: 15px; font-weight: 600; }
+  .card p { font-size: 13.5px; color: var(--muted); line-height: 1.5; }
+  .btn-row { display: flex; gap: 8px; margin-top: 10px; }
   .btn {
-    flex:1; padding:9px 0; border-radius:10px; border:none; font-size:13.5px; cursor:pointer;
+    flex: 1; padding: 10px 0; border-radius: 12px; border: none; font-size: 14px; cursor: pointer; font-weight: 500;
   }
-  .btn-primary { background:#3a1515; color:#ff8a80; border:1px solid #c44; }
-  .btn-secondary { background:#2c2c2e; color:#aaa; }
-  .btn-danger { background:#3a1010; color:#ff6b6b; border:1px solid #c33; }
+  .btn-primary { background: var(--danger-bg); color: var(--danger-text); border: 1px solid rgba(255,100,100,.35); }
+  .btn-secondary { background: var(--card2); color: var(--muted); }
+  .btn-danger { background: var(--danger-bg); color: var(--red); border: 1px solid rgba(255,69,58,.35); }
 
-  .setting-item { background:var(--card); padding:14px 16px; margin-bottom:1px; }
-  .setting-item label { display:block; font-size:12px; color:var(--muted); margin-bottom:6px; }
+  .setting-item { background: var(--card); padding: 14px 16px; margin-bottom: 1px; }
+  .setting-item:first-of-type { border-radius: 12px 12px 0 0; }
+  .setting-item label { display: block; font-size: 12px; color: var(--muted); margin-bottom: 6px; font-weight: 500; }
   .setting-item input, .setting-item textarea, .setting-item select {
-    width:100%; background:#2c2c2e; border:none; border-radius:10px;
-    padding:10px 12px; color:#fff; font-size:16px; outline:none;
+    width: 100%; background: var(--input); border: none; border-radius: 10px;
+    padding: 10px 12px; color: var(--text); font-size: 16px; outline: none;
   }
-  .setting-item textarea { height:90px; resize:none; }
-  input, textarea, select { font-size:16px !important; } /* 防止iOS输入时放大 */
-  #chat-input { font-size:16px !important; }
-  .action-btn {
-    margin:10px 16px 0; padding:12px; border-radius:12px; width:calc(100% - 32px);
-    font-size:15px; cursor:pointer; border:none;
-  }
-  .action-btn.blue { background:var(--blue); color:#fff; }
-  .action-btn.gray { background:#2c2c2e; color:#aaa; }
-  .action-btn.red { background:#3a1515; color:#ff8a80; border:1px solid #c44; }
+  .setting-item textarea { height: 90px; resize: none; }
+  input, textarea, select { font-size: 16px !important; }
+  #chat-input { font-size: 16px !important; }
 
-  .wb-item { background:var(--card); border-radius:12px; padding:12px; margin-bottom:10px; }
-  .wb-top { display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; }
-  .wb-name { font-weight:600; font-size:14px; }
-  .wb-group { font-size:11px; color:var(--muted); }
-  .wb-content { font-size:12.5px; color:#bbb; max-height:40px; overflow:hidden; margin-bottom:8px; }
-  .wb-actions { display:flex; gap:6px; flex-wrap:wrap; }
-  .wb-actions button {
-    font-size:11px; padding:4px 8px; border-radius:6px;
-    border:1px solid #444; background:#2c2c2e; color:#ccc; cursor:pointer;
+  .action-btn {
+    margin: 10px 16px 0; padding: 13px; border-radius: 12px; width: calc(100% - 32px);
+    font-size: 15px; cursor: pointer; border: none; font-weight: 500;
   }
-  .wb-actions .on { border-color:#30d158; color:#30d158; }
+  .action-btn.blue { background: var(--blue); color: #fff; }
+  .action-btn.gray { background: var(--card); color: var(--text); border: .5px solid var(--border); }
+  .action-btn.red { background: var(--danger-bg); color: var(--danger-text); border: 1px solid rgba(255,100,100,.3); }
+
+  .wb-item { background: var(--card); border-radius: 12px; padding: 12px; margin-bottom: 10px; border: .5px solid var(--border); }
+  .wb-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+  .wb-name { font-weight: 600; font-size: 14px; color: var(--text); }
+  .wb-group { font-size: 11px; color: var(--muted); }
+  .wb-content { font-size: 12.5px; color: var(--muted); max-height: 40px; overflow: hidden; margin-bottom: 8px; }
+  .wb-actions { display: flex; gap: 6px; flex-wrap: wrap; }
+  .wb-actions button {
+    font-size: 11px; padding: 4px 8px; border-radius: 6px;
+    border: 1px solid var(--border); background: var(--card2); color: var(--muted); cursor: pointer;
+  }
+  .wb-actions .on { border-color: var(--green); color: var(--green); }
 
   .contact-item {
-    display:flex; align-items:center; gap:12px; padding:10px 16px;
-    border-bottom:.5px solid #222;
+    display: flex; align-items: center; gap: 12px; padding: 10px 16px;
+    border-bottom: .5px solid var(--border); background: var(--bg);
   }
   .contact-av {
-    width:42px; height:42px; border-radius:50%;
-    background:#2c2c2e; display:flex; align-items:center; justify-content:center;
-    font-weight:600; color:#aaa;
+    width: 42px; height: 42px; border-radius: 50%;
+    background: var(--card2); display: flex; align-items: center; justify-content: center;
+    font-weight: 600; color: var(--muted); overflow: hidden;
   }
-  .contact-name { font-weight:500; font-size:15px; }
-  .contact-remark { font-size:12px; color:var(--muted); }
+  .contact-name { font-weight: 500; font-size: 15px; color: var(--text); }
+  .contact-remark { font-size: 12px; color: var(--muted); }
 
-  .status-bar { display:flex; gap:6px; padding:8px 12px; background:#0d0d0d; font-size:11px; flex-wrap:wrap; }
-  .tag { background:#2c2c2e; border-radius:12px; padding:3px 9px; color:#aaa; }
-  .tag.hot { background:#3a1515; color:#ff8a80; }
-  .body-part { background:var(--card); border-radius:14px; padding:12px; margin-bottom:10px; display:flex; gap:12px; }
-  .part-img { width:64px; height:64px; border-radius:10px; background:#2c2c2e; object-fit:cover; flex-shrink:0; }
-  .part-name { font-weight:600; font-size:14px; color:#ff8a80; cursor:pointer; }
-  .part-status { font-size:12.5px; color:#bbb; margin:4px 0 8px; }
-  .part-actions button { font-size:11px; padding:3px 7px; border-radius:5px; border:1px solid #444; background:#2c2c2e; color:#ccc; margin-right:4px; cursor:pointer; }
+  .status-bar { display: flex; gap: 6px; padding: 8px 12px; background: var(--bg2); font-size: 11px; flex-wrap: wrap; border-bottom: .5px solid var(--border); }
+  .tag { background: var(--card2); border-radius: 12px; padding: 3px 9px; color: var(--muted); }
+  .tag.hot { background: var(--danger-bg); color: var(--danger-text); }
+  .body-part { background: var(--card); border-radius: 14px; padding: 12px; margin-bottom: 10px; display: flex; gap: 12px; border: .5px solid var(--border); }
+  .part-img { width: 64px; height: 64px; border-radius: 10px; background: var(--card2); object-fit: cover; flex-shrink: 0; }
+  .part-name { font-weight: 600; font-size: 14px; color: var(--pink); }
+  .part-status { font-size: 12.5px; color: var(--muted); margin: 4px 0 8px; }
+  .part-actions button { font-size: 11px; padding: 3px 7px; border-radius: 5px; border: 1px solid var(--border); background: var(--card2); color: var(--muted); margin-right: 4px; cursor: pointer; }
 
-  .story-view { flex:1; overflow-y:auto; padding:16px; font-size:14.5px; line-height:1.7; white-space:pre-wrap; color:#ddd; }
+  .story-view { flex: 1; overflow-y: auto; padding: 16px; font-size: 14.5px; line-height: 1.75; white-space: pre-wrap; color: var(--text); background: var(--bg); }
+  .story-round-block { margin-bottom: 16px; }
+  .story-round-label { font-size: 12px; color: var(--muted); margin-bottom: 6px; font-weight: 600; }
+  .story-loading { text-align: center; padding: 16px; color: var(--muted); font-size: 13px; }
+  .story-options-wrap {
+    border: .5px solid var(--border); border-radius: 12px; margin: 8px 0 4px;
+    background: var(--card); overflow: hidden;
+  }
+  .story-options-head {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 12px; cursor: pointer; user-select: none; font-size: 13px; color: var(--pink); font-weight: 600;
+  }
+  .story-options-body { display: none; padding: 0 10px 10px; }
+  .story-options-wrap.open .story-options-body { display: block; }
+  .story-options-wrap.open .story-options-chevron { transform: rotate(180deg); }
+  .story-options-chevron { transition: transform .2s; color: var(--muted); font-size: 12px; }
+  .story-opt-btn {
+    display: block; width: 100%; text-align: left; margin-bottom: 6px;
+    background: var(--card2); border: 1px solid var(--border); color: var(--text);
+    padding: 10px 12px; border-radius: 10px; font-size: 13.5px; cursor: pointer; line-height: 1.4;
+  }
+  .story-opt-btn:active { opacity: .75; }
 
-  .edit-section { padding:12px 16px; }
-  .edit-section label { display:block; font-size:12px; color:var(--muted); margin:10px 0 4px; }
+  .edit-section { padding: 12px 16px; }
+  .edit-section label { display: block; font-size: 12px; color: var(--muted); margin: 10px 0 4px; font-weight: 500; }
   .edit-section input, .edit-section textarea {
-    width:100%; background:#2c2c2e; border:none; border-radius:10px;
-    padding:10px 12px; color:#fff; font-size:16px; outline:none;
+    width: 100%; background: var(--input); border: none; border-radius: 10px;
+    padding: 10px 12px; color: var(--text); font-size: 16px; outline: none;
   }
-  .edit-section textarea { height:100px; resize:none; }
-  .avatar-img { width:100%; height:100%; border-radius:inherit; object-fit:cover; display:block; }
-  .conv-av, .b-av, .contact-av { overflow:hidden; position:relative; }
-  .reply-bar { display:none; align-items:center; gap:8px; padding:6px 10px; background:#151515; border-top:.5px solid #2b2b2b; color:#aaa; font-size:12px; }
-  .reply-bar.show { display:flex; }
-  .reply-bar .reply-preview { flex:1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-  .reply-cancel { border:0; background:none; color:var(--blue); font-size:12px; cursor:pointer; }
-  .bubble-row { position:relative; }
-  .bubble-actions { display:none; position:absolute; top:-10px; z-index:5; }
-  .bubble-row.him .bubble-actions { left:34px; }
-  .bubble-row.me .bubble-actions { right:34px; }
-  .bubble-row.selected .bubble-actions { display:flex; }
-  .reply-btn, .del-btn { border:0; background:#333; color:#fff; border-radius:12px; padding:5px 9px; font-size:11px; cursor:pointer; box-shadow:0 3px 10px rgba(0,0,0,.35); margin-left:4px; }
-  .del-btn { background:#5a2020; color:#ff8a80; }
-  /* chat-reply styles moved to input-bar section */
-  .wb-toolbar { display:flex; gap:8px; margin-bottom:10px; }
-  .wb-filter { flex:1; background:#2c2c2e; border:0; border-radius:10px; padding:9px 11px; color:#fff; outline:none; font-size:16px !important; }
-  .wb-section { padding:10px 12px; background:#191919; border-radius:12px; margin-bottom:10px; }
-  .wb-section-title { font-size:12px; color:#aaa; margin-bottom:7px; }
-  .wb-switch { display:flex; align-items:center; justify-content:space-between; padding:7px 0; font-size:13px; color:#ddd; }
-  .wb-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
-  .wb-grid input,.wb-grid select { width:100%; background:#2c2c2e; border:0; border-radius:8px; padding:8px; color:#fff; outline:none; }
-  .wish-card { border:1px solid #2b2b2b; border-radius:12px; padding:10px; margin-top:8px; background:#181818; }
-  .wish-meta { font-size:11px; color:#888; margin-top:5px; }
+  .edit-section textarea { height: 100px; resize: none; }
+  .avatar-img { width: 100%; height: 100%; border-radius: inherit; object-fit: cover; display: block; }
+  .conv-av, .b-av, .contact-av { overflow: hidden; position: relative; }
+  .reply-bar { display: none; align-items: center; gap: 8px; padding: 6px 10px; background: var(--bg2); border-top: .5px solid var(--border); color: var(--muted); font-size: 12px; }
+  .reply-bar.show { display: flex; }
+  .reply-bar .reply-preview { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .reply-cancel { border: 0; background: none; color: var(--blue); font-size: 12px; cursor: pointer; }
+  .bubble-actions { display: none; position: absolute; top: -10px; z-index: 5; }
+  .bubble-row.him .bubble-actions { left: 34px; }
+  .bubble-row.me .bubble-actions { right: 34px; }
+  .bubble-row.selected .bubble-actions { display: flex; }
+  .reply-btn, .del-btn { border: 0; background: #333; color: #fff; border-radius: 12px; padding: 5px 9px; font-size: 11px; cursor: pointer; box-shadow: 0 3px 10px rgba(0,0,0,.35); margin-left: 4px; }
+  .del-btn { background: #5a2020; color: #ff8a80; }
+  [data-theme="light"] .reply-btn { background: #555; }
+  .wb-toolbar { display: flex; gap: 8px; margin-bottom: 10px; }
+  .wb-filter { flex: 1; background: var(--input); border: 0; border-radius: 10px; padding: 9px 11px; color: var(--text); outline: none; font-size: 16px !important; }
+  .wb-section { padding: 10px 12px; background: var(--bg2); border-radius: 12px; margin-bottom: 10px; }
+  .wb-section-title { font-size: 12px; color: var(--muted); margin-bottom: 7px; }
+  .wb-switch { display: flex; align-items: center; justify-content: space-between; padding: 7px 0; font-size: 13px; color: var(--text); }
+  .wb-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .wb-grid input, .wb-grid select { width: 100%; background: var(--input); border: 0; border-radius: 8px; padding: 8px; color: var(--text); outline: none; }
+  .wish-card { border: 1px solid var(--border); border-radius: 12px; padding: 10px; margin-top: 8px; background: var(--card); }
+  .wish-meta { font-size: 11px; color: var(--muted); margin-top: 5px; }
+  .quote { font-size: 11px; color: var(--muted); border-left: 2px solid var(--border); padding-left: 7px; margin-bottom: 4px; }
+  .wb-keywords { font-size: 11px; color: var(--muted); margin-bottom: 7px; }
+  .wb-meta { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 7px; }
+  .wb-pill { font-size: 10px; color: var(--muted); background: var(--card2); border-radius: 10px; padding: 3px 7px; }
 
-  .quote { font-size:11px; color:#888; border-left:2px solid #555; padding-left:7px; margin-bottom:4px; }
-  .wb-keywords { font-size:11px; color:#777; margin-bottom:7px; }
-  .wb-meta { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:7px; }
-  .wb-pill { font-size:10px; color:#aaa; background:#292929; border-radius:10px; padding:3px 7px; }
+  .feature-settings { background: var(--bg2); border-bottom: .5px solid var(--border); }
+  .theme-toggle-row {
+    display: flex; align-items: center; justify-content: space-between;
+    background: var(--card); padding: 14px 16px; margin: 8px 0 1px; border-radius: 12px;
+  }
+  .theme-switch {
+    width: 51px; height: 31px; border-radius: 16px; background: var(--card2);
+    position: relative; cursor: pointer; border: none; transition: background .2s;
+  }
+  .theme-switch.on { background: var(--green); }
+  .theme-switch::after {
+    content: ''; position: absolute; top: 2px; left: 2px; width: 27px; height: 27px;
+    border-radius: 50%; background: #fff; box-shadow: 0 2px 6px rgba(0,0,0,.25);
+    transition: transform .2s;
+  }
+  .theme-switch.on::after { transform: translateX(20px); }
+  .seg {
+    display: flex; background: var(--input); border-radius: 10px; padding: 3px; gap: 2px;
+  }
+  .seg button {
+    flex: 1; border: 0; background: transparent; color: var(--muted);
+    padding: 8px; border-radius: 8px; font-size: 13px; cursor: pointer; font-weight: 500;
+  }
+  .seg button.active { background: var(--card); color: var(--text); box-shadow: 0 1px 3px rgba(0,0,0,.12); }
 </style>
 </head>
-<body>
+<body data-theme="dark">
 <div class="phone">
   <div class="notch"></div>
   <div class="screen">
@@ -271,21 +389,21 @@
       <div class="time" id="clock">22:16</div>
       <div class="date" id="date">9月17日 周四</div>
       <div class="apps">
-        <div class="app" onclick="openApp('messages')"><div class="app-icon" style="background:linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045);">💬</div><div class="app-name">消息</div></div>
-        <div class="app" onclick="openApp('contacts')"><div class="app-icon" style="background:linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);">👥</div><div class="app-name">通讯录</div></div>
-        <div class="app" onclick="openApp('offline')"><div class="app-icon" style="background:linear-gradient(135deg,#ff9500,#ff5e3a);">📍</div><div class="app-name">线下</div></div>
-        <div class="app" onclick="openApp('train')"><div class="app-icon" style="background:linear-gradient(135deg,#ff2d55,#c41e3a);">🔒</div><div class="app-name">主人的母狗</div></div>
-        <div class="app" onclick="openApp('worldbook')"><div class="app-icon" style="background:linear-gradient(135deg,#5856d6,#af52de);">📖</div><div class="app-name">世界书</div></div>
-        <div class="app" onclick="openApp('diary')"><div class="app-icon" style="background:linear-gradient(135deg,#af52de,#8e44ad);">📓</div><div class="app-name">日记</div></div>
-        <div class="app" onclick="openApp('rules')"><div class="app-icon" style="background:linear-gradient(135deg,#30d158,#34c759);">📝</div><div class="app-name">守则</div></div>
-        <div class="app" onclick="openApp('me')"><div class="app-icon" style="background:linear-gradient(135deg,#ff2d55,#ff8a80);">🐶</div><div class="app-name">母狗</div></div>
-        <div class="app" onclick="openApp('settings')"><div class="app-icon" style="background:linear-gradient(135deg,#8e8e93,#636366);">⚙️</div><div class="app-name">设置</div></div>
+        <div class="app" onclick="openApp('messages')"><div class="app-icon" style="background:linear-gradient(180deg,#5ac8fa,#007aff);">💬</div><div class="app-name">消息</div></div>
+        <div class="app" onclick="openApp('contacts')"><div class="app-icon" style="background:linear-gradient(180deg,#ff9f0a,#ff375f);">👤</div><div class="app-name">通讯录</div></div>
+        <div class="app" onclick="openApp('offline')"><div class="app-icon" style="background:linear-gradient(180deg,#ffd60a,#ff9f0a);">📍</div><div class="app-name">线下</div></div>
+        <div class="app" onclick="openApp('train')"><div class="app-icon" style="background:linear-gradient(180deg,#ff6482,#ff2d55);">🔒</div><div class="app-name">主人的母狗</div></div>
+        <div class="app" onclick="openApp('worldbook')"><div class="app-icon" style="background:linear-gradient(180deg,#bf5af2,#5856d6);">📖</div><div class="app-name">世界书</div></div>
+        <div class="app" onclick="openApp('diary')"><div class="app-icon" style="background:linear-gradient(180deg,#da8fff,#af52de);">📓</div><div class="app-name">日记</div></div>
+        <div class="app" onclick="openApp('rules')"><div class="app-icon" style="background:linear-gradient(180deg,#30d158,#248a3d);">📋</div><div class="app-name">守则</div></div>
+        <div class="app" onclick="openApp('me')"><div class="app-icon" style="background:linear-gradient(180deg,#ff8a80,#ff375f);">🐶</div><div class="app-name">母狗</div></div>
+        <div class="app" onclick="openApp('settings')"><div class="app-icon" style="background:linear-gradient(180deg,#8e8e93,#636366);">⚙️</div><div class="app-name">设置</div></div>
       </div>
       <div class="dock">
-        <div class="app" onclick="openApp('messages')"><div class="app-icon" style="background:linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045);">💬</div></div>
-        <div class="app" onclick="openApp('train')"><div class="app-icon" style="background:linear-gradient(135deg,#ff2d55,#c41e3a);">🔒</div></div>
-        <div class="app" onclick="openApp('me')"><div class="app-icon" style="background:linear-gradient(135deg,#ff2d55,#ff8a80);">🐶</div></div>
-        <div class="app" onclick="openApp('settings')"><div class="app-icon" style="background:linear-gradient(135deg,#8e8e93,#636366);">⚙️</div></div>
+        <div class="app" onclick="openApp('messages')"><div class="app-icon" style="background:linear-gradient(180deg,#5ac8fa,#007aff);">💬</div></div>
+        <div class="app" onclick="openApp('train')"><div class="app-icon" style="background:linear-gradient(180deg,#ff6482,#ff2d55);">🔒</div></div>
+        <div class="app" onclick="openApp('me')"><div class="app-icon" style="background:linear-gradient(180deg,#ff8a80,#ff375f);">🐶</div></div>
+        <div class="app" onclick="openApp('settings')"><div class="app-icon" style="background:linear-gradient(180deg,#8e8e93,#636366);">⚙️</div></div>
       </div>
     </div>
 
@@ -351,17 +469,40 @@
         <input type="text" id="edit-avatar" maxlength="2">
         <label>头像图片（本地上传 或 填图片链接）</label>
         <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px;">
-          <div id="edit-avatar-preview" style="width:52px;height:52px;border-radius:50%;background:#2c2c2e;overflow:hidden;display:flex;align-items:center;justify-content:center;color:#aaa;"></div>
+          <div id="edit-avatar-preview" style="width:52px;height:52px;border-radius:50%;background:var(--card2);overflow:hidden;display:flex;align-items:center;justify-content:center;color:var(--muted);"></div>
           <button class="btn btn-secondary" style="flex:0;padding:8px 12px;" onclick="uploadChatAvatar()">选择本地</button>
           <button class="btn btn-secondary" style="flex:0;padding:8px 12px;" onclick="clearChatAvatar()">移除</button>
         </div>
         <input type="text" id="edit-avatar-url" placeholder="粘贴图片链接 http(s)://… 然后点下方「使用链接」">
         <button class="btn btn-secondary" style="margin-top:8px;width:100%;" onclick="setChatAvatarUrl()">使用链接</button>
+
+        <label>聊天背景</label>
+        <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px;">
+          <div id="edit-chatbg-preview" style="width:72px;height:48px;border-radius:10px;background:var(--card2);overflow:hidden;border:.5px solid var(--border);"></div>
+          <button class="btn btn-secondary" style="flex:0;padding:8px 12px;" onclick="uploadChatBg()">本地上传</button>
+          <button class="btn btn-secondary" style="flex:0;padding:8px 12px;" onclick="clearChatBg()">清除</button>
+        </div>
+        <input type="text" id="edit-chatbg-url" placeholder="或粘贴背景图链接 http(s)://…">
+        <button class="btn btn-secondary" style="margin-top:8px;width:100%;" onclick="setChatBgUrl()">使用链接背景</button>
+
         <label>人设（AI 会严格遵守）</label>
         <textarea id="edit-persona"></textarea>
         <label>关联世界书（多选，用逗号分隔世界书名称）</label>
         <input type="text" id="edit-wb" placeholder="例如：全局规则,苏晚专属">
-        <div style="margin-top:16px; font-size:12px; color:#888;">保存后立即生效，下次对话会读取人设 + 关联世界书。</div>
+
+        <div style="margin-top:18px;padding:12px;background:var(--card);border-radius:12px;border:.5px solid var(--border);">
+          <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:10px;">聊天记录</div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <button class="btn btn-secondary" style="flex:1;min-width:90px;" onclick="exportCharChat()">导出</button>
+            <button class="btn btn-secondary" style="flex:1;min-width:90px;" onclick="importCharChat()">导入</button>
+            <button class="btn btn-danger" style="flex:1;min-width:90px;" onclick="clearCharChat()">清除全部</button>
+          </div>
+          <input type="file" id="import-char-chat" accept=".json" style="display:none;" onchange="doImportCharChat(event)">
+          <div style="font-size:11px;color:var(--muted);margin-top:8px;">仅针对当前角色的消息记录，不影响其他人设与其它聊天。</div>
+        </div>
+
+        <button class="action-btn blue" style="width:100%;margin:16px 0 8px;" onclick="saveCharEdit()">保存全部修改</button>
+        <div style="font-size:12px; color:var(--muted);line-height:1.5;">保存后立即生效：人设、世界书、头像、聊天背景都会同步到对话页。</div>
       </div>
     </div>
 
@@ -570,7 +711,19 @@
         <div class="nav-title">设置</div>
         <div></div>
       </div>
-      <div class="scroll" style="padding-top:8px;">
+      <div class="scroll" style="padding:12px 0 24px;">
+        <div style="padding:0 16px;margin-bottom:8px;">
+          <div class="theme-toggle-row">
+            <div>
+              <div style="font-size:15px;font-weight:600;">外观</div>
+              <div style="font-size:12px;color:var(--muted);margin-top:2px;" id="theme-label">深色模式</div>
+            </div>
+            <div class="seg" style="width:160px;">
+              <button type="button" id="theme-btn-dark" class="active" onclick="setTheme('dark')">黑夜</button>
+              <button type="button" id="theme-btn-light" onclick="setTheme('light')">白天</button>
+            </div>
+          </div>
+        </div>
         <div class="setting-item">
           <label>当前 API 配置</label>
           <select id="api-profile-select" onchange="switchProfile()"></select>
@@ -655,6 +808,7 @@ let pendingReply = false;
 let wbScanDepth = 6;
 let wbMaxEntries = 12;
 let currentEvalPart = '';
+let uiTheme = 'dark';
 // 各功能勾选的聊天记忆来源（聊天id数组）；train 固定为主人
 let memorySources = {
   offline: [],
@@ -759,9 +913,27 @@ function loadAll() {
   if (localStorage.getItem('wallpaper')) {
     document.documentElement.style.setProperty('--wallpaper', `url(${localStorage.getItem('wallpaper')})`);
   }
+  uiTheme = localStorage.getItem('uiTheme') || 'dark';
+  applyTheme(uiTheme);
   renderApiSelect();
   loadCurrentProfile();
 }
+function applyTheme(theme){
+  uiTheme = theme === 'light' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', uiTheme);
+  document.body.setAttribute('data-theme', uiTheme);
+  localStorage.setItem('uiTheme', uiTheme);
+  const darkBtn = $('theme-btn-dark'), lightBtn = $('theme-btn-light'), label = $('theme-label');
+  if(darkBtn && lightBtn){
+    darkBtn.classList.toggle('active', uiTheme==='dark');
+    lightBtn.classList.toggle('active', uiTheme==='light');
+  }
+  if(label) label.textContent = uiTheme==='dark' ? '深色模式' : '浅色模式';
+  const meta = document.querySelector('meta[name="theme-color"]');
+  if(meta) meta.content = uiTheme==='dark' ? '#000000' : '#f2f2f7';
+}
+function setTheme(theme){ applyTheme(theme); }
+
 function saveAll() {
   localStorage.setItem('bitchPhoneV3', JSON.stringify({
     cor,shame,body,obey,mainFinished,bodyData,diaries,ruleVersions,
@@ -1206,6 +1378,7 @@ function openChat(id) {
   $('chat-title').textContent = c.remark || c.name;
   openApp('chat');
   renderMessages();
+  applyChatBackground();
   if(id==='master' && (!c.messages||c.messages.length===0)) startMasterChat();
   else enableFreeChat();
 }
@@ -1524,7 +1697,95 @@ function openEditChar() {
   if($('edit-avatar-url')) $('edit-avatar-url').value = (c.avatarImg && /^https?:\/\//i.test(c.avatarImg)) ? c.avatarImg : '';
   $('edit-persona').value = c.persona || '';
   $('edit-wb').value = c.linkedWB || '';
+  // 聊天背景预览
+  const bgPrev = $('edit-chatbg-preview');
+  if(bgPrev){
+    if(c.chatBg) bgPrev.innerHTML = `<img class="avatar-img" src="${c.chatBg}" style="width:100%;height:100%;object-fit:cover;">`;
+    else bgPrev.innerHTML = '';
+  }
+  if($('edit-chatbg-url')) $('edit-chatbg-url').value = (c.chatBg && /^https?:\/\//i.test(c.chatBg)) ? c.chatBg : '';
   openApp('edit');
+}
+function uploadChatBg(){
+  const input=document.createElement('input'); input.type='file'; input.accept='image/*';
+  input.onchange=e=>{
+    const f=e.target.files?.[0]; if(!f)return;
+    const r=new FileReader();
+    r.onload=ev=>{
+      const c=conversations[currentChatId]; if(!c)return;
+      c.chatBg = ev.target.result;
+      const bgPrev=$('edit-chatbg-preview');
+      if(bgPrev) bgPrev.innerHTML = `<img class="avatar-img" src="${c.chatBg}" style="width:100%;height:100%;object-fit:cover;">`;
+      saveAll(); applyChatBackground();
+    };
+    r.readAsDataURL(f);
+  };
+  input.click();
+}
+function clearChatBg(){
+  const c=conversations[currentChatId]; if(!c)return;
+  c.chatBg='';
+  const bgPrev=$('edit-chatbg-preview'); if(bgPrev) bgPrev.innerHTML='';
+  if($('edit-chatbg-url')) $('edit-chatbg-url').value='';
+  saveAll(); applyChatBackground();
+}
+function setChatBgUrl(){
+  const url = ($('edit-chatbg-url')?.value || '').trim();
+  if(!url){ alert('请先粘贴背景图链接'); return; }
+  if(!/^https?:\/\//i.test(url) && !url.startsWith('data:')){
+    alert('请填写以 http:// 或 https:// 开头的图片链接'); return;
+  }
+  const c=conversations[currentChatId]; if(!c)return;
+  c.chatBg = url;
+  const bgPrev=$('edit-chatbg-preview');
+  if(bgPrev) bgPrev.innerHTML = `<img class="avatar-img" src="${url}" style="width:100%;height:100%;object-fit:cover;" onerror="this.parentElement.textContent='图裂'">`;
+  saveAll(); applyChatBackground();
+  alert('已设置聊天背景');
+}
+function applyChatBackground(){
+  const list = $('msg-list'); if(!list) return;
+  const c = conversations[currentChatId];
+  if(c && c.chatBg) list.style.backgroundImage = `url(${c.chatBg})`;
+  else list.style.backgroundImage = '';
+}
+function exportCharChat(){
+  const c = conversations[currentChatId];
+  if(!c) return;
+  const data = { id: currentChatId, name: c.name, remark: c.remark, messages: c.messages||[], exportedAt: Date.now() };
+  const blob = new Blob([JSON.stringify(data,null,2)], {type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = (c.remark||c.name||'chat') + '_聊天记录.json';
+  a.click();
+}
+function importCharChat(){ $('import-char-chat')?.click(); }
+function doImportCharChat(e){
+  const file = e.target.files?.[0]; if(!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    try{
+      const d = JSON.parse(ev.target.result);
+      const c = conversations[currentChatId]; if(!c) return;
+      if(!Array.isArray(d.messages)){ alert('无效的聊天记录文件'); return; }
+      if(!confirm('导入将覆盖当前角色的聊天记录，确定？')) return;
+      c.messages = d.messages;
+      if(c.messages.length){ const last=c.messages[c.messages.length-1]; c.last=(last.text||'').replace(/\n/g,' '); c.time=Date.now(); }
+      else { c.last='暂无消息'; }
+      saveAll(); renderMessages(); renderConvList();
+      alert('已导入 ' + c.messages.length + ' 条消息');
+    }catch(err){ alert('导入失败：'+(err.message||err)); }
+    e.target.value='';
+  };
+  reader.readAsText(file);
+}
+function clearCharChat(){
+  const c = conversations[currentChatId]; if(!c) return;
+  if(!confirm('确定清除「'+(c.remark||c.name)+'」的全部聊天记录？不可恢复')) return;
+  c.messages = [];
+  c.last = '暂无消息';
+  c.time = Date.now();
+  saveAll(); renderMessages(); renderConvList();
+  alert('已清除聊天记录');
 }
 function uploadChatAvatar(){
   const input=document.createElement('input'); input.type='file'; input.accept='image/*';
@@ -1620,11 +1881,11 @@ function saveCharEdit() {
   if(!c.avatarImg) c.avatarImg='';
   c.persona = $('edit-persona').value.trim();
   c.linkedWB = $('edit-wb').value.trim();
-  // 同步到 contacts
   const ct = contacts.find(x=>x.id===currentChatId);
   if(ct){ ct.remark = c.remark; }
   saveAll();
   $('chat-title').textContent = c.remark;
+  applyChatBackground();
   alert('角色已保存');
   openApp('chat');
   renderMessages();
@@ -1871,14 +2132,16 @@ async function acceptTask(i){
   currentStory = '';
   window._currentOfflineTask = t;
   window._pendingStoryAction = '';
+  window._storyOptions = [];
   openApp('story');
   if($('story-nav-title')) $('story-nav-title').textContent = t.title + ' · 第1轮';
   if($('story-continue-bar')) $('story-continue-bar').style.display = 'none';
-  if($('story-options')) $('story-options').style.display = 'none';
+  if($('story-options')) { $('story-options').style.display = 'none'; $('story-options').innerHTML=''; }
   if($('save-story-btn')) $('save-story-btn').style.display = 'none';
   if($('story-round-words')) $('story-round-words').value = offlineWordCount;
   if($('story-action-input')) $('story-action-input').value = '';
-  $('story-content').innerHTML = '<div style="text-align:center;padding:40px;color:#888;">第一轮生成中…（从接到任务后凌幼薇的准备工作开始）</div>';
+  // 不隐藏历史：先放加载提示在底部
+  $('story-content').innerHTML = '<div class="story-loading" id="story-loading">第一轮生成中…（从接到任务后凌幼薇的准备工作开始）</div>';
 
   const words = offlineWordCount || 800;
   const mem = getMemoryContext('offline');
@@ -1889,11 +2152,17 @@ async function acceptTask(i){
 用第三人称或第一人称均可，语言恶俗、物化、重口，重点刻画羞耻、身体反应、下流想法。
 本轮目标字数约 ${words} 字，写满即可，不要提前结束任务。
 不要写「第一轮结束」之类的元叙述。
-写完正文后，另起一行只输出：OPTIONS:
-然后给出3个接下来可以采取的行动选项，每行一个，格式：1. xxx
-2. xxx
-3. xxx
-选项要具体、可执行、带羞耻感。`;
+
+【重要：选项格式，参考酒馆 / SillyTavern】
+正文写完后，必须在文末单独输出可折叠选项块，格式严格如下（不要改标签名）：
+
+<details><summary>选项</summary>
+1. 行动一
+2. 行动二
+3. 行动三
+</details>
+
+三个选项要具体、可执行、带羞耻感，且与当前剧情衔接。`;
   const userPrompt = `${mem}任务标题：${t.title}
 类型：${t.type||''}
 难度：${t.difficulty||'普通'}
@@ -1904,42 +2173,104 @@ async function acceptTask(i){
 
   const raw = await callAI(system, userPrompt, Math.max(1400, Math.ceil(words * 1.8)));
   const { text, options } = parseStoryWithOptions(raw);
-  currentStoryRounds.push(text);
+  currentStoryRounds.push({ text, options });
   currentStoryRound = 1;
-  currentStory = text;
-  $('story-content').textContent = text;
+  renderStoryView();
   if($('save-story-btn')) $('save-story-btn').style.display = 'block';
   if($('story-continue-bar')) $('story-continue-bar').style.display = 'flex';
   if($('story-nav-title')) $('story-nav-title').textContent = t.title + ' · 第1轮';
-  showStoryOptions(options);
+  showStoryOptions(options, true);
 }
 
 function parseStoryWithOptions(raw){
   if(!raw || typeof raw !== 'string') return { text: String(raw||''), options: [] };
   let text = raw, options = [];
-  const m = raw.match(/\n?\s*OPTIONS:\s*([\s\S]*)$/i);
+
+  // 1) <details><summary>选项</summary> ... </details>
+  let m = raw.match(/<details>\s*<summary>\s*选项\s*<\/summary>([\s\S]*?)<\/details>/i);
   if(m){
-    text = raw.slice(0, m.index).trim();
-    options = m[1].split('\n').map(l=>l.replace(/^\s*\d+[\.\)、]\s*/,'').trim()).filter(Boolean).slice(0,3);
+    text = (raw.slice(0, m.index) + raw.slice(m.index + m[0].length)).trim();
+    options = m[1].split('\n').map(l=>l.replace(/^\s*\d+[\.\)、\-]\s*/,'').trim()).filter(Boolean).slice(0,3);
+  }
+  // 2) OPTIONS:
+  if(!options.length){
+    m = raw.match(/\n?\s*OPTIONS:\s*([\s\S]*)$/i);
+    if(m){
+      text = raw.slice(0, m.index).trim();
+      options = m[1].split('\n').map(l=>l.replace(/^\s*\d+[\.\)、\-]\s*/,'').trim()).filter(Boolean).slice(0,3);
+    }
+  }
+  // 3) 【选项】
+  if(!options.length){
+    m = raw.match(/\n?\s*【选项】\s*([\s\S]*)$/);
+    if(m){
+      text = raw.slice(0, m.index).trim();
+      options = m[1].split('\n').map(l=>l.replace(/^\s*\d+[\.\)、\-]\s*/,'').trim()).filter(Boolean).slice(0,3);
+    }
   }
   if(options.length < 3){
-    // 兜底默认选项
-    while(options.length < 3){
-      const defaults = ['继续执行任务，挑更羞耻的方式','找个隐蔽处先自慰确认身体状态','故意走光试探路人反应'];
-      options.push(defaults[options.length]);
-    }
+    const defaults = ['继续执行任务，挑更羞耻的方式','找个隐蔽处先确认身体状态','故意试探周围人的反应'];
+    while(options.length < 3) options.push(defaults[options.length]);
   }
   return { text, options };
 }
 
-function showStoryOptions(options){
+function renderStoryView(){
+  const box = $('story-content'); if(!box) return;
+  let html = '';
+  currentStoryRounds.forEach((r, idx)=>{
+    const body = typeof r === 'string' ? r : (r.text || '');
+    const opts = typeof r === 'string' ? [] : (r.options || []);
+    html += `<div class="story-round-block">`;
+    html += `<div class="story-round-label">———— 第 ${idx+1} 轮 ————</div>`;
+    html += `<div style="white-space:pre-wrap;">${escapeHtml(body)}</div>`;
+    // 酒馆式：选项写在正文里（可折叠）
+    if(opts.length){
+      const openCls = (idx === currentStoryRounds.length - 1) ? ' open' : '';
+      html += `<div class="story-options-wrap${openCls}" id="story-opt-wrap-${idx}">`;
+      html += `<div class="story-options-head" onclick="toggleStoryOptWrap(${idx})"><span>选项（${opts.length}）</span><span class="story-options-chevron">▼</span></div>`;
+      html += `<div class="story-options-body">`;
+      opts.forEach((o,i)=>{
+        html += `<button type="button" class="story-opt-btn" onclick="selectStoryOption(${i})">${i+1}. ${escapeHtml(o)}</button>`;
+      });
+      html += `</div></div>`;
+    }
+    html += `</div>`;
+  });
+  box.innerHTML = html || '';
+  // 同步最新 options 到全局
+  const last = currentStoryRounds[currentStoryRounds.length-1];
+  if(last && last.options) window._storyOptions = last.options;
+  currentStory = currentStoryRounds.map((r,i)=>{
+    const body = typeof r === 'string' ? r : r.text;
+    const opts = typeof r === 'string' ? [] : (r.options||[]);
+    let chunk = body;
+    if(opts.length){
+      chunk += '\n\n<details><summary>选项</summary>\n' + opts.map((o,j)=>`${j+1}. ${o}`).join('\n') + '\n</details>';
+    }
+    return chunk;
+  }).join('\n\n');
+  box.scrollTop = box.scrollHeight;
+}
+
+function toggleStoryOptWrap(idx){
+  const el = $('story-opt-wrap-'+idx);
+  if(el) el.classList.toggle('open');
+}
+
+function showStoryOptions(options, open=true){
+  // 底部栏也保留一份可点选项（可折叠）
   const box = $('story-options');
   if(!box) return;
   if(!options || !options.length){ box.style.display='none'; return; }
   window._storyOptions = options;
   box.style.display = 'block';
-  box.innerHTML = '<div style="font-size:12px;color:#888;margin-bottom:6px;">选择行动（点一下填入输入框，可再改）</div>' +
-    options.map((o,i)=>'<button class="opt" style="width:100%;margin-bottom:6px;" onclick="selectStoryOption('+i+')">'+(i+1)+'. '+escapeHtml(o)+'</button>').join('');
+  box.innerHTML = `<div class="story-options-wrap${open?' open':''}" id="story-opt-bar">
+    <div class="story-options-head" onclick="document.getElementById('story-opt-bar').classList.toggle('open')"><span>本轮行动选项</span><span class="story-options-chevron">▼</span></div>
+    <div class="story-options-body">
+      ${options.map((o,i)=>`<button type="button" class="story-opt-btn" onclick="selectStoryOption(${i})">${i+1}. ${escapeHtml(o)}</button>`).join('')}
+    </div>
+  </div>`;
 }
 
 function selectStoryOption(idx){
@@ -1967,23 +2298,40 @@ async function continueStory(forcedAction){
   offlineWordCount = words;
   const nextRound = currentStoryRound + 1;
   if($('story-nav-title')) $('story-nav-title').textContent = t.title + ' · 第' + nextRound + '轮生成中…';
-  $('story-content').innerHTML = '<div style="text-align:center;padding:40px;color:#888;">第' + nextRound + '轮生成中…</div>';
+  // 不隐藏前文：只在底部加 loading
   if($('story-continue-bar')) $('story-continue-bar').style.display = 'none';
   if($('story-options')) $('story-options').style.display = 'none';
+  const box = $('story-content');
+  if(box){
+    let loading = $('story-loading');
+    if(!loading){
+      loading = document.createElement('div');
+      loading.id = 'story-loading';
+      loading.className = 'story-loading';
+      box.appendChild(loading);
+    }
+    loading.textContent = '第' + nextRound + '轮生成中…';
+    box.scrollTop = box.scrollHeight;
+  }
 
   const mem = getMemoryContext('offline');
   const girlName = meProfile.name || '凌幼薇';
-  const prev = currentStoryRounds.join('\n\n————\n\n');
+  const prev = currentStoryRounds.map(r => typeof r==='string'?r:(r.text||'')).join('\n\n————\n\n');
   const actionLine = action ? `\n本轮玩家选择的行动：${action}\n请围绕这个行动继续推进。` : '';
   const system = `你正在续写线下任务剧情。必须严格遵守世界书常驻条目。
 角色名：${girlName}
 这是第 ${nextRound} 轮续写。请紧接上一轮内容继续往下写，不要重复已写过的情节，推进任务执行过程。
 语言恶俗、物化、重口，重点刻画羞耻、身体反应、被发现风险、下流想法。
 本轮目标字数约 ${words} 字。不要写「第x轮结束」等元叙述。
-写完正文后，另起一行只输出：OPTIONS:
-然后给出3个接下来可以采取的行动选项，每行一个，格式：1. xxx
-2. xxx
-3. xxx`;
+
+【重要：选项格式，参考酒馆 / SillyTavern】
+正文写完后，必须在文末单独输出可折叠选项块，格式严格如下：
+
+<details><summary>选项</summary>
+1. 行动一
+2. 行动二
+3. 行动三
+</details>`;
   const userPrompt = `${mem}任务：${t.title}
 说明：${t.desc}
 ${actionLine}
@@ -1995,20 +2343,14 @@ ${prev}
 
   const raw = await callAI(system, userPrompt, Math.max(1400, Math.ceil(words * 1.8)));
   const { text, options } = parseStoryWithOptions(raw);
-  currentStoryRounds.push(text);
+  currentStoryRounds.push({ text, options });
   currentStoryRound = nextRound;
-  let full = '';
-  currentStoryRounds.forEach((r, idx)=>{
-    full += (idx > 0 ? '\n\n———— 第' + (idx+1) + '轮 ————\n\n' : '') + r;
-  });
-  currentStory = full;
-  $('story-content').textContent = full;
+  renderStoryView();
   if($('story-nav-title')) $('story-nav-title').textContent = t.title + ' · 第' + nextRound + '轮';
   if($('save-story-btn')) $('save-story-btn').style.display = 'block';
   if($('story-continue-bar')) $('story-continue-bar').style.display = 'flex';
-  showStoryOptions(options);
+  showStoryOptions(options, true);
   window._pendingStoryAction = '';
-  $('story-content').scrollTop = $('story-content').scrollHeight;
 }
 
 function saveCurrentStory(){
@@ -2024,7 +2366,7 @@ function showArchive(){
     <div class="btn-row"><button class="btn btn-secondary" onclick="viewArch(${i})">查看</button>
     <button class="btn btn-danger" onclick="delArch(${i})">删除</button></div></div>`).join('')||'<div style="text-align:center;color:#666;padding:40px;">暂无</div>';
 }
-function viewArch(i){ openApp('story'); $('story-content').textContent=offlineArchives[i].content; if($('save-story-btn')) $('save-story-btn').style.display='none'; if($('story-continue-bar')) $('story-continue-bar').style.display='none'; if($('story-options')) $('story-options').style.display='none'; }
+function viewArch(i){ openApp('story'); const a=offlineArchives[i]; currentStoryRounds=[{text:a.content,options:[]}]; currentStoryRound=1; currentStory=a.content||''; renderStoryView(); if($('save-story-btn')) $('save-story-btn').style.display='none'; if($('story-continue-bar')) $('story-continue-bar').style.display='none'; if($('story-options')) $('story-options').style.display='none'; }
 function delArch(i){ if(confirm('删除？')){ offlineArchives.splice(i,1); saveAll(); showArchive(); } }
 
 function renderDiaries(){
