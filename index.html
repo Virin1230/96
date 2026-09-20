@@ -1361,6 +1361,32 @@
   }
   .tl-card .tl-actions span { cursor:pointer; }
 
+
+  .widget.has-bg { position: relative; overflow: hidden; }
+  .widget.has-bg .widget-bg-layer {
+    position: absolute; inset: 0; border-radius: inherit; z-index: 0;
+    background-size: cover; background-position: center;
+    pointer-events: none;
+  }
+  .widget.has-bg > *:not(.widget-bg-layer):not(.app-del):not(.w-edit-hint) { position: relative; z-index: 1; }
+  .widget.align-left .wc-time, .widget.align-left .wc-date { text-align: left; width: 100%; }
+  .widget.align-right .wc-time, .widget.align-right .wc-date { text-align: right; width: 100%; }
+  .widget.align-center .wc-time, .widget.align-center .wc-date { text-align: center; width: 100%; }
+  .page.has-app-bg {
+    background-size: cover !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+  }
+  .page.has-app-bg > .scroll,
+  .page.has-app-bg > .msg-list,
+  .page.has-app-bg > .story-view {
+    background: transparent !important;
+  }
+  .bg-settings-block {
+    margin-top: 10px; padding-top: 10px; border-top: .5px solid var(--border);
+  }
+  .bg-settings-block label { display:block; font-size:12px; color:var(--muted); margin-bottom:6px; }
+
 </style>
 </head>
 <body data-theme="dark">
@@ -1421,6 +1447,21 @@
       <div class="nav">
         <button class="nav-back" onclick="goHome()">‹ 桌面</button>
         <div class="nav-title">iMessage</div>
+      <div id="messages-settings" class="feature-settings" style="display:none;padding:12px;">
+        
+        <div class="bg-settings-block" data-appbg="messages">
+          <label>本页背景图</label>
+          <div style="display:flex;gap:8px;margin-bottom:8px;">
+            <button type="button" class="btn btn-secondary" style="flex:1;" onclick="uploadAppBg('messages')">上传背景</button>
+            <button type="button" class="btn btn-secondary" style="flex:1;" onclick="clearAppBg('messages')">清除</button>
+          </div>
+          <input type="text" id="appbg-url-messages" placeholder="或粘贴图片链接" style="width:100%;background:var(--input);border:none;border-radius:10px;padding:10px;color:var(--text);font-size:14px;margin-bottom:8px;">
+          <button type="button" class="btn btn-secondary" style="width:100%;margin-bottom:6px;" onclick="setAppBgUrl('messages')">使用链接背景</button>
+          <div id="appbg-preview-messages" style="height:48px;border-radius:10px;background:var(--card2);background-size:cover;background-position:center;border:.5px solid var(--border);"></div>
+        </div>
+
+      </div>
+
         <button class="nav-right" onclick="openCreateChar()">＋</button>
       </div>
       <div class="scroll" id="conv-list"></div>
@@ -1554,6 +1595,21 @@
       <div class="nav">
         <button class="nav-back" onclick="openApp('messages')">‹ 返回</button>
         <div class="nav-title">通讯录</div>
+      <div id="contacts-settings" class="feature-settings" style="display:none;padding:12px;">
+        
+        <div class="bg-settings-block" data-appbg="contacts">
+          <label>本页背景图</label>
+          <div style="display:flex;gap:8px;margin-bottom:8px;">
+            <button type="button" class="btn btn-secondary" style="flex:1;" onclick="uploadAppBg('contacts')">上传背景</button>
+            <button type="button" class="btn btn-secondary" style="flex:1;" onclick="clearAppBg('contacts')">清除</button>
+          </div>
+          <input type="text" id="appbg-url-contacts" placeholder="或粘贴图片链接" style="width:100%;background:var(--input);border:none;border-radius:10px;padding:10px;color:var(--text);font-size:14px;margin-bottom:8px;">
+          <button type="button" class="btn btn-secondary" style="width:100%;margin-bottom:6px;" onclick="setAppBgUrl('contacts')">使用链接背景</button>
+          <div id="appbg-preview-contacts" style="height:48px;border-radius:10px;background:var(--card2);background-size:cover;background-position:center;border:.5px solid var(--border);"></div>
+        </div>
+
+      </div>
+
         <button class="nav-right" onclick="refreshContacts()">刷新</button>
       </div>
       <div class="scroll" id="contact-list"></div>
@@ -1564,7 +1620,23 @@
       <div class="nav">
         <button class="nav-back" onclick="goHome()">‹ 桌面</button>
         <div class="nav-title">世界书</div>
+      <div id="worldbook-settings" class="feature-settings" style="display:none;padding:12px;">
+        
+        <div class="bg-settings-block" data-appbg="worldbook">
+          <label>本页背景图</label>
+          <div style="display:flex;gap:8px;margin-bottom:8px;">
+            <button type="button" class="btn btn-secondary" style="flex:1;" onclick="uploadAppBg('worldbook')">上传背景</button>
+            <button type="button" class="btn btn-secondary" style="flex:1;" onclick="clearAppBg('worldbook')">清除</button>
+          </div>
+          <input type="text" id="appbg-url-worldbook" placeholder="或粘贴图片链接" style="width:100%;background:var(--input);border:none;border-radius:10px;padding:10px;color:var(--text);font-size:14px;margin-bottom:8px;">
+          <button type="button" class="btn btn-secondary" style="width:100%;margin-bottom:6px;" onclick="setAppBgUrl('worldbook')">使用链接背景</button>
+          <div id="appbg-preview-worldbook" style="height:48px;border-radius:10px;background:var(--card2);background-size:cover;background-position:center;border:.5px solid var(--border);"></div>
+        </div>
+
+      </div>
+
         <div style="display:flex;gap:2px;">
+          <button class="nav-right" style="min-width:auto;padding:8px;" onclick="toggleFeatureSettings('worldbook')" title="设置">⚙</button>
           <button class="nav-right" style="min-width:auto;padding:8px;" onclick="exportWorldBooks()" title="导出">导出</button>
           <button class="nav-right" style="min-width:auto;padding:8px;" onclick="addWorldBook()">＋</button>
         </div>
@@ -1610,6 +1682,17 @@
         <button class="nav-right" onclick="refreshTasks()">刷新</button>
       </div>
       <div id="offline-settings" class="feature-settings" style="display:none;padding:10px 12px;background:#141414;border-bottom:.5px solid var(--border);">
+        <div class="bg-settings-block" data-appbg="offline">
+          <label>本页背景图</label>
+          <div style="display:flex;gap:8px;margin-bottom:8px;">
+            <button type="button" class="btn btn-secondary" style="flex:1;" onclick="uploadAppBg('offline')">上传背景</button>
+            <button type="button" class="btn btn-secondary" style="flex:1;" onclick="clearAppBg('offline')">清除</button>
+          </div>
+          <input type="text" id="appbg-url-offline" placeholder="或粘贴图片链接" style="width:100%;background:var(--input);border:none;border-radius:10px;padding:10px;color:var(--text);font-size:14px;margin-bottom:8px;">
+          <button type="button" class="btn btn-secondary" style="width:100%;margin-bottom:6px;" onclick="setAppBgUrl('offline')">使用链接背景</button>
+          <div id="appbg-preview-offline" style="height:48px;border-radius:10px;background:var(--card2);background-size:cover;background-position:center;border:.5px solid var(--border);"></div>
+        </div>
+
         <div style="font-size:12px;color:#ff8a80;margin-bottom:6px;display:none;">每轮生成字数</div>
         <input type="number" id="offline-word-count" style="display:none" value="800" min="200" max="4000" step="100" style="width:100%;background:#2c2c2e;border:none;border-radius:10px;padding:10px 12px;color:#fff;font-size:16px;outline:none;margin-bottom:10px;">
         <div style="font-size:12px;color:#ff8a80;margin-bottom:6px;">记忆来源（勾选聊天记录）</div>
@@ -1632,6 +1715,17 @@
         <button class="nav-right" id="story-settings-btn" onclick="toggleStorySettings()">⚙</button>
       </div>
       <div id="story-settings" class="feature-settings" style="display:none;padding:12px;background:#141414;border-bottom:.5px solid var(--border);max-height:55%;overflow-y:auto;">
+        <div class="bg-settings-block" data-appbg="story">
+          <label>本页背景图</label>
+          <div style="display:flex;gap:8px;margin-bottom:8px;">
+            <button type="button" class="btn btn-secondary" style="flex:1;" onclick="uploadAppBg('story')">上传背景</button>
+            <button type="button" class="btn btn-secondary" style="flex:1;" onclick="clearAppBg('story')">清除</button>
+          </div>
+          <input type="text" id="appbg-url-story" placeholder="或粘贴图片链接" style="width:100%;background:var(--input);border:none;border-radius:10px;padding:10px;color:var(--text);font-size:14px;margin-bottom:8px;">
+          <button type="button" class="btn btn-secondary" style="width:100%;margin-bottom:6px;" onclick="setAppBgUrl('story')">使用链接背景</button>
+          <div id="appbg-preview-story" style="height:48px;border-radius:10px;background:var(--card2);background-size:cover;background-position:center;border:.5px solid var(--border);"></div>
+        </div>
+
         <div style="font-size:13px;font-weight:600;color:#ff8a80;margin-bottom:10px;">任务设置</div>
         <label style="font-size:12px;color:#aaa;">任务名称</label>
         <input type="text" id="story-edit-title" style="width:100%;background:#2c2c2e;border:none;border-radius:10px;padding:10px;color:#fff;margin:6px 0 10px;">
@@ -1674,6 +1768,17 @@
         </div>
       </div>
       <div id="train-settings" class="feature-settings" style="display:none;padding:10px 12px;background:#141414;border-bottom:.5px solid var(--border);">
+        <div class="bg-settings-block" data-appbg="train">
+          <label>本页背景图</label>
+          <div style="display:flex;gap:8px;margin-bottom:8px;">
+            <button type="button" class="btn btn-secondary" style="flex:1;" onclick="uploadAppBg('train')">上传背景</button>
+            <button type="button" class="btn btn-secondary" style="flex:1;" onclick="clearAppBg('train')">清除</button>
+          </div>
+          <input type="text" id="appbg-url-train" placeholder="或粘贴图片链接" style="width:100%;background:var(--input);border:none;border-radius:10px;padding:10px;color:var(--text);font-size:14px;margin-bottom:8px;">
+          <button type="button" class="btn btn-secondary" style="width:100%;margin-bottom:6px;" onclick="setAppBgUrl('train')">使用链接背景</button>
+          <div id="appbg-preview-train" style="height:48px;border-radius:10px;background:var(--card2);background-size:cover;background-position:center;border:.5px solid var(--border);"></div>
+        </div>
+
         <div style="font-size:12px;color:#ff8a80;margin-bottom:6px;">记忆来源（仅主人）</div>
         <div style="font-size:13px;color:#bbb;margin-bottom:10px;padding:8px;background:#1c1c1e;border-radius:8px;">🔒 本功能专属主人，固定读取「主人」聊天记录作为记忆</div>
         <div style="font-size:12px;color:#ff8a80;margin-bottom:6px;">每轮字数（评价回复）</div>
@@ -1692,6 +1797,17 @@
         <button class="nav-right" onclick="genDiary()">＋</button>
       </div>
       <div id="diary-settings" class="feature-settings" style="display:none;padding:14px 16px;background:var(--bg2);border-bottom:.5px solid var(--border);">
+        <div class="bg-settings-block" data-appbg="diary">
+          <label>本页背景图</label>
+          <div style="display:flex;gap:8px;margin-bottom:8px;">
+            <button type="button" class="btn btn-secondary" style="flex:1;" onclick="uploadAppBg('diary')">上传背景</button>
+            <button type="button" class="btn btn-secondary" style="flex:1;" onclick="clearAppBg('diary')">清除</button>
+          </div>
+          <input type="text" id="appbg-url-diary" placeholder="或粘贴图片链接" style="width:100%;background:var(--input);border:none;border-radius:10px;padding:10px;color:var(--text);font-size:14px;margin-bottom:8px;">
+          <button type="button" class="btn btn-secondary" style="width:100%;margin-bottom:6px;" onclick="setAppBgUrl('diary')">使用链接背景</button>
+          <div id="appbg-preview-diary" style="height:48px;border-radius:10px;background:var(--card2);background-size:cover;background-position:center;border:.5px solid var(--border);"></div>
+        </div>
+
         <div style="font-size:13px;font-weight:600;margin-bottom:10px;color:var(--text);">日记设置</div>
         <div style="font-size:12px;color:var(--muted);margin-bottom:6px;">记忆来源（勾选聊天记录）</div>
         <div id="diary-memory-list" style="max-height:140px;overflow-y:auto;margin-bottom:12px;background:var(--card);border-radius:12px;padding:8px;"></div>
@@ -1722,6 +1838,17 @@
         <button class="nav-right" onclick="genRulesFromMemory()">生成</button>
       </div>
       <div id="rules-settings" class="feature-settings" style="display:none;padding:10px 12px;background:#141414;border-bottom:.5px solid var(--border);">
+        <div class="bg-settings-block" data-appbg="rules">
+          <label>本页背景图</label>
+          <div style="display:flex;gap:8px;margin-bottom:8px;">
+            <button type="button" class="btn btn-secondary" style="flex:1;" onclick="uploadAppBg('rules')">上传背景</button>
+            <button type="button" class="btn btn-secondary" style="flex:1;" onclick="clearAppBg('rules')">清除</button>
+          </div>
+          <input type="text" id="appbg-url-rules" placeholder="或粘贴图片链接" style="width:100%;background:var(--input);border:none;border-radius:10px;padding:10px;color:var(--text);font-size:14px;margin-bottom:8px;">
+          <button type="button" class="btn btn-secondary" style="width:100%;margin-bottom:6px;" onclick="setAppBgUrl('rules')">使用链接背景</button>
+          <div id="appbg-preview-rules" style="height:48px;border-radius:10px;background:var(--card2);background-size:cover;background-position:center;border:.5px solid var(--border);"></div>
+        </div>
+
         <div style="font-size:12px;color:#ff8a80;margin-bottom:6px;">记忆来源（勾选后由该对象写守则）</div>
         <div id="rules-memory-list" style="max-height:140px;overflow-y:auto;margin-bottom:10px;"></div>
         <div style="font-size:12px;color:#ff8a80;margin-bottom:6px;">每轮字数</div>
@@ -1750,6 +1877,21 @@
       <div class="nav">
         <button class="nav-back" onclick="goHome()">‹ 桌面</button>
         <div class="nav-title">我是小狗</div>
+      <div id="me-settings" class="feature-settings" style="display:none;padding:12px;">
+        
+        <div class="bg-settings-block" data-appbg="me">
+          <label>本页背景图</label>
+          <div style="display:flex;gap:8px;margin-bottom:8px;">
+            <button type="button" class="btn btn-secondary" style="flex:1;" onclick="uploadAppBg('me')">上传背景</button>
+            <button type="button" class="btn btn-secondary" style="flex:1;" onclick="clearAppBg('me')">清除</button>
+          </div>
+          <input type="text" id="appbg-url-me" placeholder="或粘贴图片链接" style="width:100%;background:var(--input);border:none;border-radius:10px;padding:10px;color:var(--text);font-size:14px;margin-bottom:8px;">
+          <button type="button" class="btn btn-secondary" style="width:100%;margin-bottom:6px;" onclick="setAppBgUrl('me')">使用链接背景</button>
+          <div id="appbg-preview-me" style="height:48px;border-radius:10px;background:var(--card2);background-size:cover;background-position:center;border:.5px solid var(--border);"></div>
+        </div>
+
+      </div>
+
         <button class="nav-right" onclick="saveMeProfile()">保存</button>
       </div>
       <div class="scroll edit-section">
@@ -1786,6 +1928,21 @@
       <div class="nav">
         <button class="nav-back" onclick="goHome()">‹ 桌面</button>
         <div class="nav-title">美化</div>
+      <div id="beautify-settings" class="feature-settings" style="display:none;padding:12px;">
+        
+        <div class="bg-settings-block" data-appbg="beautify">
+          <label>本页背景图</label>
+          <div style="display:flex;gap:8px;margin-bottom:8px;">
+            <button type="button" class="btn btn-secondary" style="flex:1;" onclick="uploadAppBg('beautify')">上传背景</button>
+            <button type="button" class="btn btn-secondary" style="flex:1;" onclick="clearAppBg('beautify')">清除</button>
+          </div>
+          <input type="text" id="appbg-url-beautify" placeholder="或粘贴图片链接" style="width:100%;background:var(--input);border:none;border-radius:10px;padding:10px;color:var(--text);font-size:14px;margin-bottom:8px;">
+          <button type="button" class="btn btn-secondary" style="width:100%;margin-bottom:6px;" onclick="setAppBgUrl('beautify')">使用链接背景</button>
+          <div id="appbg-preview-beautify" style="height:48px;border-radius:10px;background:var(--card2);background-size:cover;background-position:center;border:.5px solid var(--border);"></div>
+        </div>
+
+      </div>
+
         <button class="nav-right" onclick="saveMediaSkin();saveBeautifyPreset(true)">保存</button>
       </div>
       <div class="scroll" style="padding:12px;">
@@ -1839,6 +1996,21 @@
       <div class="nav">
         <button class="nav-back" onclick="goHome()">‹ 桌面</button>
         <div class="nav-title">小狗乖乖</div>
+      <div id="guide-settings" class="feature-settings" style="display:none;padding:12px;">
+        
+        <div class="bg-settings-block" data-appbg="guide">
+          <label>本页背景图</label>
+          <div style="display:flex;gap:8px;margin-bottom:8px;">
+            <button type="button" class="btn btn-secondary" style="flex:1;" onclick="uploadAppBg('guide')">上传背景</button>
+            <button type="button" class="btn btn-secondary" style="flex:1;" onclick="clearAppBg('guide')">清除</button>
+          </div>
+          <input type="text" id="appbg-url-guide" placeholder="或粘贴图片链接" style="width:100%;background:var(--input);border:none;border-radius:10px;padding:10px;color:var(--text);font-size:14px;margin-bottom:8px;">
+          <button type="button" class="btn btn-secondary" style="width:100%;margin-bottom:6px;" onclick="setAppBgUrl('guide')">使用链接背景</button>
+          <div id="appbg-preview-guide" style="height:48px;border-radius:10px;background:var(--card2);background-size:cover;background-position:center;border:.5px solid var(--border);"></div>
+        </div>
+
+      </div>
+
         <button class="nav-right" onclick="startGuideSession()">开始</button>
       </div>
       <div class="scroll" style="padding:16px;" id="guide-setup">
@@ -1903,6 +2075,17 @@
           <button class="nav-right" style="min-width:auto;" onclick="newForumPost()">＋</button>
         </div>
         <div class="cw-settings" id="forum-settings">
+        <div class="bg-settings-block" data-appbg="forum">
+          <label>论坛背景图</label>
+          <div style="display:flex;gap:8px;margin-bottom:8px;">
+            <button type="button" class="btn btn-secondary" style="flex:1;" onclick="uploadAppBg('forum')">上传背景</button>
+            <button type="button" class="btn btn-secondary" style="flex:1;" onclick="clearAppBg('forum')">清除</button>
+          </div>
+          <input type="text" id="appbg-url-forum" placeholder="或粘贴图片链接" style="width:100%;background:var(--input);border:none;border-radius:10px;padding:10px;color:var(--text);font-size:14px;margin-bottom:8px;">
+          <button type="button" class="btn btn-secondary" style="width:100%;margin-bottom:6px;" onclick="setAppBgUrl('forum')">使用链接背景</button>
+          <div id="appbg-preview-forum" style="height:48px;border-radius:10px;background:var(--card2);background-size:cover;background-position:center;border:.5px solid var(--border);"></div>
+        </div>
+
           <div style="font-size:13px;font-weight:600;margin-bottom:8px;">设置</div>
           <div style="font-size:12px;color:var(--muted);margin-bottom:4px;">主题色</div>
           <select id="forum-theme" onchange="setForumTheme(this.value)" style="width:100%;background:var(--input);border:none;border-radius:10px;padding:8px;color:var(--text);margin-bottom:10px;">
@@ -1948,6 +2131,17 @@
         <button class="nav-right" onclick="toggleLiveSetupSettings()">⚙</button>
       </div>
       <div id="live-setup-settings" class="feature-settings" style="display:none;padding:12px;background:#141414;border-bottom:.5px solid var(--border);">
+        <div class="bg-settings-block" data-appbg="live">
+          <label>本页背景图</label>
+          <div style="display:flex;gap:8px;margin-bottom:8px;">
+            <button type="button" class="btn btn-secondary" style="flex:1;" onclick="uploadAppBg('live')">上传背景</button>
+            <button type="button" class="btn btn-secondary" style="flex:1;" onclick="clearAppBg('live')">清除</button>
+          </div>
+          <input type="text" id="appbg-url-live" placeholder="或粘贴图片链接" style="width:100%;background:var(--input);border:none;border-radius:10px;padding:10px;color:var(--text);font-size:14px;margin-bottom:8px;">
+          <button type="button" class="btn btn-secondary" style="width:100%;margin-bottom:6px;" onclick="setAppBgUrl('live')">使用链接背景</button>
+          <div id="appbg-preview-live" style="height:48px;border-radius:10px;background:var(--card2);background-size:cover;background-position:center;border:.5px solid var(--border);"></div>
+        </div>
+
         <div style="font-size:13px;font-weight:600;color:#ff8a80;margin-bottom:8px;">直播设置</div>
         <label style="font-size:12px;color:#aaa;">绑定世界书（逗号分隔）</label>
         <input type="text" id="live-wb" placeholder="全局规则,直播专属" style="width:100%;background:#2c2c2e;border:none;border-radius:10px;padding:10px;color:#fff;margin:6px 0 10px;">
@@ -2022,6 +2216,21 @@
       <div class="nav">
         <button class="nav-back" id="alb-back" onclick="albumNavBack()">‹</button>
         <div class="nav-title" id="alb-title">相册</div>
+      <div id="album-settings" class="feature-settings" style="display:none;padding:12px;">
+        
+        <div class="bg-settings-block" data-appbg="album">
+          <label>本页背景图</label>
+          <div style="display:flex;gap:8px;margin-bottom:8px;">
+            <button type="button" class="btn btn-secondary" style="flex:1;" onclick="uploadAppBg('album')">上传背景</button>
+            <button type="button" class="btn btn-secondary" style="flex:1;" onclick="clearAppBg('album')">清除</button>
+          </div>
+          <input type="text" id="appbg-url-album" placeholder="或粘贴图片链接" style="width:100%;background:var(--input);border:none;border-radius:10px;padding:10px;color:var(--text);font-size:14px;margin-bottom:8px;">
+          <button type="button" class="btn btn-secondary" style="width:100%;margin-bottom:6px;" onclick="setAppBgUrl('album')">使用链接背景</button>
+          <div id="appbg-preview-album" style="height:48px;border-radius:10px;background:var(--card2);background-size:cover;background-position:center;border:.5px solid var(--border);"></div>
+        </div>
+
+      </div>
+
         <button class="nav-right" onclick="genAlbumShot()">＋</button>
       </div>
       <div class="scroll" style="padding:0 0 20px;" id="album-list"></div>
@@ -2040,6 +2249,21 @@
       <div class="nav">
         <button class="nav-back" onclick="goHome()">‹ 桌面</button>
         <div class="nav-title">身体拍卖行</div>
+      <div id="auction-settings" class="feature-settings" style="display:none;padding:12px;">
+        
+        <div class="bg-settings-block" data-appbg="auction">
+          <label>本页背景图</label>
+          <div style="display:flex;gap:8px;margin-bottom:8px;">
+            <button type="button" class="btn btn-secondary" style="flex:1;" onclick="uploadAppBg('auction')">上传背景</button>
+            <button type="button" class="btn btn-secondary" style="flex:1;" onclick="clearAppBg('auction')">清除</button>
+          </div>
+          <input type="text" id="appbg-url-auction" placeholder="或粘贴图片链接" style="width:100%;background:var(--input);border:none;border-radius:10px;padding:10px;color:var(--text);font-size:14px;margin-bottom:8px;">
+          <button type="button" class="btn btn-secondary" style="width:100%;margin-bottom:6px;" onclick="setAppBgUrl('auction')">使用链接背景</button>
+          <div id="appbg-preview-auction" style="height:48px;border-radius:10px;background:var(--card2);background-size:cover;background-position:center;border:.5px solid var(--border);"></div>
+        </div>
+
+      </div>
+
         <button class="nav-right" onclick="refreshAuctionLots()">刷新拍品</button>
       </div>
       <div style="padding:8px 12px;background:var(--nav);border-bottom:.5px solid var(--border);display:flex;gap:8px;">
@@ -2055,6 +2279,21 @@
       <div class="nav">
         <button class="nav-back" onclick="goHome()">‹ 桌面</button>
         <div class="nav-title">发情日历</div>
+      <div id="heat-settings" class="feature-settings" style="display:none;padding:12px;">
+        
+        <div class="bg-settings-block" data-appbg="heat">
+          <label>本页背景图</label>
+          <div style="display:flex;gap:8px;margin-bottom:8px;">
+            <button type="button" class="btn btn-secondary" style="flex:1;" onclick="uploadAppBg('heat')">上传背景</button>
+            <button type="button" class="btn btn-secondary" style="flex:1;" onclick="clearAppBg('heat')">清除</button>
+          </div>
+          <input type="text" id="appbg-url-heat" placeholder="或粘贴图片链接" style="width:100%;background:var(--input);border:none;border-radius:10px;padding:10px;color:var(--text);font-size:14px;margin-bottom:8px;">
+          <button type="button" class="btn btn-secondary" style="width:100%;margin-bottom:6px;" onclick="setAppBgUrl('heat')">使用链接背景</button>
+          <div id="appbg-preview-heat" style="height:48px;border-radius:10px;background:var(--card2);background-size:cover;background-position:center;border:.5px solid var(--border);"></div>
+        </div>
+
+      </div>
+
         <div style="width:44px"></div>
       </div>
       <div class="scroll" style="padding:12px;">
@@ -2129,6 +2368,17 @@
         <button class="nav-right" onclick="saveCampusSettings()">保存</button>
       </div>
       <div class="scroll" style="padding:16px;">
+        <div class="bg-settings-block" data-appbg="campus">
+          <label>校园墙背景</label>
+          <div style="display:flex;gap:8px;margin-bottom:8px;">
+            <button type="button" class="btn btn-secondary" style="flex:1;" onclick="uploadAppBg('campus')">上传背景</button>
+            <button type="button" class="btn btn-secondary" style="flex:1;" onclick="clearAppBg('campus')">清除</button>
+          </div>
+          <input type="text" id="appbg-url-campus" placeholder="或粘贴图片链接" style="width:100%;background:var(--input);border:none;border-radius:10px;padding:10px;color:var(--text);font-size:14px;margin-bottom:8px;">
+          <button type="button" class="btn btn-secondary" style="width:100%;margin-bottom:6px;" onclick="setAppBgUrl('campus')">使用链接背景</button>
+          <div id="appbg-preview-campus" style="height:48px;border-radius:10px;background:var(--card2);background-size:cover;background-position:center;border:.5px solid var(--border);"></div>
+        </div>
+
         <div class="card" style="border-radius:16px;">
           <h4 style="margin-bottom:10px;">主题色</h4>
           <div class="seg" style="margin-bottom:4px;" id="campus-theme-seg">
@@ -2168,6 +2418,21 @@
       <div class="nav">
         <button class="nav-back" onclick="goHome()">‹ 桌面</button>
         <div class="nav-title">查询</div>
+      <div id="query-settings" class="feature-settings" style="display:none;padding:12px;">
+        
+        <div class="bg-settings-block" data-appbg="query">
+          <label>本页背景图</label>
+          <div style="display:flex;gap:8px;margin-bottom:8px;">
+            <button type="button" class="btn btn-secondary" style="flex:1;" onclick="uploadAppBg('query')">上传背景</button>
+            <button type="button" class="btn btn-secondary" style="flex:1;" onclick="clearAppBg('query')">清除</button>
+          </div>
+          <input type="text" id="appbg-url-query" placeholder="或粘贴图片链接" style="width:100%;background:var(--input);border:none;border-radius:10px;padding:10px;color:var(--text);font-size:14px;margin-bottom:8px;">
+          <button type="button" class="btn btn-secondary" style="width:100%;margin-bottom:6px;" onclick="setAppBgUrl('query')">使用链接背景</button>
+          <div id="appbg-preview-query" style="height:48px;border-radius:10px;background:var(--card2);background-size:cover;background-position:center;border:.5px solid var(--border);"></div>
+        </div>
+
+      </div>
+
         <button class="nav-right" onclick="editQueryWB()">世界书</button>
       </div>
       <div style="padding:16px;border-bottom:.5px solid var(--border);background:var(--nav);">
@@ -2452,6 +2717,7 @@ function loadAll() {
       if(Array.isArray(d.homeWidgets)) window._homeWidgets = d.homeWidgets;
       if(d.homeLayout) window._homeLayout = d.homeLayout;
       if(d.beautifyFx) window._beautifyFx = d.beautifyFx;
+      if(d.appBgs) window._appBgs = d.appBgs;
       if(typeof d.chatGlassOpacity === 'number') window._chatGlassOpacity = d.chatGlassOpacity;
       if(typeof d.globalGlassOpacity === 'number') window._globalGlassOpacity = d.globalGlassOpacity;
       if(Array.isArray(d.currentTasks)) currentTasks = d.currentTasks;
@@ -2545,6 +2811,7 @@ function saveAll() {
     currentTasks: currentTasks||[],
     homeWidgets: window._homeWidgets||[],
     homeLayout: window._homeLayout||null,
+    appBgs: window._appBgs||{},
     beautifyFx: window._beautifyFx||null,
     chatGlassOpacity: window._chatGlassOpacity ?? 0.72,
     globalGlassOpacity: window._globalGlassOpacity ?? 0.55,
@@ -2581,6 +2848,7 @@ function openApp(name) {
   const pg = $(`page-${name}`);
   if(!pg){ console.warn('no page', name); return; }
   pg.classList.add('show');
+  try{ applyAppBg(name); refreshAppBgPreview(name); }catch(_e){}
   // 关闭所有设置面板
   document.querySelectorAll('.feature-settings').forEach(el=>el.style.display='none');
   if(name==='campus-settings'){
@@ -2640,6 +2908,7 @@ function toggleFeatureSettings(feature){
   if(show && feature === 'diary' && $('diary-word-count')) $('diary-word-count').value = diaryWordCount;
   if(show && feature === 'rules' && $('rules-word-count')) $('rules-word-count').value = rulesWordCount;
   if(show && feature === 'train' && $('train-word-count')) $('train-word-count').value = trainWordCount;
+  try{ refreshAppBgPreview(feature); }catch(_e){}
 }
 
 function renderMemoryList(feature){
@@ -5890,6 +6159,7 @@ function doImport(e){
       if(Array.isArray(d.homeWidgets)) window._homeWidgets = d.homeWidgets;
       if(d.homeLayout) window._homeLayout = d.homeLayout;
       if(d.beautifyFx) window._beautifyFx = d.beautifyFx;
+      if(d.appBgs) window._appBgs = d.appBgs;
       if(typeof d.chatGlassOpacity === 'number') window._chatGlassOpacity = d.chatGlassOpacity;
       if(typeof d.globalGlassOpacity === 'number') window._globalGlassOpacity = d.globalGlassOpacity;
       if(Array.isArray(d.currentTasks)) currentTasks = d.currentTasks;
@@ -5904,6 +6174,7 @@ function doImport(e){
       if(Array.isArray(d.homeWidgets)) window._homeWidgets = d.homeWidgets;
       if(d.homeLayout) window._homeLayout = d.homeLayout;
       if(d.beautifyFx) window._beautifyFx = d.beautifyFx;
+      if(d.appBgs) window._appBgs = d.appBgs;
       if(typeof d.chatGlassOpacity === 'number') window._chatGlassOpacity = d.chatGlassOpacity;
       if(typeof d.globalGlassOpacity === 'number') window._globalGlassOpacity = d.globalGlassOpacity;
       if(Array.isArray(d.currentTasks)) currentTasks = d.currentTasks;
@@ -6190,8 +6461,12 @@ function widgetHTML(w){
     const matCls = mat==='glass' ? ' mat-glass' : mat==='liquid' ? ' mat-liquid' : '';
     const bg = w.bg || f.bg || '';
     const bgCls = bg ? ' has-bg' : '';
-    const bgStyle = bg ? ` background-image:url(${bg});` : '';
-    return `<div class="widget ${sizeCls}${big}${matCls}${bgCls}" data-style="clock" data-wid="${w.id}" data-kind="clock" data-size="${w.size||'sm'}" style="${bgStyle}" onclick="onWidgetTap('${w.id}')">${inner}${editHint}</div>`;
+    const op = (typeof w.bgOpacity === 'number') ? w.bgOpacity : 0.85;
+    const align = w.align || 'left';
+    const alignCls = ' align-'+align;
+    const safeBg = bg ? String(bg).replace(/'/g, '%27') : '';
+    const bgLayer = bg ? `<div class="widget-bg-layer" style="background-image:url('${safeBg}');opacity:${op};"></div>` : '';
+    return `<div class="widget ${sizeCls}${big}${matCls}${bgCls}${alignCls}" data-style="clock" data-wid="${w.id}" data-kind="clock" data-size="${w.size||'sm'}" onclick="onWidgetTap('${w.id}')">${bgLayer}${inner}${editHint}</div>`;
   } else {
     // status / heat / quote glass cards
     let title=f.title, body=f.body, sub=f.sub;
@@ -6209,8 +6484,12 @@ function widgetHTML(w){
   const matCls = mat==='glass' ? ' mat-glass' : mat==='liquid' ? ' mat-liquid' : '';
   const bg = w.bg || f.bg || '';
   const bgCls = bg ? ' has-bg' : '';
-  const bgStyle = bg ? ` background-image:url(${bg});` : '';
-  return `<div class="widget ${sizeCls}${matCls}${bgCls}" data-style="${style}" data-wid="${w.id}" data-kind="${w.kind}" data-size="${w.size||'sm'}" style="${bgStyle}" onclick="onWidgetTap('${w.id}')">${inner}${editHint}</div>`;
+  const op = (typeof w.bgOpacity === 'number') ? w.bgOpacity : 0.85;
+  const align = w.align || (style==='clock' ? 'left' : '');
+  const alignCls = align ? (' align-'+align) : '';
+  const safeBg = bg ? String(bg).replace(/'/g, '%27') : '';
+  const bgLayer = bg ? `<div class="widget-bg-layer" style="background-image:url('${safeBg}');opacity:${op};"></div>` : '';
+  return `<div class="widget ${sizeCls}${matCls}${bgCls}${alignCls}" data-style="${style}" data-wid="${w.id}" data-kind="${w.kind}" data-size="${w.size||'sm'}" onclick="onWidgetTap('${w.id}')">${bgLayer}${inner}${editHint}</div>`;
 }
 function esc(v){ return escapeHtml(String(v??'')); }
 function avatarOrEmoji(v){
@@ -6272,12 +6551,20 @@ function openWidgetEdit(id){
       <option value="sm" ${w.size!=='md'?'selected':''}>小（半宽）</option>
       <option value="md" ${w.size==='md'?'selected':''}>中（全宽）</option>
     </select>
-    <label style="display:block;font-size:12px;color:var(--muted);margin:12px 0 4px;">背景图（链接或本地）</label>
-    <input data-field="__bg" value="${esc(w.bg||f.bg||'')}" placeholder="http(s):// 或先点下方上传" style="width:100%;background:var(--input);border:none;border-radius:10px;padding:10px;color:var(--text);font-size:14px;">
+    <label style="display:block;font-size:12px;color:var(--muted);margin:12px 0 4px;">背景图（链接或本地上传）</label>
+    <input data-field="__bg" value="${esc(w.bg||f.bg||'')}" placeholder="http(s):// 或点下方上传" style="width:100%;background:var(--input);border:none;border-radius:10px;padding:10px;color:var(--text);font-size:14px;">
     <div style="display:flex;gap:8px;margin-top:8px;">
       <button type="button" class="btn btn-secondary" style="flex:1;" onclick="uploadWidgetBg()">上传背景</button>
       <button type="button" class="btn btn-secondary" style="flex:1;" onclick="clearWidgetBg()">清除背景</button>
-    </div>`;
+    </div>
+    <label style="display:block;font-size:12px;color:var(--muted);margin:12px 0 4px;">背景透明度 <span id="w-bg-op-val">${Math.round(((w.bgOpacity??0.85))*100)}%</span></label>
+    <input type="range" data-field="__bgOpacity" min="10" max="100" value="${Math.round(((w.bgOpacity??0.85))*100)}" style="width:100%;" oninput="var v=this.value; var el=document.getElementById('w-bg-op-val'); if(el) el.textContent=v+'%';">
+    <label style="display:block;font-size:12px;color:var(--muted);margin:12px 0 4px;">时间对齐（时间小组件）</label>
+    <select data-field="__align" style="width:100%;background:var(--input);border:none;border-radius:10px;padding:10px;color:var(--text);">
+      <option value="left" ${(w.align||'left')==='left'?'selected':''}>左对齐</option>
+      <option value="center" ${w.align==='center'?'selected':''}>居中</option>
+      <option value="right" ${w.align==='right'?'selected':''}>右对齐</option>
+    </select>`;
   $('widget-edit-sheet')?.classList.add('show');
 }
 function fieldLabel(k){
@@ -6293,13 +6580,28 @@ function uploadWidgetBg(){
   input.onchange=async e=>{
     const file=e.target.files?.[0]; if(!file) return;
     try{
-      const data = await compressImage(file, 1200, 0.75);
+      let data;
+      if(typeof compressImage === 'function'){
+        data = await compressImage(file, 1200, 0.75);
+      } else {
+        data = await new Promise((res,rej)=>{ const r=new FileReader(); r.onload=()=>res(r.result); r.onerror=rej; r.readAsDataURL(file); });
+      }
+      if(!data || typeof data !== 'string'){ alert('图片读取失败'); return; }
       const inp = document.querySelector('#widget-edit-fields [data-field="__bg"]');
       if(inp) inp.value = data;
       const id = window._editingWidgetId;
       const w = (window._homeWidgets||[]).find(x=>x.id===id);
-      if(w){ w.bg = data; }
-    }catch(err){ alert('上传失败'); }
+      if(w){
+        w.bg = data;
+        if(!w.fields) w.fields = {};
+        w.fields.bg = data;
+      }
+      try{ renderHomeWidgets(); if(window._homeEdit) enterHomeEdit(); }catch(_e){}
+      alert('背景已添加，点保存生效');
+    }catch(err){
+      console.error(err);
+      alert('上传失败：'+(err.message||err));
+    }
   };
   input.click();
 }
@@ -6309,6 +6611,7 @@ function clearWidgetBg(){
   const id = window._editingWidgetId;
   const w = (window._homeWidgets||[]).find(x=>x.id===id);
   if(w){ w.bg = ''; if(w.fields) w.fields.bg=''; }
+  try{ renderHomeWidgets(); if(window._homeEdit) enterHomeEdit(); }catch(_e){}
 }
 function closeWidgetEdit(){
   $('widget-edit-sheet')?.classList.remove('show');
@@ -6326,6 +6629,8 @@ function saveWidgetEdit(){
     if(k==='__size'){ w.size = el.value; return; }
     if(k==='__material'){ w.material = el.value; return; }
     if(k==='__bg'){ w.bg = el.value; fields.bg = el.value; return; }
+    if(k==='__bgOpacity'){ w.bgOpacity = Math.max(0.1, Math.min(1, (parseInt(el.value,10)||85)/100)); return; }
+    if(k==='__align'){ w.align = el.value || 'left'; return; }
     if(el.type==='checkbox'){ fields[k] = el.checked ? '1' : '0'; return; }
     fields[k] = el.value;
   });
@@ -6479,6 +6784,68 @@ function syncBeautifyFxUI(){
 }
 
 
+
+// ========== 各软件背景 ==========
+window._appBgs = window._appBgs || {};
+function uploadAppBg(appId){
+  const input=document.createElement('input'); input.type='file'; input.accept='image/*';
+  input.onchange=async e=>{
+    const file=e.target.files?.[0]; if(!file) return;
+    try{
+      const data = await compressImage(file, 1600, 0.72);
+      window._appBgs = window._appBgs || {};
+      window._appBgs[appId] = data;
+      applyAppBg(appId);
+      refreshAppBgPreview(appId);
+      saveAll();
+      alert('背景已设置');
+    }catch(err){ alert('上传失败'); }
+  };
+  input.click();
+}
+function clearAppBg(appId){
+  window._appBgs = window._appBgs || {};
+  delete window._appBgs[appId];
+  applyAppBg(appId);
+  refreshAppBgPreview(appId);
+  const inp=$('appbg-url-'+appId); if(inp) inp.value='';
+  saveAll();
+}
+function setAppBgUrl(appId){
+  const v=($('appbg-url-'+appId)?.value||'').trim();
+  if(!v){ alert('请先粘贴链接'); return; }
+  window._appBgs = window._appBgs || {};
+  window._appBgs[appId] = v;
+  applyAppBg(appId);
+  refreshAppBgPreview(appId);
+  saveAll();
+  alert('背景已设置');
+}
+function applyAppBg(appId){
+  const pg = $('page-'+appId);
+  if(!pg) return;
+  const bg = (window._appBgs||{})[appId] || '';
+  if(bg){
+    pg.classList.add('has-app-bg');
+    pg.style.backgroundImage = 'url('+bg+')';
+    pg.style.backgroundSize = 'cover';
+    pg.style.backgroundPosition = 'center';
+  } else {
+    pg.classList.remove('has-app-bg');
+    pg.style.backgroundImage = '';
+  }
+}
+function refreshAppBgPreview(appId){
+  const el = $('appbg-preview-'+appId);
+  if(!el) return;
+  const bg = (window._appBgs||{})[appId] || '';
+  el.style.backgroundImage = bg ? ('url('+bg+')') : '';
+}
+function applyAllAppBgs(){
+  Object.keys(window._appBgs||{}).forEach(applyAppBg);
+}
+
+
 loadAll();
 try{ applyAppIcons(); }catch(_e){}
 try{
@@ -6492,6 +6859,7 @@ try{
   renderHomeWidgets();
 }catch(_e){}
 try{ syncBeautifyFxUI(); applyDeskFx(); applyGlobalFx(); }catch(_e){}
+try{ applyAllAppBgs(); }catch(_e){}
 </script>
 </body>
 </html>
