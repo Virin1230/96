@@ -140,10 +140,8 @@
   .page { position: absolute; inset: 0; background: var(--bg); display: none; flex-direction: column; }
   .page.show { display: flex; }
   .nav {
-    height: 56px; padding: 0 8px 0 4px; display: flex; align-items: center; justify-content: space-between;
-    background: var(--nav); backdrop-filter: blur(40px) saturate(200%);
-    -webkit-backdrop-filter: blur(40px) saturate(200%);
-    border-bottom: .33px solid var(--border); margin-top: 34px; flex-shrink: 0;
+    height: 52px; padding: 0 12px; display: flex; align-items: center; justify-content: space-between;
+    background: transparent; border-bottom: none; margin-top: 36px; flex-shrink: 0;
   }
   .nav-back, .nav-right {
     color: var(--blue); font-size: 17px; background: none; border: none; cursor: pointer;
@@ -829,6 +827,140 @@
     font-size: var(--fs-sm); cursor: pointer;
   }
 
+
+  /* chat like reference */
+  #page-chat { background: #f7f5f8; }
+  [data-theme="dark"] #page-chat { background: #121014; }
+  #page-chat .nav {
+    background: rgba(255,255,255,.92); border-bottom: .5px solid rgba(0,0,0,.06);
+    margin-top: 36px;
+  }
+  [data-theme="dark"] #page-chat .nav { background: rgba(28,28,30,.94); border-bottom-color: rgba(255,255,255,.08); }
+  #page-chat .nav-title { font-size: 16px; font-weight: 600; }
+  #page-chat .msg-list {
+    background-image: radial-gradient(rgba(180,160,180,.12) 1px, transparent 1px);
+    background-size: 28px 28px;
+  }
+  [data-theme="dark"] #page-chat .msg-list {
+    background-image: radial-gradient(rgba(255,255,255,.04) 1px, transparent 1px);
+  }
+  #page-chat .bubble-row.me .b-text {
+    background: #d4d0d8 !important; color: #1c1c1e !important; border-radius: 18px 18px 6px 18px;
+  }
+  [data-theme="dark"] #page-chat .bubble-row.me .b-text {
+    background: #3a3540 !important; color: #f5f5f7 !important;
+  }
+  #page-chat .bubble-row.him .b-text {
+    background: #ece8ee !important; color: #1c1c1e !important; border-radius: 18px 18px 18px 6px;
+  }
+  [data-theme="dark"] #page-chat .bubble-row.him .b-text {
+    background: #2c2c2e !important; color: #f5f5f7 !important;
+  }
+  #page-chat .input-bar {
+    background: rgba(255,255,255,.95); border-top: .5px solid rgba(0,0,0,.06);
+    padding: 10px 12px 14px; gap: 8px;
+  }
+  [data-theme="dark"] #page-chat .input-bar { background: rgba(22,22,24,.96); }
+  #page-chat #chat-input {
+    background: #efecef; border-radius: 22px; padding: 10px 16px; font-size: 15px;
+  }
+  [data-theme="dark"] #page-chat #chat-input { background: #2c2c2e; }
+  #page-chat #chat-send.icon-btn {
+    background: #1c1c1e; border-radius: 50%; width: 36px; height: 36px;
+  }
+  [data-theme="dark"] #page-chat #chat-send.icon-btn { background: #f5f5f7; color: #000; }
+  .msg-read { font-size: 11px; color: var(--muted); text-align: right; margin: 2px 8px 10px; }
+
+  /* campus weibo style */
+  #page-campus { background: var(--bg); }
+  .cw-bottom {
+    display: flex; border-top: .5px solid var(--border); background: var(--nav);
+    padding: 6px 0 calc(6px + env(safe-area-inset-bottom)); flex-shrink: 0;
+  }
+  .cw-bottom button {
+    flex: 1; border: 0; background: none; color: var(--muted);
+    font-size: 11px; padding: 6px 0; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 2px;
+  }
+  .cw-bottom button.on { color: var(--campus-accent, var(--pink)); font-weight: 600; }
+  .cw-bottom button span { font-size: 18px; }
+  .cw-search {
+    display: flex; gap: 8px; align-items: center; padding: 8px 12px;
+    background: var(--bg2); border-bottom: .5px solid var(--border);
+  }
+  .cw-search input {
+    flex: 1; background: var(--input); border: none; border-radius: 20px;
+    padding: 10px 16px; color: var(--text); font-size: 14px; outline: none;
+  }
+  .cw-search .cw-go {
+    width: 36px; height: 36px; border-radius: 50%; border: none;
+    background: var(--campus-accent, var(--pink)); color: #fff; font-size: 16px; cursor: pointer;
+  }
+  .cw-search .cw-go.busy { background: #8e8e93; pointer-events: none; }
+  .cw-section-title {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 12px 16px 6px; font-size: 15px; font-weight: 700;
+  }
+  .cw-section-title a { font-size: 13px; color: var(--campus-accent, var(--blue)); font-weight: 500; cursor: pointer; }
+  .cw-post {
+    padding: 12px 16px; border-bottom: .5px solid var(--border); cursor: pointer;
+  }
+  .cw-post:active { background: var(--card2); }
+  .cw-post .u { font-size: 14px; font-weight: 600; color: var(--text); }
+  .cw-post .t { font-size: 15px; margin: 6px 0; line-height: 1.45; font-weight: 600; }
+  .cw-post .b { font-size: 14px; color: var(--muted); line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .cw-post .meta { font-size: 12px; color: var(--muted); margin-top: 8px; }
+  .cw-settings {
+    display: none; position: absolute; right: 12px; top: 80px; z-index: 30;
+    background: var(--card); border-radius: 14px; border: .5px solid var(--border);
+    box-shadow: var(--shadow); padding: 12px; min-width: 200px;
+  }
+  .cw-settings.show { display: block; }
+
+  /* live redesign */
+  .live-panel {
+    position: relative; z-index: 2; margin: 0 12px 8px;
+    background: rgba(0,0,0,.55); border-radius: 14px; border: 1px solid rgba(255,255,255,.12);
+    overflow: hidden; max-height: 42%; display: flex; flex-direction: column;
+  }
+  .live-panel.collapsed { max-height: 44px; }
+  .live-panel-head {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 12px; cursor: pointer; flex-shrink: 0;
+  }
+  .live-panel-body { overflow-y: auto; padding: 0 12px 12px; flex: 1; min-height: 0; }
+  .live-round-nav {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 6px 0; font-size: 12px; color: rgba(255,255,255,.7);
+  }
+  .live-danmaku-float {
+    position: absolute; left: 8px; right: 40%; top: 100px; bottom: 120px;
+    overflow: hidden; pointer-events: none; z-index: 3;
+  }
+  .live-dm-scroll {
+    position: absolute; left: 0; white-space: nowrap; color: #fff;
+    font-size: 13px; text-shadow: 0 1px 3px rgba(0,0,0,.8);
+    animation: dmMove linear forwards;
+    background: rgba(0,0,0,.25); padding: 2px 8px; border-radius: 10px;
+  }
+  @keyframes dmMove {
+    from { transform: translateX(100vw); }
+    to { transform: translateX(-120%); }
+  }
+
+  /* apple notes diary */
+  #page-diary { background: #fafafa; }
+  [data-theme="dark"] #page-diary { background: #000; }
+  .note-item {
+    padding: 12px 16px; border-bottom: .5px solid var(--border); cursor: pointer;
+  }
+  .note-item .nd { font-size: 12px; color: var(--muted); margin-bottom: 4px; }
+  .note-item .nt { font-size: 16px; font-weight: 600; margin-bottom: 4px; }
+  .note-item .ne { font-size: 14px; color: var(--muted); line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+
+  /* heat calendar polish */
+  .heat-top-row { display: flex; gap: 8px; margin-bottom: 12px; }
+  .heat-top-row .btn { flex: 1; }
+
 </style>
 </head>
 <body data-theme="dark">
@@ -852,7 +984,7 @@
             <div class="app" onclick="openApp('worldbook')"><div class="app-icon" id="icon-worldbook" style="background:linear-gradient(180deg,#bf5af2,#5856d6);">📖</div><div class="app-name">世界书</div></div>
             <div class="app" onclick="openApp('diary')"><div class="app-icon" id="icon-diary" style="background:linear-gradient(180deg,#da8fff,#af52de);">📓</div><div class="app-name">日记</div></div>
             <div class="app" onclick="openApp('rules')"><div class="app-icon" id="icon-rules" style="background:linear-gradient(180deg,#30d158,#248a3d);">📋</div><div class="app-name">守则</div></div>
-            <div class="app" onclick="openApp('me')"><div class="app-icon" id="icon-me" style="background:linear-gradient(180deg,#ff8a80,#ff375f);">🐶</div><div class="app-name">母狗</div></div>
+            <div class="app" onclick="openApp('me')"><div class="app-icon" id="icon-me" style="background:linear-gradient(180deg,#ff8a80,#ff375f);">🐶</div><div class="app-name">小狗</div></div>
             <div class="app" onclick="openApp('guide')"><div class="app-icon" id="icon-guide" style="background:linear-gradient(180deg,#64d2ff,#0a84ff);">🎀</div><div class="app-name">小狗乖乖</div></div>
             <div class="app" onclick="openApp('beautify')"><div class="app-icon" id="icon-beautify" style="background:linear-gradient(180deg,#bf5af2,#5e5ce6);">✨</div><div class="app-name">美化</div></div>
             <div class="app" onclick="openApp('settings')"><div class="app-icon" id="icon-settings" style="background:linear-gradient(180deg,#8e8e93,#636366);">⚙️</div><div class="app-name">设置</div></div>
@@ -892,8 +1024,11 @@
     <!-- 聊天 -->
     <div class="page" id="page-chat">
       <div class="nav">
-        <button class="nav-back" onclick="openApp('messages')">‹ 返回</button>
-        <div class="nav-title" id="chat-title">聊天</div>
+        <button class="nav-back" onclick="openApp('messages')">‹ back</button>
+        <div class="nav-title" id="chat-title" style="display:flex;flex-direction:column;align-items:center;pointer-events:auto;">
+          <span id="chat-title-text">聊天</span>
+          <span style="font-size:11px;font-weight:400;color:var(--muted);" id="chat-online">online</span>
+        </div>
         <button class="nav-right" onclick="openEditChar()">···</button>
       </div>
       <div class="msg-list" id="msg-list"></div>
@@ -1129,18 +1264,23 @@
     <!-- 日记 -->
     <div class="page" id="page-diary">
       <div class="nav">
-        <button class="nav-back" onclick="goHome()">‹ 桌面</button>
-        <div class="nav-title" style="display:flex;align-items:center;gap:6px;">母狗日记 <button class="nav-right" style="font-size:14px;padding:0;min-width:auto;" onclick="toggleFeatureSettings('diary')" title="设置">⚙</button></div>
-        <button class="nav-right" onclick="genDiary()">写新篇</button>
+        <button class="nav-back" onclick="goHome()">‹</button>
+        <div class="nav-title">备忘录</div>
+        <button class="nav-right" onclick="genDiary()">＋</button>
       </div>
-      <div id="diary-settings" class="feature-settings" style="display:none;padding:10px 12px;background:#141414;border-bottom:.5px solid var(--border);">
-        <div style="font-size:12px;color:#ff8a80;margin-bottom:6px;">每轮字数</div>
-        <input type="number" id="diary-word-count" value="500" min="200" max="3000" step="100" style="width:100%;background:#2c2c2e;border:none;border-radius:10px;padding:10px 12px;color:#fff;font-size:16px;outline:none;margin-bottom:10px;">
-        <div style="font-size:12px;color:#ff8a80;margin-bottom:6px;">记忆来源（勾选聊天记录）</div>
-        <div id="diary-memory-list" style="max-height:140px;overflow-y:auto;margin-bottom:10px;"></div>
-        <button class="btn btn-primary" style="width:100%;" onclick="saveFeatureSettings('diary')">保存设置</button>
+      <div style="padding:8px 16px;display:flex;gap:8px;">
+        <button class="btn btn-secondary" style="flex:0;padding:8px 12px;" onclick="toggleFeatureSettings('diary')">⚙</button>
+        <input type="text" id="diary-search" placeholder="搜索" oninput="renderDiaries()" style="flex:1;background:var(--input);border:none;border-radius:10px;padding:8px 12px;color:var(--text);font-size:14px;">
       </div>
-      <div class="scroll" style="padding:12px;" id="diary-list"></div>
+      <div class="scroll" style="padding:0;" id="diary-list"></div>
+      <div id="diary-detail" style="display:none;position:absolute;inset:0;top:88px;background:var(--bg);z-index:5;flex-direction:column;">
+        <div style="padding:8px 12px;display:flex;gap:8px;border-bottom:.5px solid var(--border);">
+          <button class="nav-back" style="margin:0;" onclick="closeDiaryDetail()">‹</button>
+          <button class="btn btn-secondary" style="flex:0;padding:6px 12px;" onclick="editDiaryDetail()">编辑</button>
+          <button class="btn btn-danger" style="flex:0;padding:6px 12px;" onclick="deleteDiaryDetail()">删除</button>
+        </div>
+        <div class="scroll" style="padding:16px;" id="diary-detail-body"></div>
+      </div>
     </div>
 
     <!-- 守则 -->
@@ -1178,15 +1318,15 @@
     <div class="page" id="page-me">
       <div class="nav">
         <button class="nav-back" onclick="goHome()">‹ 桌面</button>
-        <div class="nav-title">我是母狗</div>
+        <div class="nav-title">我是小狗</div>
         <button class="nav-right" onclick="saveMeProfile()">保存</button>
       </div>
       <div class="scroll edit-section">
         <div style="text-align:center;padding:18px 0 10px;">
           <div id="me-avatar-preview" style="width:84px;height:84px;border-radius:50%;background:#2c2c2e;margin:0 auto 10px;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:28px;color:#ff8a80;border:2px solid #3a1515;"></div>
           <div style="display:flex;gap:8px;justify-content:center;">
-            <button class="btn btn-secondary" style="flex:0;padding:8px 14px;" onclick="uploadMeAvatar()">本地上传</button>
-            <button class="btn btn-secondary" style="flex:0;padding:8px 14px;" onclick="clearMeAvatar()">清除</button>
+            <button class="btn btn-secondary" style="flex:1;padding:10px 8px;" onclick="uploadMeAvatar()">本地上传</button>
+            <button class="btn btn-secondary" style="flex:1;padding:10px 8px;" onclick="clearMeAvatar()">清除</button>
           </div>
         </div>
         <label>头像图片链接（可填 http(s) 链接）</label>
@@ -1310,10 +1450,24 @@
     
     <!-- 今夜可约（约炮论坛） -->
     <div class="page forum-night" id="page-forum">
-      <div class="nav" style="background:rgba(18,12,18,.92);">
-        <button class="nav-back" onclick="goHome()">‹ 桌面</button>
+      <div class="nav" style="background:rgba(18,12,18,.92);position:relative;">
+        <button class="nav-back" onclick="goHome()">‹</button>
         <div class="nav-title">今夜可约</div>
-        <button class="nav-right" onclick="newForumPost()">发帖</button>
+        <div style="display:flex;gap:4px;">
+          <button class="nav-right" style="min-width:auto;" onclick="toggleForumSettings()">⚙</button>
+          <button class="nav-right" style="min-width:auto;" onclick="newForumPost()">＋</button>
+        </div>
+        <div class="cw-settings" id="forum-settings">
+          <div style="font-size:13px;font-weight:600;margin-bottom:8px;">设置</div>
+          <div style="font-size:12px;color:var(--muted);margin-bottom:4px;">主题色</div>
+          <select id="forum-theme" onchange="setForumTheme(this.value)" style="width:100%;background:var(--input);border:none;border-radius:10px;padding:8px;color:var(--text);margin-bottom:10px;">
+            <option value="pink">粉红</option>
+            <option value="red">暗红</option>
+            <option value="purple">紫色</option>
+            <option value="blue">蓝色</option>
+          </select>
+          <button class="btn btn-secondary" style="width:100%;" onclick="editForumWB()">绑定世界书</button>
+        </div>
       </div>
       <div class="forum-ticker" id="forum-ticker">刚刚有人约成功 · 滨江区 · 女找男</div>
       <div class="forum-tabs" id="forum-tabs">
@@ -1346,7 +1500,7 @@
       <div class="nav">
         <button class="nav-back" id="live-back-btn" onclick="tryExitLive()">‹ 桌面</button>
         <div class="nav-title">发骚直播</div>
-        <button class="nav-right" onclick="toggleLiveSettings()">设置</button>
+        <button class="nav-right" onclick="toggleLiveSettings()">说明</button>
       </div>
       <div id="live-setup" class="scroll" style="padding:12px;">
         <div class="card" style="border-radius:16px;">
@@ -1364,7 +1518,7 @@
         <div class="card" style="border-radius:16px;">
           <h4>选项</h4>
           <div class="wb-switch"><span>强制露脸</span><input type="checkbox" id="live-face"></div>
-          <div class="wb-switch"><span>开启声音（必须叫）</span><input type="checkbox" id="live-voice" checked></div>
+          <div class="wb-switch"><span>露出（镜头更近/少遮挡）</span><input type="checkbox" id="live-expose" checked></div>
           <div class="wb-switch"><span>路人模式（陌生观众）</span><input type="checkbox" id="live-stranger"></div>
           <div class="wb-switch"><span>惩罚模式</span><input type="checkbox" id="live-punish"></div>
         </div>
@@ -1376,24 +1530,31 @@
         <div class="live-overlay"></div>
         <div class="live-top">
           <div class="live-title" id="live-title">欠操母狗正在发情自慰</div>
-          <div class="live-badge">LIVE · <span id="live-viewers">128</span></div>
-        </div>
-        <div class="live-status" id="live-body-status">小穴湿润度 37% · 奶子微颤 · 呼吸急促</div>
-        <div class="live-cmd" id="live-cmd">等待主人指令…</div>
-        <div class="live-mid">
-          <div class="live-col">
-            <div class="live-col-h">观众弹幕（AI）</div>
-            <div class="live-col-body" id="live-danmaku"></div>
+          <div style="display:flex;gap:6px;align-items:center;">
+            <div class="live-badge">LIVE · <span id="live-viewers">128</span></div>
+            <button onclick="toggleLiveSettingsPanel()" style="border:0;background:rgba(0,0,0,.4);color:#fff;border-radius:8px;padding:4px 8px;font-size:12px;">设置</button>
           </div>
-          <div class="live-col">
-            <div class="live-col-h">完成描写</div>
-            <div class="live-col-body" id="live-narrative"></div>
+        </div>
+        <div class="live-danmaku-float" id="live-danmaku"></div>
+        <div style="flex:1"></div>
+        <div class="live-panel" id="live-panel">
+          <div class="live-panel-head" onclick="toggleLivePanel()">
+            <span style="color:#fff;font-size:13px;font-weight:600;">本轮内容 · 点按展开/收起</span>
+            <span id="live-panel-chevron" style="color:#aaa;">▼</span>
+          </div>
+          <div class="live-panel-body" id="live-panel-body">
+            <div class="live-round-nav">
+              <button onclick="event.stopPropagation();livePrevRound()" style="border:0;background:rgba(255,255,255,.15);color:#fff;border-radius:8px;padding:4px 10px;">‹ 上轮</button>
+              <span id="live-round-label">第 1 轮</span>
+              <button onclick="event.stopPropagation();liveNextRound()" style="border:0;background:rgba(255,255,255,.15);color:#fff;border-radius:8px;padding:4px 10px;">下轮 ›</button>
+            </div>
+            <div id="live-round-content" style="color:#eee;font-size:13px;line-height:1.55;white-space:pre-wrap;"></div>
           </div>
         </div>
         <div class="live-bar">
-          <input type="text" id="live-input" placeholder="汇报你正在做的事…" style="flex:1;background:rgba(255,255,255,.12);border:none;border-radius:18px;padding:9px 14px;color:#fff;font-size:15px;outline:none;">
-          <button class="btn btn-primary" style="flex:0;padding:0 14px;border-radius:18px;" onclick="sendLiveReport()">上报</button>
-          <button class="btn btn-secondary" style="flex:0;padding:0 12px;border-radius:18px;" onclick="endLive()">结束</button>
+          <input type="text" id="live-input" placeholder="汇报…" style="flex:1;background:rgba(255,255,255,.12);border:none;border-radius:18px;padding:9px 14px;color:#fff;font-size:15px;outline:none;">
+          <button title="上报" onclick="sendLiveReport()" style="border:0;background:var(--green);color:#fff;width:40px;height:40px;border-radius:50%;font-size:18px;">↑</button>
+          <button title="结束" onclick="endLive()" style="border:0;background:rgba(255,255,255,.2);color:#fff;width:40px;height:40px;border-radius:50%;font-size:16px;">⏹</button>
         </div>
       </div>
     </div>
@@ -1439,13 +1600,14 @@
       <div class="nav">
         <button class="nav-back" onclick="goHome()">‹ 桌面</button>
         <div class="nav-title">发情日历</div>
-        <button class="nav-right" onclick="shiftHeatMonth(1)">下月</button>
+        <div style="width:44px"></div>
       </div>
       <div class="scroll" style="padding:12px;">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-          <button class="btn btn-secondary" style="flex:0;padding:8px 12px;" onclick="shiftHeatMonth(-1)">上月</button>
-          <div id="heat-month-label" style="font-weight:700;font-size:17px;"></div>
-          <button class="btn btn-secondary" style="flex:0;padding:8px 12px;" onclick="checkHeatToday()">今日检查</button>
+        <div id="heat-month-label" style="font-weight:700;font-size:20px;text-align:center;margin-bottom:12px;"></div>
+        <div class="heat-top-row">
+          <button class="btn btn-secondary" onclick="shiftHeatMonth(-1)">上月</button>
+          <button class="btn btn-secondary" onclick="shiftHeatMonth(1)">下月</button>
+          <button class="btn btn-primary" onclick="checkHeatToday()">今日检查</button>
         </div>
         <div class="cal-legend">
           <span style="color:#ff6b6b;">● 易受孕日</span>
@@ -1463,44 +1625,53 @@
 
 
 
-    <!-- 校园墙 -->
+    <!-- 校园墙 · 微博/推特风格 -->
     <div class="page" id="page-campus">
-      <div class="nav">
-        <button class="nav-back" onclick="goHome()">‹ 桌面</button>
+      <div class="nav" style="position:relative;">
+        <button class="nav-back" onclick="goHome()">‹</button>
         <div class="nav-title">校园墙</div>
-        <button class="nav-right" onclick="toggleCampusMenu()">···</button>
+        <button class="nav-right" onclick="toggleCampusSettings()">⚙</button>
+        <div class="cw-settings" id="campus-settings">
+          <div style="font-size:13px;font-weight:600;margin-bottom:8px;">设置</div>
+          <div style="font-size:12px;color:var(--muted);margin-bottom:4px;">主题色</div>
+          <select id="campus-theme" onchange="setCampusTheme(this.value)" style="width:100%;background:var(--input);border:none;border-radius:10px;padding:8px;color:var(--text);margin-bottom:10px;">
+            <option value="pink">粉红</option>
+            <option value="blue">蓝色</option>
+            <option value="purple">紫色</option>
+            <option value="green">绿色</option>
+            <option value="orange">橙色</option>
+          </select>
+          <button class="btn btn-secondary" style="width:100%;margin-bottom:6px;" onclick="editCampusWB()">绑定世界书</button>
+          <button class="btn btn-secondary" style="width:100%;margin-bottom:6px;" onclick="exportCampus()">导出</button>
+          <button class="btn btn-secondary" style="width:100%;margin-bottom:6px;" onclick="importCampus()">导入</button>
+          <button class="btn btn-danger" style="width:100%;" onclick="clearCampus()">清空</button>
+        </div>
       </div>
-      <div id="campus-menu" style="display:none;padding:8px 12px;background:var(--nav);border-bottom:.5px solid var(--border);gap:6px;flex-wrap:wrap;">
-        <button class="btn btn-secondary" style="flex:1;padding:8px;font-size:12px;" onclick="exportCampus()">导出</button>
-        <button class="btn btn-secondary" style="flex:1;padding:8px;font-size:12px;" onclick="importCampus()">导入</button>
-        <button class="btn btn-danger" style="flex:1;padding:8px;font-size:12px;" onclick="clearCampus()">清空</button>
-        <button class="btn btn-secondary" style="flex:1;padding:8px;font-size:12px;" onclick="editCampusWB()">世界书</button>
+      <div class="cw-search">
+        <input type="text" id="campus-hint" placeholder="搜索或输入生成方向…">
+        <button class="cw-go" id="campus-go" onclick="refreshCampusSection()">⌕</button>
       </div>
-      <div style="padding:8px 12px;background:var(--nav);border-bottom:.5px solid var(--border);display:flex;gap:8px;align-items:center;">
-        <span style="font-size:12px;color:var(--muted);">主题</span>
-        <select id="campus-theme" onchange="setCampusTheme(this.value)" style="flex:1;background:var(--input);border:none;border-radius:12px;padding:8px;color:var(--text);font-size:14px;">
-          <option value="pink">粉红</option>
-          <option value="blue">蓝色</option>
-          <option value="purple">紫色</option>
-          <option value="green">绿色</option>
-          <option value="orange">橙色</option>
-        </select>
+      <div class="scroll" style="flex:1;padding:0;" id="campus-list"></div>
+      <div id="campus-subview" style="display:none;flex:1;flex-direction:column;min-height:0;position:absolute;inset:0;top:88px;bottom:56px;background:var(--bg);z-index:10;">
+        <div style="padding:8px 12px;display:flex;align-items:center;gap:8px;border-bottom:.5px solid var(--border);">
+          <button class="nav-back" style="margin:0;" onclick="closeCampusSubview()">‹ 返回</button>
+          <div id="campus-sub-title" style="font-weight:600;font-size:15px;">分类</div>
+        </div>
+        <div class="scroll" style="flex:1;padding:0;" id="campus-sub-list"></div>
       </div>
-      <div class="forum-tabs" id="campus-tabs" style="background:var(--nav);">
-        <button class="forum-tab on" onclick="setCampusTab('gossip',this)">八卦区</button>
-        <button class="forum-tab" onclick="setCampusTab('nsfw',this)">NSFW区</button>
-        <button class="forum-tab" onclick="setCampusTab('boys',this)">男生论坛</button>
-        <button class="forum-tab" onclick="setCampusTab('girls',this)">女生论坛</button>
+      <div id="campus-postview" style="display:none;flex:1;flex-direction:column;min-height:0;position:absolute;inset:0;top:88px;bottom:0;background:var(--bg);z-index:11;">
+        <div style="padding:8px 12px;display:flex;align-items:center;gap:8px;border-bottom:.5px solid var(--border);">
+          <button class="nav-back" style="margin:0;" onclick="closeCampusPost()">‹ 返回</button>
+          <div style="font-weight:600;font-size:15px;">帖子</div>
+        </div>
+        <div class="scroll" style="flex:1;padding:16px;" id="campus-post-detail"></div>
       </div>
-      <div id="campus-rank-view" style="display:none;flex:1;flex-direction:column;min-height:0;">
-        <div style="padding:8px 12px;"><button class="btn btn-secondary" onclick="closeCampusRank()">‹ 返回列表</button></div>
-        <div class="scroll" style="padding:12px;" id="campus-rank-detail"></div>
+      <div class="cw-bottom" id="campus-tabs">
+        <button class="on" onclick="setCampusTab('gossip',this)"><span>🔥</span>八卦</button>
+        <button onclick="setCampusTab('nsfw',this)"><span>💋</span>NSFW</button>
+        <button onclick="setCampusTab('boys',this)"><span>♂</span>男生</button>
+        <button onclick="setCampusTab('girls',this)"><span>♀</span>女生</button>
       </div>
-      <div style="padding:8px 12px;background:var(--bg2);border-bottom:.5px solid var(--border);">
-        <input type="text" id="campus-hint" placeholder="生成方向（可选，如：表白学长、厕所偷情…）" style="width:100%;background:var(--input);border:none;border-radius:10px;padding:10px;color:var(--text);font-size:14px;margin-bottom:8px;">
-        <button class="btn btn-primary" style="width:100%;" onclick="refreshCampusSection()">AI 刷新本区</button>
-      </div>
-      <div class="scroll" style="padding:12px;" id="campus-list"></div>
       <div class="msg-edit-bar" id="campus-edit-bar">
         <button class="btn btn-secondary" style="flex:1;" onclick="exitCampusEdit()">取消</button>
         <button class="btn btn-danger" style="flex:1;" onclick="deleteCampusSelected()">删除所选</button>
@@ -2361,7 +2532,7 @@ function openChat(id) {
   pendingReply=false;
   currentChatId = id;
   const c = conversations[id];
-  $('chat-title').textContent = c.remark || c.name;
+  const _ct=$('chat-title-text')||$('chat-title'); if(_ct) _ct.textContent = c.remark || c.name;
   openApp('chat');
   renderMessages();
   applyChatBackground();
@@ -2982,7 +3153,7 @@ function saveCharEdit() {
   const ct = contacts.find(x=>x.id===currentChatId);
   if(ct){ ct.remark = c.remark; }
   saveAll();
-  $('chat-title').textContent = c.remark;
+  const _ct=$('chat-title-text')||$('chat-title'); if(_ct) _ct.textContent = c.remark;
   applyChatBackground();
   alert('角色已保存');
   openApp('chat');
@@ -3563,11 +3734,43 @@ function viewArch(i){ openApp('story'); const a=offlineArchives[i]; currentStory
 function delArch(i){ if(confirm('删除？')){ offlineArchives.splice(i,1); saveAll(); showArchive(); } }
 
 function renderDiaries(){
-  const box = $('diary-list');
-  if(!box) return;
-  box.innerHTML=diaries.map((d,i)=>`
-    <div class="card"><h4>${d.title}</h4><p>${d.content.replace(/\n/g,'<br>')}</p>
-    <button class="btn btn-danger" style="margin-top:8px;" onclick="diaries.splice(${i},1);saveAll();renderDiaries();">删除</button></div>`).join('')||'<div style="text-align:center;color:#666;padding:40px;">暂无日记</div>';
+  const box=$('diary-list'); if(!box) return;
+  const q=($('diary-search')?.value||'').trim().toLowerCase();
+  let list=(diaries||[]).map((d,i)=>({d,i})).reverse();
+  if(q) list=list.filter(x=>String(x.d.content||x.d||'').toLowerCase().includes(q)||String(x.d.title||'').toLowerCase().includes(q));
+  box.innerHTML = list.map(({d,i})=>{
+    const content = typeof d==='string'?d:(d.content||'');
+    const title = (d.title||content.split('\n')[0]||'日记').slice(0,24);
+    const date = d.time ? new Date(d.time).toLocaleString() : '';
+    const excerpt = content.slice(0, 80);
+    return `<div class="note-item" onclick="openDiaryDetail(${i})">
+      <div class="nd">${escapeHtml(date)}</div>
+      <div class="nt">${escapeHtml(title)}</div>
+      <div class="ne">${escapeHtml(excerpt)}</div>
+    </div>`;
+  }).join('') || '<div style="text-align:center;color:var(--muted);padding:48px;font-size:14px;">无备忘录</div>';
+}
+function openDiaryDetail(i){
+  window._diaryIdx=i;
+  const d=diaries[i]; if(d==null) return;
+  const content=typeof d==='string'?d:(d.content||'');
+  const view=$('diary-detail'); const body=$('diary-detail-body');
+  if(view){ view.style.display='flex'; }
+  if(body) body.innerHTML=`<div style="font-size:12px;color:var(--muted);margin-bottom:12px;">${d.time?new Date(d.time).toLocaleString():''}</div><div style="font-size:16px;line-height:1.6;white-space:pre-wrap;">${escapeHtml(content)}</div>`;
+}
+function closeDiaryDetail(){ const v=$('diary-detail'); if(v) v.style.display='none'; }
+function editDiaryDetail(){
+  const i=window._diaryIdx; const d=diaries[i]; if(d==null) return;
+  const content=typeof d==='string'?d:(d.content||'');
+  const v=prompt('编辑日记', content); if(v===null) return;
+  if(typeof d==='string') diaries[i]={content:v, time:Date.now(), title:v.split('\n')[0].slice(0,20)};
+  else { d.content=v; d.title=v.split('\n')[0].slice(0,20); }
+  saveAll(); renderDiaries(); openDiaryDetail(i);
+}
+function deleteDiaryDetail(){
+  const i=window._diaryIdx; if(i==null) return;
+  if(!confirm('删除这篇？')) return;
+  diaries.splice(i,1); saveAll(); closeDiaryDetail(); renderDiaries();
 }
 async function genDiary(){
   $('diary-list').innerHTML='<div style="text-align:center;padding:30px;color:#888;">生成中…</div>';
@@ -4027,6 +4230,22 @@ function setForumTab(tab, btn){
   if(btn) btn.classList.add('on');
   renderForum();
 }
+
+let forumTheme = 'pink';
+let forumWB = '';
+function toggleForumSettings(){
+  $('forum-settings')?.classList.toggle('show');
+}
+function setForumTheme(t){
+  forumTheme=t||'pink';
+  const pg=$('page-forum');
+  if(pg){ pg.style.setProperty('--campus-accent', {pink:'#ff2d55',red:'#ff453a',purple:'#bf5af2',blue:'#0a84ff'}[forumTheme]||'#ff2d55'); }
+  saveAll();
+}
+function editForumWB(){
+  openWBPickerModal(forumWB, v=>{ forumWB=v||''; saveAll(); alert('已绑定：'+(forumWB||'无')); });
+}
+
 function renderForum(){
   ensureForumData();
   const box = $('forum-list'); if(!box) return;
@@ -4164,7 +4383,9 @@ async function startForceLive(){
   window._liveDanmaku = [];
   window._liveLog = [];
   window._liveRound = 0;
-  window._livePhase = 'normal'; // normal -> heat
+  window._livePhase = 'normal';
+  window._liveRounds = [];
+  window._liveRoundIdx = 0;
   if($('live-setup')) $('live-setup').style.display='none';
   if($('live-room')) $('live-room').style.display='flex';
   if($('live-back-btn')) $('live-back-btn').style.display='none';
@@ -4176,8 +4397,10 @@ async function startForceLive(){
   if($('live-viewers')) $('live-viewers').textContent = 80+Math.floor(Math.random()*400);
   if($('live-danmaku')) $('live-danmaku').innerHTML='';
   if($('live-narrative')) $('live-narrative').innerHTML='';
-  updateLiveBodyStatus(20);
   await pushLiveCommand(true);
+  window._liveRounds = [{ cmd: $('live-cmd')?.textContent || window._lastLiveCmd || '', report:'', action:'', danmaku:[] }];
+  window._liveRoundIdx = 0;
+  renderLiveRoundView();
   startLiveDanmakuLoop();
 }
 function tryExitLive(){
@@ -4194,7 +4417,7 @@ function updateLiveBodyStatus(base){
 async function pushLiveCommand(first){
   const stranger = $('live-stranger')?.checked;
   const punish = $('live-punish')?.checked;
-  const voice = $('live-voice')?.checked;
+  const voice = $('live-expose')?.checked;
   const place = window._livePlace || '未知';
   const phase = window._livePhase || 'normal';
   let system, user;
@@ -4205,12 +4428,22 @@ async function pushLiveCommand(first){
     // 第2轮上报后可切入
     if(!first && (window._liveRound||0)>=1) window._livePhase = 'heat';
   } else {
-    system = `你是调教主人，正在强制母狗在「${place}」公开直播发骚。给出下一条实时指令（掰穴/揉奶/自慰/舔手指/说下贱台词等），可夹杂羞辱。${voice?'要求她叫出声。':''}${punish?'不听话就威胁提高玩具强度并全网播报。':''}${stranger?'强调有陌生路人观众。':''}必须严格参考世界书常驻条目。只输出指令本身，短句。`;
+    system = `你是调教主人，正在强制母狗在「${place}」公开直播发骚。给出下一条实时指令（掰穴/揉奶/自慰/舔手指/说下贱台词等），可夹杂羞辱。${voice?'要求更多露出、少遮挡。':''}${punish?'不听话就威胁提高玩具强度并全网播报。':''}${stranger?'强调有陌生路人观众。':''}必须严格参考世界书常驻条目。只输出指令本身，短句。`;
     user = first?'开始强制发骚指令':'根据直播继续下指令';
   }
   const text = await callAI(system, user, 800);
-  if($('live-cmd')) $('live-cmd').textContent = text;
+  window._lastLiveCmd = text;
   window._liveLog.push({type:'cmd', text});
+  // 更新当前轮
+  if(!window._liveRounds) window._liveRounds=[];
+  if(window._liveRounds.length===0) window._liveRounds.push({cmd:text, report:'', action:'', danmaku:[]});
+  else {
+    const cur = window._liveRounds[window._liveRoundIdx];
+    if(cur && !cur.report) cur.cmd = text;
+    else window._liveRounds.push({cmd:text, report:'', action:'', danmaku:[]});
+    window._liveRoundIdx = window._liveRounds.length-1;
+  }
+  renderLiveRoundView();
 }
 function startLiveDanmakuLoop(){
   if(liveDanmakuTimer) clearInterval(liveDanmakuTimer);
@@ -4220,7 +4453,7 @@ function startLiveDanmakuLoop(){
   liveDanmakuTimer = setInterval(()=>{
     if(!window._liveActive) return;
     if($('live-viewers')) $('live-viewers').textContent = 80+Math.floor(Math.random()*500);
-    updateLiveBodyStatus();
+    
   }, 4000);
 }
 function appendLiveDm(text, kind){
@@ -4241,34 +4474,68 @@ async function sendLiveReport(){
   window._liveLog.push({type:'me', text:v});
   window._liveRound = (window._liveRound||0)+1;
   $('live-input').value='';
-  appendLiveDm('【上报】'+v, 'me');
   const place = window._livePlace||'未知';
-  const cmd = $('live-cmd')?.textContent || '';
+  const cmd = window._lastLiveCmd || '';
   const prev = (window._liveLog||[]).slice(-6).map(x=>x.type+':'+x.text).join('\n');
-  // 不限字数：详细描写 + 全新弹幕
   const raw = await callAI(
-    `你是直播系统与羞辱文案写手。地点：${place}。
-根据主人指令与母狗上报，输出纯 JSON：
-{"action":"第三人称详细描写她执行指令的过程（像线下任务文笔，具体、下贱、可多段，不要限制篇幅）","danmaku":["结合本轮剧情新写的观众弹幕1","弹幕2","弹幕3","弹幕4","弹幕5","弹幕6"]}
-弹幕必须每轮全新、贴合刚才发生的事，禁止复用套话模板。必须参考世界书常驻。只输出 JSON。`,
-    `主人指令：${cmd}\n母狗上报：${v}\n近期过程：\n${prev}`,
+    `直播系统。地点：${place}。输出JSON：{"action":"详细完成描写","danmaku":["弹幕1","弹幕2","弹幕3","弹幕4","弹幕5"]}。弹幕全新贴合剧情。参考世界书常驻。只输出JSON。`,
+    `指令：${cmd}\n上报：${v}\n过程：\n${prev}`,
     4000
   );
-  let data=null;
-  try{ const m=raw.match(/\{[\s\S]*\}/); data=m?JSON.parse(m[0]):null; }catch(_){}
+  let data=null; try{ const m=raw.match(/\{[\s\S]*\}/); data=m?JSON.parse(m[0]):null; }catch(_){}
   const action = (data && data.action) ? data.action : (raw||'她照做了。');
-  appendLiveNarrative(action);
+  const dms = (data && Array.isArray(data.danmaku)) ? data.danmaku : [];
+  dms.forEach(d => spawnLiveDanmaku(String(d)));
+  // 写入当前轮
+  let cur = (window._liveRounds||[])[window._liveRoundIdx];
+  if(!cur){ cur={cmd, report:'', action:'', danmaku:[]}; window._liveRounds=[cur]; window._liveRoundIdx=0; }
+  cur.report = v;
+  cur.action = action;
+  cur.danmaku = dms;
   window._liveLog.push({type:'action', text:action});
-  const dms = (data && Array.isArray(data.danmaku) && data.danmaku.length) ? data.danmaku : [];
-  if(dms.length){ dms.forEach(d => appendLiveDm(String(d), 'dm')); }
-  else {
-    // 再要一轮纯弹幕
-    const dmRaw = await callAI('只输出6条本轮直播观众弹幕，每行一条，结合剧情新写，不要编号。','指令:'+cmd+'\n上报:'+v+'\n描写:'+action.slice(0,400), 800);
-    (dmRaw||'').split('\n').map(x=>x.trim()).filter(Boolean).slice(0,8).forEach(d=>appendLiveDm(d,'dm'));
-  }
-  updateLiveBodyStatus();
+  renderLiveRoundView();
   await pushLiveCommand(false);
 }
+function spawnLiveDanmaku(text){
+  const box = $('live-danmaku'); if(!box) return;
+  const el = document.createElement('div');
+  el.className = 'live-dm-scroll';
+  el.textContent = text;
+  el.style.top = (8 + Math.random()*70) + '%';
+  el.style.animationDuration = (8+Math.random()*6)+'s';
+  box.appendChild(el);
+  setTimeout(()=>el.remove(), 15000);
+  window._liveDanmaku = window._liveDanmaku||[];
+  window._liveDanmaku.push({text});
+}
+function toggleLivePanel(){
+  $('live-panel')?.classList.toggle('collapsed');
+}
+function renderLiveRoundView(){
+  const rounds = window._liveRounds||[];
+  const i = window._liveRoundIdx||0;
+  const r = rounds[i];
+  if($('live-round-label')) $('live-round-label').textContent = `第 ${i+1} / ${Math.max(1,rounds.length)} 轮`;
+  const box = $('live-round-content'); if(!box) return;
+  if(!r){ box.textContent='等待指令…'; return; }
+  box.innerHTML = `<div style="color:#ffb4c0;margin-bottom:8px;"><b>主人指令</b>\n${escapeHtml(r.cmd||'')}</div>`
+    + (r.report?`<div style="color:#9cf;margin-bottom:8px;"><b>我的上报</b>\n${escapeHtml(r.report)}</div>`:'')
+    + (r.action?`<div style="color:#ffe0b0;"><b>完成描写</b>\n${escapeHtml(r.action)}</div>`:'');
+}
+function livePrevRound(){
+  if(!window._liveRounds||!window._liveRounds.length) return;
+  window._liveRoundIdx = Math.max(0, (window._liveRoundIdx||0)-1);
+  renderLiveRoundView();
+}
+function liveNextRound(){
+  if(!window._liveRounds||!window._liveRounds.length) return;
+  window._liveRoundIdx = Math.min(window._liveRounds.length-1, (window._liveRoundIdx||0)+1);
+  renderLiveRoundView();
+}
+function toggleLiveSettingsPanel(){
+  alert('露脸 / 露出 / 路人 / 惩罚 请在开播前于准备页勾选');
+}
+
 function appendLiveNarrative(text){
   const box = $('live-narrative'); if(!box) return;
   const el = document.createElement('div');
@@ -4304,13 +4571,7 @@ async function endLive(){
 }
 function openLiveReplay(i){
   const h = liveHistory[i]; if(!h) return;
-  const selected = (h.danmaku||[]).slice(0,10).map((d,idx)=>{
-    const t = typeof d==='string'?d:(d.text||'');
-    return `${idx+1}. ${t}`;
-  }).join('\n');
-  const msg = `【回放】${h.title}\n地点：${h.place||''}\n主人点评：\n${h.review||'无'}\n\n弹幕精选：\n${selected}`;
-  const feel = prompt(msg + '\n\n可写观后感（取消跳过）：');
-  if(feel && feel.trim()){ h.reflection = feel.trim(); saveAll(); }
+  alert('【回放】'+h.title+'\n地点：'+(h.place||'')+'\n\n主人点评：\n'+(h.review||'无'));
 }
 function deleteLiveReplay(i){
   if(!confirm('删除这条回放？')) return;
@@ -4604,9 +4865,9 @@ async function heatForceReport(type){
 
 
 // ========== 校园墙 ==========
-function toggleCampusMenu(){
-  const m=$('campus-menu'); if(!m)return;
-  m.style.display = m.style.display==='none'||!m.style.display ? 'flex' : 'none';
+function toggleCampusSettings(){
+  const el=$('campus-settings'); if(!el) return;
+  el.classList.toggle('show');
 }
 function setCampusTheme(t){
   campusTheme = t || 'pink';
@@ -4621,140 +4882,121 @@ function applyCampusTheme(){
 }
 function setCampusTab(tab, btn){
   campusTab = tab;
-  window._campusRankId = null;
-  document.querySelectorAll('#campus-tabs .forum-tab').forEach(b=>b.classList.remove('on'));
+  window._campusSub = null;
+  window._campusPostId = null;
+  document.querySelectorAll('#campus-tabs button').forEach(b=>b.classList.remove('on'));
   if(btn) btn.classList.add('on');
-  const rv=$('campus-rank-view'); if(rv) rv.style.display='none';
-  const list=$('campus-list'); if(list) list.style.display='block';
+  closeCampusSubview();
+  closeCampusPost();
   renderCampus();
 }
 function editCampusWB(){
   openWBPickerModal(campusWB, v=>{ campusWB=v||''; saveAll(); alert('已绑定：'+(campusWB||'无')); });
 }
+function campusSectionsForTab(tab){
+  if(tab==='boys') return [
+    {key:'rank', title:'女生排行榜'},
+    {key:'review', title:'操过体验感'},
+    {key:'post', title:'讨论'}
+  ];
+  if(tab==='girls') return [
+    {key:'rank', title:'排名'},
+    {key:'fantasy', title:'匿名意淫'},
+    {key:'post', title:'讨论'}
+  ];
+  return [{key:'all', title:'最新'}];
+}
 function renderCampus(){
   if(!campusData) campusData = { gossip:[], nsfw:[], boys:[], girls:[], boysChat:[] };
   applyCampusTheme();
-  if(window._campusRankId){ openCampusRank(window._campusRankId); return; }
   const box = $('campus-list'); if(!box) return;
-  box.style.display='block';
-  const rv=$('campus-rank-view'); if(rv) rv.style.display='none';
   const list = campusData[campusTab] || [];
-  if(campusTab==='boys'){
-    box.innerHTML = renderBoysForum(list) + renderBoysChat();
-    bindCampusCards();
-    return;
-  }
-  if(campusTab==='girls'){
-    box.innerHTML = renderGirlsForum(list);
-    bindCampusCards();
-    return;
-  }
-  box.innerHTML = list.map(p=>campusPostHtml(p)).join('') ||
-    '<div style="text-align:center;color:var(--muted);padding:40px;font-size:14px;">本区暂无帖子</div>';
+  const sections = campusSectionsForTab(campusTab);
+  let html = '';
+  sections.forEach(sec=>{
+    let items = list;
+    if(sec.key!=='all') items = list.filter(x=>(x.kind||'post')===sec.key);
+    else items = list.slice();
+    items = items.slice().sort((a,b)=>(b.time||0)-(a.time||0));
+    const show = items.slice(0,2);
+    html += `<div class="cw-section-title"><span>${sec.title}</span><a onclick="openCampusSection('${sec.key}','${sec.title}')">全部 ${items.length} ›</a></div>`;
+    if(!show.length) html += `<div style="padding:12px 16px;color:var(--muted);font-size:14px;">暂无帖子</div>`;
+    else html += show.map(p=>cwPostRow(p)).join('');
+  });
+  box.innerHTML = html;
   bindCampusCards();
 }
-function campusPostHtml(p, opts){
-  const isRank = p.kind==='rank';
-  return `<div class="forum-card campus-card" data-id="${p.id}" data-kind="${p.kind||'post'}" style="cursor:pointer;">
-    <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:8px;">
-      <span style="color:var(--campus-accent,var(--pink));font-weight:600;">${escapeHtml(p.user||'匿名')}</span>
-      <span>${p.time?new Date(p.time).toLocaleString():''}</span>
-    </div>
-    <div style="font-size:16px;font-weight:600;margin-bottom:8px;color:var(--text);line-height:1.4;">${escapeHtml(p.title||'')}</div>
-    ${isRank?`<div style="font-size:12px;color:var(--muted);">点击查看完整帖子 ›</div>`:`<div style="font-size:14px;color:var(--muted);line-height:1.6;white-space:pre-wrap;">${escapeHtml((p.body||'').slice(0,120))}${(p.body||'').length>120?'…':''}</div>`}
-    ${p.tag?`<div style="margin-top:8px;"><span class="wb-pill">${escapeHtml(p.tag)}</span></div>`:''}
+function cwPostRow(p){
+  return `<div class="cw-post campus-card" data-id="${p.id}">
+    <div class="u">${escapeHtml(p.user||'匿名')} ${p.tag?`<span class="wb-pill">${escapeHtml(p.tag)}</span>`:''}</div>
+    <div class="t">${escapeHtml(p.title||'')}</div>
+    <div class="b">${escapeHtml(p.body||'')}</div>
+    <div class="meta">${p.time?new Date(p.time).toLocaleString():''} · 评论 ${(p.replies||[]).length}</div>
   </div>`;
 }
-function renderBoysForum(list){
-  const ranks = list.filter(x=>x.kind==='rank');
-  const reviews = list.filter(x=>x.kind==='review');
-  const posts = list.filter(x=>!x.kind || x.kind==='post');
-  let html = '';
-  if(ranks.length){
-    html += '<div style="font-size:14px;font-weight:700;margin-bottom:8px;color:var(--text);">女生排行榜</div>';
-    html += ranks.map(p=>campusPostHtml(p)).join('');
+function openCampusSection(kind, title){
+  window._campusSub = kind;
+  const sub=$('campus-subview'); const list=$('campus-sub-list');
+  if($('campus-sub-title')) $('campus-sub-title').textContent = title||'分类';
+  if(sub){ sub.style.display='flex'; }
+  const all = campusData[campusTab]||[];
+  let items = kind==='all' ? all : all.filter(x=>(x.kind||'post')===kind);
+  items = items.slice().sort((a,b)=>(b.time||0)-(a.time||0));
+  if(list){
+    list.innerHTML = items.map(p=>cwPostRow(p)).join('') || '<div style="padding:24px;color:var(--muted);text-align:center;">空</div>';
+    list.querySelectorAll('.campus-card').forEach(el=>{
+      el.onclick = ()=>openCampusPost(el.dataset.id);
+      el.ondblclick = (ev)=>{ ev.preventDefault(); enterCampusEdit(el); };
+    });
   }
-  if(reviews.length){
-    html += '<div style="font-size:14px;font-weight:700;margin:16px 0 8px;color:var(--text);">操过体验感</div>';
-    html += reviews.map(p=>campusPostHtml(p)).join('');
-  }
-  if(posts.length){
-    html += '<div style="font-size:14px;font-weight:700;margin:16px 0 8px;color:var(--text);">讨论</div>';
-    html += posts.map(p=>campusPostHtml(p)).join('');
-  }
-  return html || '<div style="color:var(--muted);padding:24px;text-align:center;font-size:14px;">暂无内容</div>';
 }
-function renderBoysChat(){
-  const chat = campusData.boysChat || [];
-  return `<div style="font-size:14px;font-weight:700;margin:16px 0 8px;">匿名群聊</div>
-    <div class="card" style="max-height:220px;overflow-y:auto;padding:12px;" id="campus-boys-chat">
-      ${chat.map(m=>`<div style="font-size:14px;margin-bottom:8px;line-height:1.5;"><b style="color:var(--campus-accent,var(--pink));">${escapeHtml(m.user)}</b>：${escapeHtml(m.text)}</div>`).join('')||'<div style="color:var(--muted);font-size:14px;">还没有人说话</div>'}
-    </div>
-    <div style="display:flex;gap:8px;margin-top:8px;">
-      <input type="text" id="campus-chat-input" placeholder="匿名发言…" style="flex:1;background:var(--input);border:none;border-radius:12px;padding:12px;color:var(--text);font-size:16px;">
-      <button class="btn btn-secondary" style="flex:0;padding:0 12px;" onclick="campusChatAIReply()" title="等人回复">💬</button>
-      <button class="btn btn-primary" style="flex:0;padding:0 14px;" onclick="sendCampusChat()">发送</button>
-    </div>`;
+function closeCampusSubview(){
+  window._campusSub = null;
+  const sub=$('campus-subview'); if(sub) sub.style.display='none';
 }
-function renderGirlsForum(list){
-  // 修复：fantasy 必须单独分区且可点进详情
-  const ranks = list.filter(x=>x.kind==='rank');
-  const fantasy = list.filter(x=>x.kind==='fantasy');
-  const posts = list.filter(x=>!x.kind || x.kind==='post');
-  let html='';
-  if(ranks.length){
-    html += '<div style="font-size:14px;font-weight:700;margin-bottom:8px;">排名</div>'+ranks.map(p=>campusPostHtml(p)).join('');
-  }
-  if(fantasy.length){
-    html += '<div style="font-size:14px;font-weight:700;margin:16px 0 8px;">匿名意淫区</div>'+fantasy.map(p=>campusPostHtml({...p, kind:'fantasy'})).join('');
-  }
-  if(posts.length){
-    html += '<div style="font-size:14px;font-weight:700;margin:16px 0 8px;">讨论</div>'+posts.map(p=>campusPostHtml(p)).join('');
-  }
-  if(!html) html = '<div style="color:var(--muted);padding:24px;text-align:center;font-size:14px;">暂无内容，可点上方 AI 刷新本区</div>';
-  return html;
-}
-function openCampusRank(id){
+function openCampusPost(id){
   const list = campusData[campusTab]||[];
-  const p = list.find(x=>x.id===id);
-  if(!p){ window._campusRankId=null; renderCampus(); return; }
-  window._campusRankId = id;
-  const listEl=$('campus-list'); if(listEl) listEl.style.display='none';
-  const rv=$('campus-rank-view'); if(rv){ rv.style.display='flex'; }
-  const box=$('campus-rank-detail'); if(!box) return;
-  box.innerHTML = `<div class="forum-card">
-    <div style="font-size:12px;color:var(--muted);margin-bottom:8px;">${escapeHtml(p.user||'')} · ${p.tag?escapeHtml(p.tag):''}</div>
-    <div style="font-size:20px;font-weight:700;line-height:1.3;margin-bottom:12px;">${escapeHtml(p.title||'')}</div>
-    <div style="font-size:14px;line-height:1.6;white-space:pre-wrap;color:var(--text);">${escapeHtml(p.body||'（无正文）')}</div>
-  </div>`;
+  const p = list.find(x=>x.id===id); if(!p) return;
+  window._campusPostId = id;
+  const view=$('campus-postview'); const box=$('campus-post-detail');
+  if(view) view.style.display='flex';
+  const replies = p.replies||[];
+  if(box){
+    box.innerHTML = `
+      <div style="font-size:13px;color:var(--muted);margin-bottom:8px;">${escapeHtml(p.user||'匿名')} · ${p.time?new Date(p.time).toLocaleString():''}</div>
+      <div style="font-size:20px;font-weight:700;line-height:1.3;margin-bottom:12px;">${escapeHtml(p.title||'')}</div>
+      <div style="font-size:15px;line-height:1.6;white-space:pre-wrap;margin-bottom:20px;">${escapeHtml(p.body||'')}</div>
+      <div style="font-size:14px;font-weight:600;margin-bottom:10px;border-top:.5px solid var(--border);padding-top:12px;">评论 ${replies.length}</div>
+      ${replies.map(r=>`<div style="padding:10px 0;border-bottom:.5px solid var(--border);"><b style="color:var(--campus-accent,var(--pink));">${escapeHtml(r.user||'匿名')}</b><div style="font-size:14px;margin-top:4px;line-height:1.5;">${escapeHtml(r.text||'')}</div></div>`).join('')||'<div style="color:var(--muted);font-size:14px;">还没有评论</div>'}
+      <div style="display:flex;gap:8px;margin-top:16px;">
+        <input type="text" id="campus-reply-input" placeholder="写评论…" style="flex:1;background:var(--input);border:none;border-radius:12px;padding:10px;color:var(--text);">
+        <button class="btn btn-primary" style="flex:0;padding:0 14px;" onclick="sendCampusPostReply()">发送</button>
+      </div>`;
+  }
 }
-function closeCampusRank(){
-  window._campusRankId=null;
-  const rv=$('campus-rank-view'); if(rv) rv.style.display='none';
-  const listEl=$('campus-list'); if(listEl) listEl.style.display='block';
-  renderCampus();
+function closeCampusPost(){
+  window._campusPostId=null;
+  const view=$('campus-postview'); if(view) view.style.display='none';
+}
+function sendCampusPostReply(){
+  const v=($('campus-reply-input')?.value||'').trim(); if(!v||!window._campusPostId) return;
+  const list = campusData[campusTab]||[];
+  const p = list.find(x=>x.id===window._campusPostId); if(!p) return;
+  p.replies = p.replies||[];
+  p.replies.push({ user: meProfile.name||'我', text:v, time:Date.now() });
+  saveAll(); openCampusPost(p.id);
 }
 function bindCampusCards(){
-  document.querySelectorAll('.campus-card').forEach(el=>{
-    el.onclick = ()=>{
-      if(window._campusEdit){
-        el.classList.toggle('msel');
-        el.style.outline = el.classList.contains('msel') ? '2px solid var(--blue)' : '';
-        return;
-      }
-      const id = el.dataset.id;
-      // 排行榜与意淫都可进详情
-      openCampusRank(id);
-    };
-    el.ondblclick = (ev)=>{
-      ev.preventDefault();
-      ev.stopPropagation();
-      window._campusEdit = true;
-      $('campus-edit-bar')?.classList.add('show');
-      el.classList.add('msel');
-      el.style.outline = '2px solid var(--blue)';
-    };
+  document.querySelectorAll('#campus-list .campus-card').forEach(el=>{
+    el.onclick = ()=>openCampusPost(el.dataset.id);
+    el.ondblclick = (ev)=>{ ev.preventDefault(); enterCampusEdit(el); };
   });
+}
+function enterCampusEdit(el){
+  window._campusEdit = true;
+  $('campus-edit-bar')?.classList.add('show');
+  el.classList.add('msel');
+  el.style.outline = '2px solid var(--blue)';
 }
 function exitCampusEdit(){
   window._campusEdit=false;
@@ -4765,65 +5007,33 @@ function deleteCampusSelected(){
   const ids = [...document.querySelectorAll('.campus-card.msel')].map(el=>el.dataset.id);
   if(!ids.length){ alert('请先选择'); return; }
   if(!confirm('删除选中的 '+ids.length+' 条？')) return;
-  const arr = campusData[campusTab]||[];
-  campusData[campusTab] = arr.filter(p=>!ids.includes(p.id));
-  saveAll(); exitCampusEdit(); window._campusRankId=null; renderCampus();
-}
-function sendCampusChat(){
-  const v=($('campus-chat-input')?.value||'').trim(); if(!v) return;
-  campusData.boysChat = campusData.boysChat||[];
-  campusData.boysChat.push({ user: '匿名'+(Math.floor(Math.random()*90)+10), text:v, time:Date.now() });
-  $('campus-chat-input').value='';
-  saveAll(); renderCampus();
-}
-async function campusChatAIReply(){
-  const linked = (campusWB||'').split(/[,，]/).map(x=>x.trim()).filter(Boolean);
-  const recent = (campusData.boysChat||[]).slice(-8).map(m=>m.user+'：'+m.text).join('\n');
-  const raw = await callAI(
-    '生成2-4条男生匿名群聊回复，JSON数组[{"user":"匿名xx","text":"..."}]，真实大学生口吻。参考世界书常驻。',
-    '最近聊天：\n'+recent+'\n请让其他人回复。',
-    800, linked
-  );
-  try{
-    const m=raw.match(/\[[\s\S]*\]/); const c=m?JSON.parse(m[0]):[];
-    if(Array.isArray(c) && c.length){
-      campusData.boysChat = (campusData.boysChat||[]).concat(c.map(x=>({user:x.user||'匿名', text:x.text||'', time:Date.now()})));
-      saveAll(); renderCampus(); return;
-    }
-  }catch(_){}
-  alert('回复生成失败');
+  campusData[campusTab] = (campusData[campusTab]||[]).filter(p=>!ids.includes(p.id));
+  saveAll(); exitCampusEdit(); closeCampusPost(); closeCampusSubview(); renderCampus();
 }
 async function refreshCampusSection(){
+  const btn = $('campus-go');
+  if(btn){ btn.classList.add('busy'); btn.textContent='…'; }
   const hint = ($('campus-hint')?.value||'').trim();
   const linked = (campusWB||'').split(/[,，]/).map(x=>x.trim()).filter(Boolean);
   const prompts = {
-    gossip: `生成3-5条「校园八卦区」帖子。主题可含：情感八卦、校园某处打炮、表白学长学姐、花痴等。真实姓名。JSON数组：user,title,body,tag。${hint?'方向：'+hint:''}`,
-    nsfw: `生成3-5条同校NSFW约炮交友帖。真实姓名。JSON：user,title,body,tag。${hint?'方向：'+hint:''}`,
-    boys: `男生论坛：2-3条女生排行(kind=rank,tag为最骚/最想操/最母狗之一，body写详细理由)；2条操过体验(kind=review)；1-2讨论(kind=post)。JSON：user,title,body,tag,kind。${hint?'方向：'+hint:''}`,
-    girls: `女生论坛：最帅/最想谈恋爱/最想被调教排名(kind=rank，真实男名，body详细)；2-3条匿名意淫(kind=fantasy，body完整意淫内容)；可加讨论(kind=post)。JSON：user,title,body,tag,kind。${hint?'方向：'+hint:''}`
+    gossip: `生成4条校园八卦帖。JSON数组user,title,body,tag,kind(固定post)。真实姓名。${hint?'方向：'+hint:''}`,
+    nsfw: `生成4条同校NSFW帖。JSON：user,title,body,tag,kind(post)。${hint?'方向：'+hint:''}`,
+    boys: `男生论坛：2条排行(kind=rank,tag最骚/最想操/最母狗)，2条体验(kind=review)，2条讨论(kind=post)。JSON含user,title,body,tag,kind。${hint?'方向：'+hint:''}`,
+    girls: `女生论坛：2条排名(kind=rank)，2条匿名意淫(kind=fantasy)，2条讨论(kind=post)。JSON。${hint?'方向：'+hint:''}`
   };
-  const system = `你是校园墙生成器。必须参考世界书常驻。姓名真实。只输出JSON数组。`;
-  const raw = await callAI(system, prompts[campusTab]||prompts.gossip, 3000, linked);
-  let arr=[]; try{ const m=raw.match(/\[[\s\S]*\]/); arr=m?JSON.parse(m[0]):[]; }catch(_){}
-  if(!Array.isArray(arr)||!arr.length){ alert('生成失败'); return; }
-  const mapped = arr.map((p,i)=>({
-    id: 'cp'+Date.now()+i,
-    user: p.user||'匿名',
-    title: p.title||'无题',
-    body: p.body||'',
-    tag: p.tag||'',
-    kind: p.kind || (campusTab==='girls' && /意淫/.test(p.tag||'') ? 'fantasy' : 'post'),
-    time: Date.now()
-  }));
-  // 女生论坛：若模型没标 fantasy，标题含意淫则纠正
-  if(campusTab==='girls'){
-    mapped.forEach(p=>{
-      if(p.kind==='post' && /意淫|幻想|想被/.test(p.title+p.body+p.tag)) p.kind='fantasy';
-    });
+  try{
+    const raw = await callAI('校园墙生成器，参考世界书常驻，只输出JSON数组。', prompts[campusTab]||prompts.gossip, 3000, linked);
+    let arr=[]; try{ const m=raw.match(/\[[\s\S]*\]/); arr=m?JSON.parse(m[0]):[]; }catch(_){}
+    if(!arr.length){ alert('生成失败'); return; }
+    const mapped = arr.map((p,i)=>({
+      id:'cp'+Date.now()+i, user:p.user||'匿名', title:p.title||'无题', body:p.body||'',
+      tag:p.tag||'', kind:p.kind||'post', time:Date.now(), replies:[]
+    }));
+    campusData[campusTab] = (campusData[campusTab]||[]).concat(mapped);
+    saveAll(); renderCampus();
+  } finally {
+    if(btn){ btn.classList.remove('busy'); btn.textContent='⌕'; }
   }
-  campusData[campusTab] = (campusData[campusTab]||[]).concat(mapped);
-  saveAll(); renderCampus();
-  alert('已追加 '+mapped.length+' 条');
 }
 function exportCampus(){
   const blob = new Blob([JSON.stringify({campusData, campusWB, campusTheme}, null, 2)], {type:'application/json'});
@@ -4833,22 +5043,15 @@ function exportCampus(){
 function importCampus(){
   const input=document.createElement('input'); input.type='file'; input.accept='application/json';
   input.onchange=async e=>{
-    const f=e.target.files?.[0]; if(!f)return;
-    try{
-      const text=await f.text(); const d=JSON.parse(text);
-      if(d.campusData) campusData=d.campusData;
-      if(d.campusWB!=null) campusWB=d.campusWB;
-      if(d.campusTheme) campusTheme=d.campusTheme;
-      saveAll(); renderCampus(); alert('导入成功');
-    }catch(err){ alert('导入失败'); }
+    try{ const d=JSON.parse(await e.target.files[0].text()); if(d.campusData)campusData=d.campusData; if(d.campusWB!=null)campusWB=d.campusWB; if(d.campusTheme)campusTheme=d.campusTheme; saveAll(); renderCampus(); alert('导入成功'); }catch(_){ alert('失败'); }
   };
   input.click();
 }
 function clearCampus(){
-  if(!confirm('清空校园墙全部内容？')) return;
-  campusData = { gossip:[], nsfw:[], boys:[], girls:[], boysChat:[] };
-  saveAll(); renderCampus();
+  if(!confirm('清空？')) return;
+  campusData={gossip:[],nsfw:[],boys:[],girls:[],boysChat:[]}; saveAll(); renderCampus();
 }
+
 
 
 
