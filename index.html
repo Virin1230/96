@@ -860,7 +860,7 @@
   [data-theme="dark"] #page-chat .bubble-row.him .b-text {
     background: var(--bubble-him, #2c2c2e); color: #f5f5f7;
   }
-  /* allow per-chat color override to win */
+  /* allow per-chat color override to win (solid mode) */
   #page-chat .msg-list[style*="--bubble-me"] .bubble-row.me .b-text {
     background: var(--bubble-me) !important;
     color: var(--bubble-me-fg, #fff) !important;
@@ -868,6 +868,27 @@
   #page-chat .msg-list[style*="--bubble-him"] .bubble-row.him .b-text {
     background: var(--bubble-him) !important;
     color: var(--bubble-him-fg, #1c1c1e) !important;
+  }
+  /* glass / liquid + color together */
+  #page-chat .msg-list.glass-mode[style*="--bubble-me"] .bubble-row.me .b-text,
+  #page-chat .msg-list.liquid-mode[style*="--bubble-me"] .bubble-row.me .b-text {
+    background: color-mix(in srgb, var(--bubble-me) 72%, transparent) !important;
+    backdrop-filter: blur(16px) saturate(160%) !important;
+    -webkit-backdrop-filter: blur(16px) saturate(160%) !important;
+    border: .5px solid rgba(255,255,255,.28) !important;
+    color: var(--bubble-me-fg, #fff) !important;
+  }
+  #page-chat .msg-list.glass-mode[style*="--bubble-him"] .bubble-row.him .b-text,
+  #page-chat .msg-list.liquid-mode[style*="--bubble-him"] .bubble-row.him .b-text {
+    background: color-mix(in srgb, var(--bubble-him) 70%, transparent) !important;
+    backdrop-filter: blur(16px) saturate(160%) !important;
+    -webkit-backdrop-filter: blur(16px) saturate(160%) !important;
+    border: .5px solid rgba(255,255,255,.18) !important;
+    color: var(--bubble-him-fg, var(--text)) !important;
+  }
+  #page-chat .msg-list.liquid-mode .bubble-row.me .b-text,
+  #page-chat .msg-list.liquid-mode .bubble-row.him .b-text {
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.35), 0 6px 18px rgba(0,0,0,.12) !important;
   }
   #page-chat .input-bar {
     background: rgba(255,255,255,.95); border-top: .5px solid rgba(0,0,0,.06);
@@ -1034,6 +1055,164 @@
   .app:active { transform: scale(.92); }
   .home-wrap.edit-mode .app:active { transform: scale(1.05); }
 
+
+  /* liquid glass material */
+  .fx-liquid, .msg-list.liquid-mode .bubble-row .b-text,
+  body.global-fx-liquid .card, body.global-fx-liquid .nav,
+  body.global-fx-liquid .forum-card, body.global-fx-liquid .cw-settings {
+    background: linear-gradient(135deg, rgba(255,255,255,.22), rgba(255,255,255,.06)) !important;
+    backdrop-filter: blur(28px) saturate(200%) !important;
+    -webkit-backdrop-filter: blur(28px) saturate(200%) !important;
+    border: 1px solid rgba(255,255,255,.28) !important;
+    box-shadow: 0 8px 32px rgba(0,0,0,.18), inset 0 1px 0 rgba(255,255,255,.35) !important;
+  }
+  body.global-fx-glass .card, body.global-fx-glass .nav, body.global-fx-glass .forum-card {
+    background: var(--glass-bg) !important;
+    backdrop-filter: blur(24px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(24px) saturate(180%) !important;
+    border: .5px solid var(--glass-border) !important;
+  }
+  body.global-fx-normal .card {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+  /* glass + color can coexist */
+  .msg-list.glass-mode .bubble-row.me .b-text,
+  .msg-list.liquid-mode .bubble-row.me .b-text {
+    background: color-mix(in srgb, var(--bubble-me, #0a84ff) 72%, transparent) !important;
+    backdrop-filter: blur(16px) saturate(160%);
+    -webkit-backdrop-filter: blur(16px) saturate(160%);
+    border: .5px solid rgba(255,255,255,.28);
+    color: var(--bubble-me-fg, #fff) !important;
+  }
+  .msg-list.glass-mode .bubble-row.him .b-text,
+  .msg-list.liquid-mode .bubble-row.him .b-text {
+    background: color-mix(in srgb, var(--bubble-him, #2c2c2e) 70%, transparent) !important;
+    backdrop-filter: blur(16px) saturate(160%);
+    -webkit-backdrop-filter: blur(16px) saturate(160%);
+    border: .5px solid rgba(255,255,255,.18);
+    color: var(--bubble-him-fg, var(--text)) !important;
+  }
+  .msg-list.liquid-mode .bubble-row.me .b-text,
+  .msg-list.liquid-mode .bubble-row.him .b-text {
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.35), 0 6px 18px rgba(0,0,0,.12);
+  }
+  /* desktop material */
+  .home-wrap.desk-fx-glass .app-icon,
+  .home-wrap.desk-fx-glass .widget,
+  .home-wrap.desk-fx-glass .dock {
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+  }
+  .home-wrap.desk-fx-liquid .app-icon {
+    background-image: linear-gradient(145deg, rgba(255,255,255,.35), rgba(255,255,255,.08)) !important;
+    border: 1px solid rgba(255,255,255,.3);
+    box-shadow: 0 8px 24px rgba(0,0,0,.2), inset 0 1px 0 rgba(255,255,255,.4);
+  }
+  .home-wrap.desk-fx-liquid .widget,
+  .home-wrap.desk-fx-liquid .dock {
+    background: linear-gradient(135deg, rgba(255,255,255,.28), rgba(255,255,255,.08)) !important;
+    backdrop-filter: blur(30px) saturate(200%);
+    -webkit-backdrop-filter: blur(30px) saturate(200%);
+    border: 1px solid rgba(255,255,255,.3);
+    box-shadow: 0 10px 32px rgba(0,0,0,.22), inset 0 1px 0 rgba(255,255,255,.4);
+  }
+  /* widget style variants */
+  .widget { overflow: hidden; }
+  .widget[data-style="diary"] {
+    grid-column: span 4; min-height: 140px; border-radius: 28px;
+    background: rgba(255,255,255,.92); color: #1c1c1e;
+    padding: 0; display: flex; flex-direction: column;
+  }
+  [data-theme="dark"] .widget[data-style="diary"] { background: rgba(28,28,30,.92); color: #f5f5f7; }
+  .widget[data-style="diary"] .wd-head {
+    text-align: center; font-size: 14px; font-weight: 600; padding: 12px 12px 0; color: inherit;
+  }
+  .widget[data-style="diary"] .wd-body { padding: 10px 14px 8px; display:flex; gap:10px; align-items:flex-start; }
+  .widget[data-style="diary"] .wd-av {
+    width: 40px; height: 40px; border-radius: 50%; background: #f0f0f0; flex-shrink:0;
+    display:flex; align-items:center; justify-content:center; font-size:20px; overflow:hidden;
+  }
+  .widget[data-style="diary"] .wd-av img { width:100%; height:100%; object-fit:cover; }
+  .widget[data-style="diary"] .wd-user { font-size:13px; font-weight:600; margin-bottom:4px; }
+  .widget[data-style="diary"] .wd-text { font-size:14px; line-height:1.4; }
+  .widget[data-style="diary"] .wd-time { font-size:11px; opacity:.5; padding:0 14px 6px; }
+  .widget[data-style="diary"] .wd-foot {
+    display:flex; border-top:.5px solid rgba(0,0,0,.06); margin-top:auto;
+  }
+  .widget[data-style="diary"] .wd-foot span {
+    flex:1; text-align:center; padding:10px 0; font-size:12px; opacity:.7;
+  }
+
+  .widget[data-style="tags"] {
+    grid-column: span 4; min-height: 150px; background: rgba(255,255,255,.85); color:#333;
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px;
+  }
+  [data-theme="dark"] .widget[data-style="tags"] { background: rgba(30,30,32,.88); color:#eee; }
+  .widget[data-style="tags"] .wt-av {
+    width: 64px; height: 64px; border-radius: 50%; background:#eee; overflow:hidden;
+    display:flex; align-items:center; justify-content:center; font-size:28px;
+  }
+  .widget[data-style="tags"] .wt-av img { width:100%; height:100%; object-fit:cover; }
+  .widget[data-style="tags"] .wt-row { display:flex; gap:8px; flex-wrap:wrap; justify-content:center; max-width:100%; }
+  .widget[data-style="tags"] .wt-pill {
+    background: rgba(0,0,0,.06); border-radius: 20px; padding: 6px 12px; font-size:12px;
+  }
+  [data-theme="dark"] .widget[data-style="tags"] .wt-pill { background: rgba(255,255,255,.1); }
+
+  .widget[data-style="music"] {
+    grid-column: span 4; min-height: 88px; border-radius: 28px;
+    background: rgba(120,120,125,.55); color:#fff; display:flex; align-items:center; gap:10px;
+    padding: 10px 14px;
+  }
+  .widget[data-style="music"] .wm-cover {
+    width: 56px; height: 56px; border-radius: 12px; background:#444; overflow:hidden; flex-shrink:0;
+    display:flex; align-items:center; justify-content:center; font-size:22px;
+  }
+  .widget[data-style="music"] .wm-cover img { width:100%; height:100%; object-fit:cover; }
+  .widget[data-style="music"] .wm-info { flex:1; min-width:0; }
+  .widget[data-style="music"] .wm-title { font-size:15px; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .widget[data-style="music"] .wm-sub { font-size:12px; opacity:.8; margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .widget[data-style="music"] .wm-ctrl { font-size:14px; opacity:.85; letter-spacing:6px; }
+
+  .widget[data-style="cute"] {
+    grid-column: span 2; min-height: 130px; background: rgba(255,255,255,.9); color:#333;
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px;
+    position:relative;
+  }
+  [data-theme="dark"] .widget[data-style="cute"] { background: rgba(30,30,32,.9); color:#eee; }
+  .widget[data-style="cute"] .wc-bubble {
+    background: rgba(0,0,0,.05); border-radius: 16px; padding: 6px 12px; font-size:12px; max-width:90%;
+  }
+  .widget[data-style="cute"] .wc-av {
+    width: 72px; height: 72px; border-radius: 50%; background: radial-gradient(circle at 30% 30%, #fff, #f5d0d0);
+    display:flex; align-items:center; justify-content:center; font-size:36px; overflow:hidden;
+  }
+  .widget[data-style="cute"] .wc-av img { width:100%; height:100%; object-fit:cover; }
+  .widget[data-style="cute"] .wc-name { font-size:11px; opacity:.65; }
+
+  .widget[data-style="clock"] {
+    grid-column: span 2; min-height: 88px; display:flex; flex-direction:column; justify-content:center;
+  }
+  .widget[data-style="clock"] .wc-time { font-size:32px; font-weight:200; letter-spacing:-1px; line-height:1.1; }
+  .widget[data-style="clock"] .wc-date { font-size:12px; opacity:.75; margin-top:4px; }
+  .widget[data-style="clock"].big { grid-column: span 4; min-height: 110px; }
+  .widget[data-style="clock"].big .wc-time { font-size:48px; }
+
+  .widget .w-edit-hint { display:none; }
+  .home-wrap.edit-mode .widget .w-edit-hint {
+    display:block; position:absolute; bottom:6px; right:8px; font-size:10px; opacity:.5;
+  }
+  .widget-edit-sheet {
+    position: absolute; inset: 0; z-index: 80; background: rgba(0,0,0,.55);
+    display: none; align-items: flex-end; justify-content: center;
+  }
+  .widget-edit-sheet.show { display: flex; }
+  .widget-edit-panel {
+    width: 100%; max-height: 78%; background: var(--card); border-radius: 20px 20px 0 0;
+    padding: 16px; overflow-y: auto; border: .5px solid var(--border);
+  }
+
 </style>
 </head>
 <body data-theme="dark">
@@ -1195,6 +1374,7 @@
           <div class="seg" style="margin:6px 0 10px;">
             <button type="button" id="theme-fx-normal" class="active" onclick="setChatFx('normal')">普通</button>
             <button type="button" id="theme-fx-glass" onclick="setChatFx('glass')">毛玻璃</button>
+            <button type="button" id="theme-fx-liquid" onclick="setChatFx('liquid')">液态玻璃</button>
           </div>
           <label>我的气泡颜色</label>
           <input type="color" id="edit-bubble-me" value="#0a84ff" style="width:100%;height:40px;border:none;border-radius:10px;background:transparent;margin-bottom:8px;">
@@ -1455,6 +1635,18 @@
         <button class="nav-right" onclick="saveMediaSkin();saveBeautifyPreset(true)">保存</button>
       </div>
       <div class="scroll" style="padding:12px;">
+        <div class="card" style="border-radius:16px;">
+          <h4>美化效果</h4>
+          <div class="seg" style="margin:8px 0 10px;" id="fx-mode-seg">
+            <button type="button" data-fx="normal" class="active" onclick="setBeautifyFx('normal')">普通</button>
+            <button type="button" data-fx="glass" onclick="setBeautifyFx('glass')">毛玻璃</button>
+            <button type="button" data-fx="liquid" onclick="setBeautifyFx('liquid')">液态玻璃</button>
+          </div>
+          <div class="wb-switch" style="margin:6px 0;"><span>应用到桌面与图标</span><input type="checkbox" id="fx-scope-desk" checked></div>
+          <div class="wb-switch" style="margin:6px 0;"><span>整体（所有软件内界面）</span><input type="checkbox" id="fx-scope-global"></div>
+          <button class="btn btn-primary" style="width:100%;margin-top:8px;" onclick="applyBeautifyFx()">应用效果</button>
+          <div style="font-size:11px;color:var(--muted);margin-top:8px;line-height:1.4;">可只开桌面，也可勾选整体让所有软件卡片/导航一起变。</div>
+        </div>
         <div class="card" style="border-radius:16px;">
           <h4>图标预设</h4>
           <div style="display:flex;gap:8px;margin:8px 0;">
@@ -1900,6 +2092,17 @@
       <div class="scroll" style="padding:12px;" id="archive-list"></div>
     </div>
 
+    <div class="widget-edit-sheet" id="widget-edit-sheet">
+      <div class="widget-edit-panel">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+          <div style="font-weight:700;font-size:16px;">编辑小组件</div>
+          <button type="button" class="btn btn-secondary" style="flex:0;padding:6px 12px;" onclick="closeWidgetEdit()">关闭</button>
+        </div>
+        <div id="widget-edit-fields"></div>
+        <button class="btn btn-primary" style="width:100%;margin-top:12px;" onclick="saveWidgetEdit()">保存</button>
+      </div>
+    </div>
+
   </div>
 </div>
 
@@ -2078,6 +2281,7 @@ function loadAll() {
       if(d.appIcons) appIcons = d.appIcons;
       if(Array.isArray(d.homeWidgets)) window._homeWidgets = d.homeWidgets;
       if(d.homeLayout) window._homeLayout = d.homeLayout;
+      if(d.beautifyFx) window._beautifyFx = d.beautifyFx;
       if(Array.isArray(d.evalFavorites)) evalFavorites = d.evalFavorites;
       if(d.mediaSkin) mediaSkin = Object.assign(mediaSkin, d.mediaSkin);
       if(Array.isArray(d.forumPosts)) forumPosts = d.forumPosts;
@@ -2678,6 +2882,7 @@ function renderMessages(){
   // 主题
   const fx = c.chatFx || 'normal';
   list.classList.toggle('glass-mode', fx==='glass');
+  list.classList.toggle('liquid-mode', fx==='liquid');
   if(c.bubbleMe) {
     list.style.setProperty('--bubble-me', c.bubbleMe);
     // auto text contrast: bright bg -> dark text
@@ -4266,6 +4471,7 @@ function setChatFx(fx){
   chatFxTemp = fx;
   $('theme-fx-normal')?.classList.toggle('active', fx==='normal');
   $('theme-fx-glass')?.classList.toggle('active', fx==='glass');
+  $('theme-fx-liquid')?.classList.toggle('active', fx==='liquid');
 }
 
 // ========== 小狗乖乖 ==========
@@ -5406,6 +5612,7 @@ function exportData(){
     // 桌面布局 / 小组件
     homeLayout: window._homeLayout || null,
     homeWidgets: window._homeWidgets || [],
+    beautifyFx: window._beautifyFx || null,
     homePageIndex,
     // 壁纸等
     wallpaper: localStorage.getItem('wallpaper') || '',
@@ -5449,9 +5656,11 @@ function doImport(e){
       if(d.appIcons) appIcons = d.appIcons;
       if(Array.isArray(d.homeWidgets)) window._homeWidgets = d.homeWidgets;
       if(d.homeLayout) window._homeLayout = d.homeLayout;
+      if(d.beautifyFx) window._beautifyFx = d.beautifyFx;
       if(Array.isArray(d.evalFavorites)) evalFavorites = d.evalFavorites;
       if(Array.isArray(d.homeWidgets)) window._homeWidgets = d.homeWidgets;
       if(d.homeLayout) window._homeLayout = d.homeLayout;
+      if(d.beautifyFx) window._beautifyFx = d.beautifyFx;
       if(d.forumTheme) forumTheme = d.forumTheme;
       if(d.forumWB!=null) forumWB = d.forumWB;
       if(Array.isArray(d.guideMessages)) guideMessages = d.guideMessages;
@@ -5515,10 +5724,13 @@ function clearStoryBg(){
 }
 
 
+
 // ========== 桌面编辑 / 小组件 ==========
 window._homeWidgets = window._homeWidgets || [];
 window._homeEdit = false;
-window._homeLayout = window._homeLayout || null; // optional order of app ids per page
+window._homeLayout = window._homeLayout || null;
+window._beautifyFx = window._beautifyFx || { mode: 'normal', desk: true, global: false };
+window._editingWidgetId = null;
 
 function enterHomeEdit(){
   window._homeEdit = true;
@@ -5552,9 +5764,8 @@ function toggleHomeEdit(){
 }
 function removeHomeApp(appEl){
   if(!appEl) return;
-  // hide app (soft delete) by data-hidden
   const name = appEl.querySelector('.app-name')?.textContent || '';
-  if(!confirm('从桌面移除「'+name+'」？（可在设置里恢复默认布局）')) return;
+  if(!confirm('从桌面移除「'+name+'」？')) return;
   appEl.style.display='none';
   appEl.dataset.hidden='1';
   saveHomeLayout();
@@ -5564,68 +5775,268 @@ function saveHomeLayout(){
   document.querySelectorAll('.home-page').forEach(page=>{
     const apps = [...page.querySelectorAll('.apps > .app, .apps > .widget')].map(el=>{
       if(el.classList.contains('widget')){
-        return {type:'widget', id: el.dataset.wid, kind: el.dataset.kind, size: el.dataset.size||'sm'};
+        return {type:'widget', id: el.dataset.wid, kind: el.dataset.kind, size: el.dataset.size||'sm', style: el.dataset.style||''};
       }
       const onclick = el.getAttribute('onclick')||'';
-      const m = onclick.match(/openApp\\('([^']+)'\\)/);
-      return {type:'app', id: m?m[1]:'', hidden: el.dataset.hidden==='1'};
+      const mm = onclick.match(/openApp\('([^']+)'\)/);
+      return {type:'app', id: mm?mm[1]:'', hidden: el.dataset.hidden==='1'};
     });
     pages.push(apps);
   });
   window._homeLayout = pages;
   try{ localStorage.setItem('homeLayoutV1', JSON.stringify(pages)); }catch(_){}
 }
+
 function addHomeWidget(){
-  const kinds = [
-    {k:'status', label:'身体状态'},
-    {k:'heat', label:'发情日'},
-    {k:'quote', label:'今日守则'},
-    {k:'clock', label:'时间卡片'}
-  ];
-  const pick = prompt('添加小组件类型：\\n1.身体状态\\n2.发情日\\n3.今日守则\\n4.时间卡片', '1');
+  const menu = `添加小组件：
+1. 日记卡片（参考图1）
+2. 标签环绕（参考图2）
+3. 音乐卡片（参考图3）
+4. 可爱头像（参考图4）
+5. 时间日期
+6. 身体状态
+7. 发情日
+8. 守则摘录`;
+  const pick = prompt(menu, '1');
   if(pick===null) return;
-  const idx = Math.max(0, Math.min(3, (parseInt(pick,10)||1)-1));
-  const kind = kinds[idx].k;
+  const n = parseInt(pick,10)||1;
+  const map = {
+    1:{kind:'diary', style:'diary', size:'md'},
+    2:{kind:'tags', style:'tags', size:'md'},
+    3:{kind:'music', style:'music', size:'md'},
+    4:{kind:'cute', style:'cute', size:'sm'},
+    5:{kind:'clock', style:'clock', size:'sm'},
+    6:{kind:'status', style:'glass', size:'sm'},
+    7:{kind:'heat', style:'glass', size:'sm'},
+    8:{kind:'quote', style:'glass', size:'sm'}
+  };
+  const conf = map[n] || map[1];
   const id = 'w'+Date.now();
+  const defaults = defaultWidgetFields(conf.kind, conf.style);
   window._homeWidgets = window._homeWidgets || [];
-  window._homeWidgets.push({id, kind, size:'sm', page: homePageIndex||0});
+  window._homeWidgets.push({
+    id, kind: conf.kind, style: conf.style, size: conf.size,
+    page: homePageIndex||0, fields: defaults
+  });
   renderHomeWidgets();
   if(window._homeEdit) enterHomeEdit();
   saveAll();
+  // open editor immediately
+  openWidgetEdit(id);
 }
-function removeHomeWidget(el){
-  const id = el?.dataset?.wid;
-  if(!id) return;
-  window._homeWidgets = (window._homeWidgets||[]).filter(w=>w.id!==id);
-  el.remove();
-  saveAll();
-}
-function widgetHTML(w){
+
+function defaultWidgetFields(kind, style){
   const girl = (meProfile&&meProfile.name)||'小狗';
-  let title='', body='', sub='';
-  if(w.kind==='status'){
-    title='身体状态'; body='待命中 · 湿润'; sub=girl+' · 随时可用';
-  } else if(w.kind==='heat'){
-    const {type, day} = (typeof heatCycleDay==='function') ? heatCycleDay(new Date()) : {type:null, day:0};
-    const map={fertile:'易受孕日', want:'求操日', force:'强制发情'};
-    title='发情日历'; body=map[type]||'普通日'; sub='周期第 '+(day+1)+' 天';
-  } else if(w.kind==='quote'){
-    title='守则摘录';
-    const r = (ruleVersions&&ruleVersions[0]&&ruleVersions[0].content)||'听话，汇报，被使用。';
-    body = String(r).split('\\n').filter(Boolean)[0]||'听话。';
-    sub='双击桌面可编辑';
-  } else {
-    title='现在'; body=( $('clock')?.textContent || '' ); sub=($('date')?.textContent||'');
+  if(kind==='diary' || style==='diary'){
+    return {
+      title: '初冬 · 日记',
+      user: '@'+girl,
+      text: '许愿像轻松熊一样轻松˚‧º·(˃̵͈́-˂̵͈̀ )‧º·˚',
+      time: new Date().toISOString().slice(0,16).replace('T',' '),
+      avatar: '🐻',
+      like: '喜欢',
+      star: '收藏'
+    };
   }
-  const size = w.size==='md' ? 'w-md' : 'w-sm';
-  return `<div class="widget ${size}" data-wid="${w.id}" data-kind="${w.kind}" data-size="${w.size||'sm'}" onclick="if(!window._homeEdit){ if('${w.kind}'==='heat')openApp('heat'); else if('${w.kind}'==='status')openApp('train'); else if('${w.kind}'==='quote')openApp('rules'); }">
-    <div class="w-title">${title}</div>
-    <div class="w-body">${escapeHtml(body)}</div>
-    <div class="w-sub">${escapeHtml(sub)}</div>
-  </div>`;
+  if(kind==='tags' || style==='tags'){
+    return {
+      avatar: '🐶',
+      tag1: '♡ liquidtea',
+      tag2: '♡ ilove',
+      tag3: 'im1ssu',
+      tag4: '행복.♥'
+    };
+  }
+  if(kind==='music' || style==='music'){
+    return {
+      title: 'Just Like That',
+      sub: '· in the moment°+♡',
+      cover: '🎵',
+      badge: '♡'
+    };
+  }
+  if(kind==='cute' || style==='cute'){
+    return {
+      bubble: 'Amor Fati',
+      avatar: '🐰',
+      name: '@'+girl
+    };
+  }
+  if(kind==='clock' || style==='clock'){
+    return {
+      clockStyle: 'simple', // simple | big | pill
+      showDate: '1'
+    };
+  }
+  if(kind==='status'){
+    return { title:'身体状态', body:'待命中 · 湿润', sub: girl+' · 随时可用' };
+  }
+  if(kind==='heat'){
+    return { title:'发情日历', body:'查看今日', sub:'点按打开' };
+  }
+  if(kind==='quote'){
+    const r = (ruleVersions&&ruleVersions[0]&&ruleVersions[0].content)||'听话，汇报，被使用。';
+    return { title:'守则摘录', body: String(r).split('\n').filter(Boolean)[0]||'听话。', sub:'可编辑' };
+  }
+  return { title:'小组件', body:'点按编辑', sub:'' };
+}
+
+function widgetHTML(w){
+  const f = Object.assign(defaultWidgetFields(w.kind, w.style), w.fields||{});
+  const style = w.style || (w.kind==='clock'?'clock': w.kind==='diary'?'diary':'glass');
+  const sizeCls = (w.size==='md' || style==='diary' || style==='tags' || style==='music') ? 'w-md' : 'w-sm';
+  const editHint = '<div class="w-edit-hint">点按编辑</div>';
+  const delReady = '';
+  let inner = '';
+
+  if(style==='diary'){
+    inner = `<div class="wd-head" data-fk="title">${esc(f.title)}</div>
+      <div class="wd-body">
+        <div class="wd-av">${avatarOrEmoji(f.avatar)}</div>
+        <div style="min-width:0;flex:1;">
+          <div class="wd-user" data-fk="user">${esc(f.user)}</div>
+          <div class="wd-text" data-fk="text">${esc(f.text)}</div>
+        </div>
+      </div>
+      <div class="wd-time" data-fk="time">🕒 ${esc(f.time)}</div>
+      <div class="wd-foot"><span data-fk="like">♡ ${esc(f.like||'喜欢')}</span><span data-fk="star">☆ ${esc(f.star||'收藏')}</span><span>···</span></div>`;
+  } else if(style==='tags'){
+    inner = `<div class="wt-row">
+        <span class="wt-pill" data-fk="tag1">${esc(f.tag1)}</span>
+        <span class="wt-pill" data-fk="tag2">${esc(f.tag2)}</span>
+      </div>
+      <div class="wt-av">${avatarOrEmoji(f.avatar)}</div>
+      <div class="wt-row">
+        <span class="wt-pill" data-fk="tag3">${esc(f.tag3)}</span>
+        <span class="wt-pill" data-fk="tag4">${esc(f.tag4)}</span>
+      </div>`;
+  } else if(style==='music'){
+    inner = `<div class="wm-cover">${avatarOrEmoji(f.cover)}</div>
+      <div class="wm-info">
+        <div class="wm-title" data-fk="title">${esc(f.title)}</div>
+        <div class="wm-sub" data-fk="sub">${esc(f.sub)}</div>
+        <div class="wm-ctrl">⏮  ⏸  ⏭</div>
+      </div>`;
+  } else if(style==='cute'){
+    inner = `<div class="wc-bubble" data-fk="bubble">${esc(f.bubble)}</div>
+      <div class="wc-av">${avatarOrEmoji(f.avatar)}</div>
+      <div class="wc-name" data-fk="name">${esc(f.name)}</div>`;
+  } else if(style==='clock' || w.kind==='clock'){
+    const t = $('clock')?.textContent || '--:--';
+    const d = $('date')?.textContent || '';
+    const big = (f.clockStyle==='big') ? ' big' : '';
+    inner = `<div class="wc-time">${esc(t)}</div>
+      ${(f.showDate!=='0')?`<div class="wc-date">${esc(d)}</div>`:''}`;
+    return `<div class="widget ${sizeCls}${big}" data-style="clock" data-wid="${w.id}" data-kind="clock" data-size="${w.size||'sm'}" onclick="onWidgetTap('${w.id}')">${inner}${editHint}</div>`;
+  } else {
+    // status / heat / quote glass cards
+    let title=f.title, body=f.body, sub=f.sub;
+    if(w.kind==='heat' && typeof heatCycleDay==='function'){
+      const {type, day} = heatCycleDay(new Date());
+      const map={fertile:'易受孕日', want:'求操日', force:'强制发情'};
+      if(!w.fields || !w.fields.body){ body = map[type]||'普通日'; sub = '周期第 '+(day+1)+' 天'; }
+    }
+    inner = `<div class="w-title" data-fk="title">${esc(title||'')}</div>
+      <div class="w-body" data-fk="body">${esc(body||'')}</div>
+      <div class="w-sub" data-fk="sub">${esc(sub||'')}</div>`;
+  }
+
+  return `<div class="widget ${sizeCls}" data-style="${style}" data-wid="${w.id}" data-kind="${w.kind}" data-size="${w.size||'sm'}" onclick="onWidgetTap('${w.id}')">${inner}${editHint}</div>`;
+}
+function esc(v){ return escapeHtml(String(v??'')); }
+function avatarOrEmoji(v){
+  if(!v) return '✦';
+  if(typeof v==='string' && (v.startsWith('http') || v.startsWith('data:'))) return `<img src="${v}" alt="">`;
+  return esc(v);
+}
+function onWidgetTap(id){
+  if(window._homeEdit){ openWidgetEdit(id); return; }
+  const w = (window._homeWidgets||[]).find(x=>x.id===id);
+  if(!w) return;
+  // non-edit: quick open related app, or still allow edit via long? double path: open edit always for text widgets if shift? 
+  // User asked text editable — open editor on tap when not navigating
+  if(w.kind==='heat'){ openApp('heat'); return; }
+  if(w.kind==='status'){ openApp('train'); return; }
+  if(w.kind==='quote'){ openApp('rules'); return; }
+  openWidgetEdit(id);
+}
+function openWidgetEdit(id){
+  const w = (window._homeWidgets||[]).find(x=>x.id===id);
+  if(!w) return;
+  window._editingWidgetId = id;
+  const f = Object.assign(defaultWidgetFields(w.kind, w.style), w.fields||{});
+  const box = $('widget-edit-fields');
+  if(!box) return;
+  const keys = Object.keys(f);
+  box.innerHTML = keys.map(k=>{
+    if(k==='clockStyle'){
+      return `<label style="display:block;font-size:12px;color:var(--muted);margin:10px 0 4px;">时间样式</label>
+        <select data-field="clockStyle" style="width:100%;background:var(--input);border:none;border-radius:10px;padding:10px;color:var(--text);">
+          <option value="simple" ${f.clockStyle==='simple'?'selected':''}>简约</option>
+          <option value="big" ${f.clockStyle==='big'?'selected':''}>大号</option>
+          <option value="pill" ${f.clockStyle==='pill'?'selected':''}>胶囊</option>
+        </select>`;
+    }
+    if(k==='showDate'){
+      return `<div class="wb-switch" style="margin-top:10px;"><span>显示日期</span><input type="checkbox" data-field="showDate" ${f.showDate!=='0'?'checked':''}></div>`;
+    }
+    const rows = (k==='text'||k==='body'||k==='sub') ? 3 : 1;
+    if(rows>1){
+      return `<label style="display:block;font-size:12px;color:var(--muted);margin:10px 0 4px;">${fieldLabel(k)}</label>
+        <textarea data-field="${k}" style="width:100%;min-height:72px;background:var(--input);border:none;border-radius:10px;padding:10px;color:var(--text);font-size:15px;">${esc(f[k])}</textarea>`;
+    }
+    return `<label style="display:block;font-size:12px;color:var(--muted);margin:10px 0 4px;">${fieldLabel(k)}</label>
+      <input data-field="${k}" value="${esc(f[k])}" style="width:100%;background:var(--input);border:none;border-radius:10px;padding:10px;color:var(--text);font-size:15px;">`;
+  }).join('') + `
+    <label style="display:block;font-size:12px;color:var(--muted);margin:12px 0 4px;">样式</label>
+    <select data-field="__style" style="width:100%;background:var(--input);border:none;border-radius:10px;padding:10px;color:var(--text);">
+      ${['diary','tags','music','cute','clock','glass'].map(s=>`<option value="${s}" ${(w.style||'')===s?'selected':''}>${styleLabel(s)}</option>`).join('')}
+    </select>
+    <label style="display:block;font-size:12px;color:var(--muted);margin:12px 0 4px;">尺寸</label>
+    <select data-field="__size" style="width:100%;background:var(--input);border:none;border-radius:10px;padding:10px;color:var(--text);">
+      <option value="sm" ${w.size!=='md'?'selected':''}>小（半宽）</option>
+      <option value="md" ${w.size==='md'?'selected':''}>中（全宽）</option>
+    </select>`;
+  $('widget-edit-sheet')?.classList.add('show');
+}
+function fieldLabel(k){
+  return ({title:'标题',user:'用户名',text:'正文',time:'时间',avatar:'头像(emoji或图片链接)',like:'喜欢文案',star:'收藏文案',
+    tag1:'标签1',tag2:'标签2',tag3:'标签3',tag4:'标签4',sub:'副标题',cover:'封面(emoji/链接)',badge:'角标',
+    bubble:'气泡文字',name:'名字',body:'正文',clockStyle:'时间样式',showDate:'显示日期'})[k] || k;
+}
+function styleLabel(s){
+  return ({diary:'日记卡片',tags:'标签环绕',music:'音乐卡片',cute:'可爱头像',clock:'时间日期',glass:'毛玻璃卡片'})[s]||s;
+}
+function closeWidgetEdit(){
+  $('widget-edit-sheet')?.classList.remove('show');
+  window._editingWidgetId = null;
+}
+function saveWidgetEdit(){
+  const id = window._editingWidgetId;
+  const w = (window._homeWidgets||[]).find(x=>x.id===id);
+  if(!w) return;
+  const box = $('widget-edit-fields');
+  const fields = Object.assign({}, w.fields||{});
+  box.querySelectorAll('[data-field]').forEach(el=>{
+    const k = el.getAttribute('data-field');
+    if(k==='__style'){ w.style = el.value; return; }
+    if(k==='__size'){ w.size = el.value; return; }
+    if(el.type==='checkbox'){ fields[k] = el.checked ? '1' : '0'; return; }
+    fields[k] = el.value;
+  });
+  w.fields = fields;
+  // if style implies kind
+  if(w.style==='clock') w.kind='clock';
+  if(w.style==='diary') w.kind='diary';
+  if(w.style==='tags') w.kind='tags';
+  if(w.style==='music') w.kind='music';
+  if(w.style==='cute') w.kind='cute';
+  saveAll();
+  renderHomeWidgets();
+  if(window._homeEdit) enterHomeEdit();
+  closeWidgetEdit();
 }
 function renderHomeWidgets(){
-  // remove existing widgets then inject into page apps grids
   document.querySelectorAll('.home-page .widget').forEach(el=>el.remove());
   const list = window._homeWidgets || [];
   list.forEach(w=>{
@@ -5634,6 +6045,15 @@ function renderHomeWidgets(){
     if(!grid) return;
     grid.insertAdjacentHTML('afterbegin', widgetHTML(w));
   });
+  // hide native clock if a clock widget exists? keep both - user can hide by editing home
+  applyDeskFx();
+}
+function removeHomeWidget(el){
+  const id = el?.dataset?.wid;
+  if(!id) return;
+  window._homeWidgets = (window._homeWidgets||[]).filter(w=>w.id!==id);
+  el.remove();
+  saveAll();
 }
 
 let _dragApp = null;
@@ -5655,9 +6075,6 @@ function onHomeDragStart(e){
   const el = e.currentTarget;
   _dragApp = el;
   el.classList.add('dragging');
-  const move = (ev)=>{
-    // visual only; swap on end by elementFromPoint
-  };
   const up = (ev)=>{
     el.classList.remove('dragging');
     const pt = (ev.changedTouches&&ev.changedTouches[0]) || ev;
@@ -5687,7 +6104,7 @@ function onHomeDragStart(e){
   const home=$('home');
   if(!home) return;
   home.addEventListener('click', (e)=>{
-    if(e.target.closest('.app') || e.target.closest('.dock') || e.target.closest('.home-edit-bar') || e.target.closest('.widget')) return;
+    if(e.target.closest('.app') || e.target.closest('.dock') || e.target.closest('.home-edit-bar') || e.target.closest('.widget') || e.target.closest('.widget-edit-sheet')) return;
     const now=Date.now();
     if(now-lastTap<320){ toggleHomeEdit(); lastTap=0; }
     else lastTap=now;
@@ -5698,10 +6115,60 @@ function onHomeDragStart(e){
   });
 })();
 
+// beautify fx
+function setBeautifyFx(mode){
+  window._beautifyFx = window._beautifyFx || { mode:'normal', desk:true, global:false };
+  window._beautifyFx.mode = mode || 'normal';
+  document.querySelectorAll('#fx-mode-seg button').forEach(b=>{
+    b.classList.toggle('active', b.getAttribute('data-fx')===window._beautifyFx.mode);
+  });
+}
+function applyBeautifyFx(){
+  window._beautifyFx = window._beautifyFx || { mode:'normal', desk:true, global:false };
+  window._beautifyFx.mode = document.querySelector('#fx-mode-seg button.active')?.getAttribute('data-fx') || window._beautifyFx.mode || 'normal';
+  window._beautifyFx.desk = !!$('fx-scope-desk')?.checked;
+  window._beautifyFx.global = !!$('fx-scope-global')?.checked;
+  applyDeskFx();
+  applyGlobalFx();
+  saveAll();
+  alert('美化效果已应用');
+}
+function refreshClockWidgets(){
+  document.querySelectorAll('.widget[data-style="clock"] .wc-time').forEach(el=>{
+    if($('clock')) el.textContent = $('clock').textContent;
+  });
+  document.querySelectorAll('.widget[data-style="clock"] .wc-date').forEach(el=>{
+    if($('date')) el.textContent = $('date').textContent;
+  });
+}
+setInterval(function(){ try{ refreshClockWidgets(); }catch(_e){} }, 1000);
+
+function applyDeskFx(){
+  const home = $('home'); if(!home) return;
+  home.classList.remove('desk-fx-glass','desk-fx-liquid','desk-fx-normal');
+  const fx = window._beautifyFx || {};
+  if(fx.desk === false) return;
+  const mode = fx.mode || 'normal';
+  home.classList.add('desk-fx-'+mode);
+}
+function applyGlobalFx(){
+  document.body.classList.remove('global-fx-glass','global-fx-liquid','global-fx-normal');
+  const fx = window._beautifyFx || {};
+  if(!fx.global) return;
+  document.body.classList.add('global-fx-'+(fx.mode||'normal'));
+}
+function syncBeautifyFxUI(){
+  const fx = window._beautifyFx || { mode:'normal', desk:true, global:false };
+  setBeautifyFx(fx.mode||'normal');
+  if($('fx-scope-desk')) $('fx-scope-desk').checked = fx.desk !== false;
+  if($('fx-scope-global')) $('fx-scope-global').checked = !!fx.global;
+}
+
 
 loadAll();
 try{ applyAppIcons(); }catch(_e){}
 try{ renderHomeWidgets(); }catch(_e){}
+try{ syncBeautifyFxUI(); applyDeskFx(); applyGlobalFx(); }catch(_e){}
 </script>
 </body>
 </html>
