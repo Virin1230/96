@@ -155,6 +155,7 @@
     max-width: 46%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
     pointer-events: none;
   }
+  .nav-title button, .nav-title .nav-right { pointer-events: auto; }
   .nav { position: relative; }
 
   /* media message bubbles */
@@ -1275,6 +1276,13 @@
     -webkit-backdrop-filter: blur(24px) saturate(180%) !important;
     border: .5px solid rgba(255,255,255,.25) !important;
   }
+  .widget.mat-none {
+    background: transparent !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    border: none !important;
+    box-shadow: none !important;
+  }
   .widget.mat-liquid {
     background: linear-gradient(145deg, rgba(255,255,255,.38), rgba(255,255,255,.1)) !important;
     backdrop-filter: blur(30px) saturate(200%) !important;
@@ -1637,6 +1645,7 @@
 
         <div style="display:flex;gap:2px;">
           <button class="nav-right" style="min-width:auto;padding:8px;" onclick="toggleFeatureSettings('worldbook')" title="设置">⚙</button>
+          <button class="nav-right" style="min-width:auto;padding:8px;" onclick="importWorldBooks()" title="导入">导入</button>
           <button class="nav-right" style="min-width:auto;padding:8px;" onclick="exportWorldBooks()" title="导出">导出</button>
           <button class="nav-right" style="min-width:auto;padding:8px;" onclick="addWorldBook()">＋</button>
         </div>
@@ -1678,8 +1687,11 @@
     <div class="page" id="page-offline">
       <div class="nav">
         <button class="nav-back" onclick="goHome()">‹ 桌面</button>
-        <div class="nav-title" style="display:flex;align-items:center;gap:6px;">线下任务 <button class="nav-right" style="font-size:14px;padding:0;min-width:auto;" onclick="toggleFeatureSettings('offline')" title="设置">⚙</button></div>
-        <button class="nav-right" onclick="refreshTasks()">刷新</button>
+        <div class="nav-title">线下任务</div>
+        <div style="display:flex;gap:2px;position:relative;z-index:5;">
+          <button class="nav-right" style="min-width:auto;padding:8px;" onclick="toggleFeatureSettings('offline')" title="设置">⚙</button>
+          <button class="nav-right" style="min-width:auto;padding:8px;" onclick="refreshTasks()">刷新</button>
+        </div>
       </div>
       <div id="offline-settings" class="feature-settings" style="display:none;padding:10px 12px;background:#141414;border-bottom:.5px solid var(--border);">
         <div class="bg-settings-block" data-appbg="offline">
@@ -1834,8 +1846,11 @@
     <div class="page" id="page-rules">
       <div class="nav">
         <button class="nav-back" onclick="goHome()">‹ 桌面</button>
-        <div class="nav-title" style="display:flex;align-items:center;gap:6px;">母狗守则 <button class="nav-right" style="font-size:14px;padding:0;min-width:auto;" onclick="toggleFeatureSettings('rules')" title="设置">⚙</button></div>
-        <button class="nav-right" onclick="genRulesFromMemory()">生成</button>
+        <div class="nav-title">母狗守则</div>
+        <div style="display:flex;gap:2px;position:relative;z-index:5;">
+          <button class="nav-right" style="min-width:auto;padding:8px;" onclick="toggleFeatureSettings('rules')" title="设置">⚙</button>
+          <button class="nav-right" style="min-width:auto;padding:8px;" onclick="genRulesFromMemory()">生成</button>
+        </div>
       </div>
       <div id="rules-settings" class="feature-settings" style="display:none;padding:10px 12px;background:#141414;border-bottom:.5px solid var(--border);">
         <div class="bg-settings-block" data-appbg="rules">
@@ -2777,6 +2792,18 @@ function loadAll() {
     }
     if (!contacts.find(c => c.id === r.id)) contacts.push({id:r.id,name:r.name,remark:r.remark,gender:'male',relation:r.relation});
   });
+  try {
+    const wb = localStorage.getItem('bitchPhoneWidgets');
+    if(wb){
+      const arr = JSON.parse(wb);
+      if(Array.isArray(arr) && arr.length) window._homeWidgets = arr;
+    }
+    const ab = localStorage.getItem('bitchPhoneAppBgs');
+    if(ab){
+      const obj = JSON.parse(ab);
+      if(obj && typeof obj==='object') window._appBgs = Object.assign(window._appBgs||{}, obj);
+    }
+  } catch(_e){}
   if (localStorage.getItem('wallpaper')) {
     document.documentElement.style.setProperty('--wallpaper', `url(${localStorage.getItem('wallpaper')})`);
   }
@@ -2802,7 +2829,7 @@ function applyTheme(theme){
 function setTheme(theme){ applyTheme(theme); }
 
 function saveAll() {
-  localStorage.setItem('bitchPhoneV3', JSON.stringify({
+  const payload = {
     cor,shame,body,obey,mainFinished,bodyData,diaries,ruleVersions,
     offlineArchives,worldBooks,apiProfiles,currentProfileId,
     conversations,contacts,pendingRequests, meProfile, memorySources,
@@ -2818,8 +2845,25 @@ function saveAll() {
     guideMode, guideMessages: guideMessages||[],
     forumTab, forumTheme, forumWB, queryMode, campusTab, homePageIndex, albumView, aucTab,
     uiTheme
-  }));
-  // 同步头像给旧逻辑兼容
+  };
+  try {
+    localStorage.setItem('bitchPhoneV3', JSON.stringify(payload));
+  } catch (err) {
+    console.warn('saveAll main failed', err);
+    try {
+      const compact = Object.assign({}, payload);
+      compact.homeWidgets = (window._homeWidgets||[]).map(w=>{
+        const x = Object.assign({}, w);
+        if(x.bg && String(x.bg).length > 120000) x.bg = '';
+        return x;
+      });
+      localStorage.setItem('bitchPhoneV3', JSON.stringify(compact));
+    } catch (e2) { console.warn(e2); }
+  }
+  try {
+    localStorage.setItem('bitchPhoneWidgets', JSON.stringify(window._homeWidgets||[]));
+    localStorage.setItem('bitchPhoneAppBgs', JSON.stringify(window._appBgs||{}));
+  } catch (_e) { console.warn('widget backup failed', _e); }
   if(meProfile.avatarImg) localStorage.setItem('myAvatar', meProfile.avatarImg);
   else localStorage.removeItem('myAvatar');
 }
@@ -3104,6 +3148,29 @@ function saveWBEdit(){
   openApp('worldbook');
   renderWorldBooks();
   alert(editingWBIndex>=0 ? '已保存修改' : '已添加世界书条目');
+}
+function importWorldBooks(){
+  const input=document.createElement('input'); input.type='file'; input.accept='application/json,.json';
+  input.onchange=async e=>{
+    const file=e.target.files?.[0]; if(!file) return;
+    try{
+      const text = await file.text();
+      const data = JSON.parse(text);
+      const list = Array.isArray(data) ? data : (data.worldBooks || data.books || []);
+      if(!Array.isArray(list) || !list.length){ alert('文件里没有世界书条目'); return; }
+      const merge = confirm('确定=合并到现有世界书\n取消=清空后仅保留导入内容');
+      if(!merge){ worldBooks = []; }
+      list.forEach(w=>{
+        const item = (typeof wbNormalize==='function') ? wbNormalize(w) : w;
+        if(!item.id) item.id = 'wb'+Date.now()+Math.random().toString(36).slice(2,6);
+        worldBooks.push(item);
+      });
+      saveAll();
+      renderWorldBooks();
+      alert('已导入 '+list.length+' 条');
+    }catch(err){ alert('导入失败：'+(err.message||err)); }
+  };
+  input.click();
 }
 function exportWorldBooks(){
   const data = { version:1, exportedAt: Date.now(), worldBooks: worldBooks||[] };
@@ -6458,7 +6525,7 @@ function widgetHTML(w){
     inner = `<div class="wc-time">${esc(t)}</div>
       ${(f.showDate!=='0')?`<div class="wc-date">${esc(d)}</div>`:''}`;
     const mat = w.material || 'normal';
-    const matCls = mat==='glass' ? ' mat-glass' : mat==='liquid' ? ' mat-liquid' : '';
+    const matCls = mat==='glass' ? ' mat-glass' : mat==='liquid' ? ' mat-liquid' : mat==='none' ? ' mat-none' : '';
     const bg = w.bg || f.bg || '';
     const bgCls = bg ? ' has-bg' : '';
     const op = (typeof w.bgOpacity === 'number') ? w.bgOpacity : 0.85;
@@ -6481,7 +6548,7 @@ function widgetHTML(w){
   }
 
   const mat = w.material || 'normal';
-  const matCls = mat==='glass' ? ' mat-glass' : mat==='liquid' ? ' mat-liquid' : '';
+  const matCls = mat==='glass' ? ' mat-glass' : mat==='liquid' ? ' mat-liquid' : mat==='none' ? ' mat-none' : '';
   const bg = w.bg || f.bg || '';
   const bgCls = bg ? ' has-bg' : '';
   const op = (typeof w.bgOpacity === 'number') ? w.bgOpacity : 0.85;
@@ -6498,16 +6565,18 @@ function avatarOrEmoji(v){
   return esc(v);
 }
 function onWidgetTap(id){
-  if(window._homeEdit){ openWidgetEdit(id); return; }
-  const w = (window._homeWidgets||[]).find(x=>x.id===id);
-  if(!w) return;
-  // non-edit: quick open related app, or still allow edit via long? double path: open edit always for text widgets if shift? 
-  // User asked text editable — open editor on tap when not navigating
-  if(w.kind==='heat'){ openApp('heat'); return; }
-  if(w.kind==='status'){ openApp('train'); return; }
-  if(w.kind==='quote'){ openApp('rules'); return; }
-  openWidgetEdit(id);
+  // 编辑模式外：不打开编辑；功能类可跳转
+  if(!window._homeEdit){
+    const w = (window._homeWidgets||[]).find(x=>x.id===id);
+    if(!w) return;
+    if(w.kind==='heat'){ openApp('heat'); return; }
+    if(w.kind==='status'){ openApp('train'); return; }
+    if(w.kind==='quote'){ openApp('rules'); return; }
+    return;
+  }
+  // 编辑模式内：单击不编辑（双击才编辑）
 }
+
 function openWidgetEdit(id){
   const w = (window._homeWidgets||[]).find(x=>x.id===id);
   if(!w) return;
@@ -6542,6 +6611,7 @@ function openWidgetEdit(id){
     </select>
     <label style="display:block;font-size:12px;color:var(--muted);margin:12px 0 4px;">材质</label>
     <select data-field="__material" style="width:100%;background:var(--input);border:none;border-radius:10px;padding:10px;color:var(--text);">
+      <option value="none" ${w.material==='none'?'selected':''}>无背景</option>
       <option value="normal" ${(w.material||'normal')==='normal'?'selected':''}>普通</option>
       <option value="glass" ${w.material==='glass'?'selected':''}>毛玻璃</option>
       <option value="liquid" ${w.material==='liquid'?'selected':''}>液态玻璃</option>
@@ -6582,7 +6652,7 @@ function uploadWidgetBg(){
     try{
       let data;
       if(typeof compressImage === 'function'){
-        data = await compressImage(file, 1200, 0.75);
+        data = await compressImage(file, 900, 0.62);
       } else {
         data = await new Promise((res,rej)=>{ const r=new FileReader(); r.onload=()=>res(r.result); r.onerror=rej; r.readAsDataURL(file); });
       }
@@ -6683,10 +6753,26 @@ function onHomeDragStart(e){
   if(!window._homeEdit) return;
   if(e.target.closest('.app-del')) return;
   const el = e.currentTarget;
-  _dragApp = el;
-  el.classList.add('dragging');
+  let moved = false;
+  const startX = (e.touches?e.touches[0]:e).clientX;
+  const startY = (e.touches?e.touches[0]:e).clientY;
+  const timer = setTimeout(()=>{ el.classList.add('dragging'); _dragApp = el; }, 180);
+  const move = (ev)=>{
+    const pt = (ev.touches&&ev.touches[0]) || ev;
+    if(Math.abs(pt.clientX-startX)>8 || Math.abs(pt.clientY-startY)>8){
+      moved = true;
+      el.classList.add('dragging');
+      _dragApp = el;
+    }
+  };
   const up = (ev)=>{
+    clearTimeout(timer);
     el.classList.remove('dragging');
+    document.removeEventListener('touchmove', move);
+    document.removeEventListener('mousemove', move);
+    document.removeEventListener('touchend', up);
+    document.removeEventListener('mouseup', up);
+    if(!_dragApp && !moved){ _dragApp=null; return; }
     const pt = (ev.changedTouches&&ev.changedTouches[0]) || ev;
     const target = document.elementFromPoint(pt.clientX, pt.clientY);
     const other = target?.closest('.apps .app, .apps .widget');
@@ -6699,31 +6785,41 @@ function onHomeDragStart(e){
         else parent.insertBefore(el, other);
       }
       saveHomeLayout();
+      saveAll();
     }
-    document.removeEventListener('touchend', up);
-    document.removeEventListener('mouseup', up);
     _dragApp=null;
   };
-  document.addEventListener('touchend', up, {once:true});
-  document.addEventListener('mouseup', up, {once:true});
+  document.addEventListener('touchmove', move, {passive:true});
+  document.addEventListener('mousemove', move);
+  document.addEventListener('touchend', up);
+  document.addEventListener('mouseup', up);
 }
 
-// double-click / double-tap home to edit
+// 桌面交互：双击空白进入/退出编辑；编辑内双击小组件编辑；长按/拖动换位
 (function(){
   let lastTap=0;
   const home=$('home');
   if(!home) return;
+  home.addEventListener('dblclick', (e)=>{
+    if(e.target.closest('.dock') || e.target.closest('.home-edit-bar') || e.target.closest('.widget-edit-sheet')) return;
+    const w = e.target.closest('.widget');
+    if(w && window._homeEdit){
+      const id = w.dataset.wid;
+      if(id) openWidgetEdit(id);
+      e.preventDefault();
+      return;
+    }
+    if(e.target.closest('.app') || e.target.closest('.widget')) return;
+    toggleHomeEdit();
+  });
   home.addEventListener('click', (e)=>{
     if(e.target.closest('.app') || e.target.closest('.dock') || e.target.closest('.home-edit-bar') || e.target.closest('.widget') || e.target.closest('.widget-edit-sheet')) return;
     const now=Date.now();
     if(now-lastTap<320){ toggleHomeEdit(); lastTap=0; }
     else lastTap=now;
   });
-  home.addEventListener('dblclick', (e)=>{
-    if(e.target.closest('.app') || e.target.closest('.dock') || e.target.closest('.widget')) return;
-    toggleHomeEdit();
-  });
 })();
+
 
 // beautify fx
 function setBeautifyFx(mode){
