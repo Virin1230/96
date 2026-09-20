@@ -944,7 +944,7 @@
   .cw-post .b { font-size: 14px; color: var(--muted); line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
   .cw-post .meta { font-size: 12px; color: var(--muted); margin-top: 8px; }
   .cw-settings {
-    display: none; position: absolute; right: 10px; left: 10px; top: 88px; z-index: 500;
+    display: none; position: absolute; right: 10px; left: 10px; bottom: 64px; top: auto; z-index: 500;
     background: var(--glass-bg, var(--card)); backdrop-filter: blur(24px) saturate(180%);
     -webkit-backdrop-filter: blur(24px) saturate(180%);
     border-radius: 18px; border: .5px solid var(--glass-border, var(--border));
@@ -1213,6 +1213,102 @@
     padding: 16px; overflow-y: auto; border: .5px solid var(--border);
   }
 
+
+  :root {
+    --chat-glass-alpha: 0.72;
+    --global-glass-alpha: 0.55;
+    --liquid-shine: inset 0 1px 0 rgba(255,255,255,.4), 0 8px 28px rgba(0,0,0,.14);
+  }
+  /* real materials driven by CSS vars */
+  body.global-fx-glass .card,
+  body.global-fx-glass .nav,
+  body.global-fx-glass .forum-card,
+  body.global-fx-glass .input-bar,
+  body.global-fx-glass .cw-settings {
+    background: rgba(255,255,255, calc(var(--global-glass-alpha) * 0.85)) !important;
+    backdrop-filter: blur(24px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(24px) saturate(180%) !important;
+    border: .5px solid rgba(255,255,255,.22) !important;
+  }
+  [data-theme="dark"] body.global-fx-glass .card,
+  [data-theme="dark"] body.global-fx-glass .nav,
+  body.global-fx-glass[data-theme="dark"] .card {
+    background: rgba(28,28,30, var(--global-glass-alpha)) !important;
+  }
+  body.global-fx-liquid .card,
+  body.global-fx-liquid .nav,
+  body.global-fx-liquid .forum-card,
+  body.global-fx-liquid .input-bar {
+    background: linear-gradient(145deg, rgba(255,255,255, calc(var(--global-glass-alpha) + 0.12)), rgba(255,255,255, calc(var(--global-glass-alpha) * 0.4))) !important;
+    backdrop-filter: blur(32px) saturate(210%) !important;
+    -webkit-backdrop-filter: blur(32px) saturate(210%) !important;
+    border: 1px solid rgba(255,255,255,.3) !important;
+    box-shadow: var(--liquid-shine) !important;
+  }
+  [data-theme="dark"] body.global-fx-liquid .card,
+  [data-theme="dark"] body.global-fx-liquid .nav {
+    background: linear-gradient(145deg, rgba(60,60,68, calc(var(--global-glass-alpha) + 0.1)), rgba(20,20,24, calc(var(--global-glass-alpha) * 0.5))) !important;
+  }
+  .home-wrap.desk-fx-glass .widget,
+  .home-wrap.desk-fx-glass .dock {
+    background: rgba(255,255,255, calc(var(--global-glass-alpha) * 0.7)) !important;
+    backdrop-filter: blur(28px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(28px) saturate(180%) !important;
+  }
+  .home-wrap.desk-fx-liquid .widget,
+  .home-wrap.desk-fx-liquid .dock {
+    background: linear-gradient(145deg, rgba(255,255,255,.35), rgba(255,255,255,.08)) !important;
+    backdrop-filter: blur(32px) saturate(210%) !important;
+    -webkit-backdrop-filter: blur(32px) saturate(210%) !important;
+    border: 1px solid rgba(255,255,255,.32) !important;
+    box-shadow: var(--liquid-shine) !important;
+  }
+  .home-wrap.desk-fx-liquid .app-icon {
+    background-image: linear-gradient(145deg, rgba(255,255,255,.4), rgba(255,255,255,.1)) !important;
+    border: 1px solid rgba(255,255,255,.3);
+    box-shadow: 0 8px 24px rgba(0,0,0,.18), inset 0 1px 0 rgba(255,255,255,.45);
+  }
+  /* widget material */
+  .widget.mat-glass {
+    background: rgba(255,255,255, calc(var(--global-glass-alpha) * 0.75)) !important;
+    backdrop-filter: blur(24px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(24px) saturate(180%) !important;
+    border: .5px solid rgba(255,255,255,.25) !important;
+  }
+  .widget.mat-liquid {
+    background: linear-gradient(145deg, rgba(255,255,255,.38), rgba(255,255,255,.1)) !important;
+    backdrop-filter: blur(30px) saturate(200%) !important;
+    -webkit-backdrop-filter: blur(30px) saturate(200%) !important;
+    border: 1px solid rgba(255,255,255,.32) !important;
+    box-shadow: var(--liquid-shine) !important;
+  }
+  .widget.has-bg {
+    background-size: cover !important;
+    background-position: center !important;
+  }
+  .widget.has-bg::before {
+    content:''; position:absolute; inset:0; border-radius:inherit;
+    background: inherit; opacity: 1; z-index:0; pointer-events:none;
+  }
+  .widget.has-bg > * { position: relative; z-index: 1; }
+  /* chat glass with adjustable alpha */
+  #page-chat .msg-list.glass-mode .bubble-row.me .b-text,
+  #page-chat .msg-list.liquid-mode .bubble-row.me .b-text {
+    background: color-mix(in srgb, var(--bubble-me, #0a84ff) calc(var(--chat-glass-alpha) * 100%), transparent) !important;
+    backdrop-filter: blur(18px) saturate(170%) !important;
+    -webkit-backdrop-filter: blur(18px) saturate(170%) !important;
+  }
+  #page-chat .msg-list.glass-mode .bubble-row.him .b-text,
+  #page-chat .msg-list.liquid-mode .bubble-row.him .b-text {
+    background: color-mix(in srgb, var(--bubble-him, #2c2c2e) calc(var(--chat-glass-alpha) * 100%), transparent) !important;
+    backdrop-filter: blur(18px) saturate(170%) !important;
+    -webkit-backdrop-filter: blur(18px) saturate(170%) !important;
+  }
+  #page-chat .msg-list.liquid-mode .bubble-row .b-text {
+    box-shadow: var(--liquid-shine) !important;
+    border: 1px solid rgba(255,255,255,.28) !important;
+  }
+
 </style>
 </head>
 <body data-theme="dark">
@@ -1376,6 +1472,8 @@
             <button type="button" id="theme-fx-glass" onclick="setChatFx('glass')">毛玻璃</button>
             <button type="button" id="theme-fx-liquid" onclick="setChatFx('liquid')">液态玻璃</button>
           </div>
+          <label>毛玻璃/液态透明度 <span id="edit-glass-alpha-val">72%</span></label>
+          <input type="range" id="edit-glass-alpha" min="20" max="95" value="72" style="width:100%;margin:6px 0 10px;" oninput="$('edit-glass-alpha-val').textContent=this.value+'%';">
           <label>我的气泡颜色</label>
           <input type="color" id="edit-bubble-me" value="#0a84ff" style="width:100%;height:40px;border:none;border-radius:10px;background:transparent;margin-bottom:8px;">
           <label>对方气泡颜色</label>
@@ -1644,8 +1742,10 @@
           </div>
           <div class="wb-switch" style="margin:6px 0;"><span>应用到桌面与图标</span><input type="checkbox" id="fx-scope-desk" checked></div>
           <div class="wb-switch" style="margin:6px 0;"><span>整体（所有软件内界面）</span><input type="checkbox" id="fx-scope-global"></div>
-          <button class="btn btn-primary" style="width:100%;margin-top:8px;" onclick="applyBeautifyFx()">应用效果</button>
-          <div style="font-size:11px;color:var(--muted);margin-top:8px;line-height:1.4;">可只开桌面，也可勾选整体让所有软件卡片/导航一起变。</div>
+          <label style="display:block;font-size:12px;color:var(--muted);margin:10px 0 4px;">整体透明度 <span id="fx-global-alpha-val">55%</span></label>
+          <input type="range" id="fx-global-alpha" min="15" max="90" value="55" style="width:100%;" oninput="$('fx-global-alpha-val').textContent=this.value+'%';">
+          <button class="btn btn-primary" style="width:100%;margin-top:10px;" onclick="applyBeautifyFx()">应用效果</button>
+          <div style="font-size:11px;color:var(--muted);margin-top:8px;line-height:1.4;">毛玻璃/液态玻璃会真实作用在桌面与软件内。透明度可调。</div>
         </div>
         <div class="card" style="border-radius:16px;">
           <h4>图标预设</h4>
@@ -1929,7 +2029,7 @@
       <div class="nav" style="position:relative;">
         <button class="nav-back" onclick="goHome()">‹</button>
         <div class="nav-title">校园墙</div>
-        <button class="nav-right" onclick="toggleCampusSettings()">⚙</button>
+        <div style="width:44px"></div>
         <div class="cw-settings" id="campus-settings">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
             <div style="font-size:15px;font-weight:700;">校园墙设置</div>
@@ -1981,10 +2081,11 @@
         <div class="scroll" style="flex:1;padding:16px;" id="campus-post-detail"></div>
       </div>
       <div class="cw-bottom" id="campus-tabs">
-        <button class="on" onclick="setCampusTab('gossip',this)"><span>🔥</span>八卦</button>
-        <button onclick="setCampusTab('nsfw',this)"><span>💋</span>NSFW</button>
+        <button class="on" onclick="setCampusTab('gossip',this)"><span>◇</span>八卦</button>
+        <button onclick="setCampusTab('nsfw',this)"><span>◈</span>NSFW</button>
         <button onclick="setCampusTab('boys',this)"><span>♂</span>男生</button>
         <button onclick="setCampusTab('girls',this)"><span>♀</span>女生</button>
+        <button type="button" onclick="toggleCampusSettings()"><span>☰</span>设置</button>
       </div>
       <div class="msg-edit-bar" id="campus-edit-bar">
         <button class="btn btn-secondary" style="flex:1;" onclick="exitCampusEdit()">取消</button>
@@ -2282,6 +2383,16 @@ function loadAll() {
       if(Array.isArray(d.homeWidgets)) window._homeWidgets = d.homeWidgets;
       if(d.homeLayout) window._homeLayout = d.homeLayout;
       if(d.beautifyFx) window._beautifyFx = d.beautifyFx;
+      if(typeof d.chatGlassOpacity === 'number') window._chatGlassOpacity = d.chatGlassOpacity;
+      if(typeof d.globalGlassOpacity === 'number') window._globalGlassOpacity = d.globalGlassOpacity;
+      if(Array.isArray(d.currentTasks)) currentTasks = d.currentTasks;
+      if(Array.isArray(d.guideMessages)) guideMessages = d.guideMessages;
+      if(d.guideMode) guideMode = d.guideMode;
+      if(d.forumTheme) forumTheme = d.forumTheme;
+      if(d.forumWB!=null) forumWB = d.forumWB;
+      if(d.queryMode) queryMode = d.queryMode;
+      if(d.campusTab) campusTab = d.campusTab;
+      if(typeof d.homePageIndex === 'number') homePageIndex = d.homePageIndex;
       if(Array.isArray(d.evalFavorites)) evalFavorites = d.evalFavorites;
       if(d.mediaSkin) mediaSkin = Object.assign(mediaSkin, d.mediaSkin);
       if(Array.isArray(d.forumPosts)) forumPosts = d.forumPosts;
@@ -2361,7 +2472,16 @@ function saveAll() {
     offlineArchives,worldBooks,apiProfiles,currentProfileId,
     conversations,contacts,pendingRequests, meProfile, memorySources,
     offlineWordCount, diaryWordCount, rulesWordCount, trainWordCount, doneTaskKeys, appIcons, evalFavorites, mediaSkin, forumPosts, liveBg, liveHistory, auctionParts, albumShots, auctionLots, heatCycleStart: window._heatCycleStart,
-    beautyPresets, currentBeautyPreset, campusData, campusWB, campusTheme, queryResults, queryWB
+    beautyPresets, currentBeautyPreset, campusData, campusWB, campusTheme, queryResults, queryWB,
+    currentTasks: currentTasks||[],
+    homeWidgets: window._homeWidgets||[],
+    homeLayout: window._homeLayout||null,
+    beautifyFx: window._beautifyFx||null,
+    chatGlassOpacity: window._chatGlassOpacity ?? 0.72,
+    globalGlassOpacity: window._globalGlassOpacity ?? 0.55,
+    guideMode, guideMessages: guideMessages||[],
+    forumTab, forumTheme, forumWB, queryMode, campusTab, homePageIndex, albumView, aucTab,
+    uiTheme
   }));
   // 同步头像给旧逻辑兼容
   if(meProfile.avatarImg) localStorage.setItem('myAvatar', meProfile.avatarImg);
@@ -2758,8 +2878,11 @@ async function callAI(system, user, maxTokens=3000, linkedWB=[]) {
   const p = getActiveProfile();
   if(!p.url || !p.key) return '【未配置API】请先去「设置」填好 API 地址和 Key，然后点保存。';
 
+  // 每次生成前强制读取世界书常驻条目
   const wb = getWorldBookPrompt(linkedWB, user);
-  const fullSystem = (wb || '') + (p.style || '') + '\n\n' + system;
+  const constantOnly = (worldBooks||[]).filter(w=>w && w.enabled && (w.constant||w.global)).map(w=>`【${w.name}】\n${w.content||''}`).join('\n\n');
+  const wbBlock = wb || (constantOnly ? ('【世界书·常驻条目】\n'+constantOnly+'\n\n') : '');
+  const fullSystem = (wbBlock || '') + (p.style || '') + '\n\n' + system;
 
   // 规范化地址
   let apiUrl = (p.url || '').trim();
@@ -2883,6 +3006,9 @@ function renderMessages(){
   const fx = c.chatFx || 'normal';
   list.classList.toggle('glass-mode', fx==='glass');
   list.classList.toggle('liquid-mode', fx==='liquid');
+  const gAlpha = (typeof c.glassOpacity === 'number') ? c.glassOpacity : (window._chatGlassOpacity ?? 0.72);
+  list.style.setProperty('--chat-glass-alpha', String(gAlpha));
+  document.documentElement.style.setProperty('--chat-glass-alpha', String(gAlpha));
   if(c.bubbleMe) {
     list.style.setProperty('--bubble-me', c.bubbleMe);
     // auto text contrast: bright bg -> dark text
@@ -3326,6 +3452,9 @@ function openEditChar() {
   chatFxTemp = c.chatFx || 'normal';
   setChatFx(chatFxTemp);
   if($('edit-bubble-me')) $('edit-bubble-me').value = c.bubbleMe || '#0a84ff';
+  const ga = Math.round(((typeof c.glassOpacity==='number'?c.glassOpacity:window._chatGlassOpacity)||0.72)*100);
+  if($('edit-glass-alpha')) $('edit-glass-alpha').value = ga;
+  if($('edit-glass-alpha-val')) $('edit-glass-alpha-val').textContent = ga+'%';
   if($('edit-bubble-him')) $('edit-bubble-him').value = c.bubbleHim || '#2c2c2e';
   openApp('edit');
 }
@@ -3509,6 +3638,8 @@ function saveCharEdit() {
   c.linkedWB = $('edit-wb').value.trim();
   c.memDepth = parseInt($('edit-mem-depth')?.value,10) || 10;
   c.chatFx = chatFxTemp || 'normal';
+  const gaIn = parseInt($('edit-glass-alpha')?.value,10);
+  if(!isNaN(gaIn)){ c.glassOpacity = gaIn/100; window._chatGlassOpacity = c.glassOpacity; }
   c.bubbleMe = $('edit-bubble-me')?.value || '';
   c.bubbleHim = $('edit-bubble-him')?.value || '';
   const ct = contacts.find(x=>x.id===currentChatId);
@@ -5328,10 +5459,15 @@ function setCampusTab(tab, btn){
   campusTab = tab;
   window._campusSub = null;
   window._campusPostId = null;
-  document.querySelectorAll('#campus-tabs button').forEach(b=>b.classList.remove('on'));
+  document.querySelectorAll('#campus-tabs button').forEach(b=>{
+    // 设置按钮不参与 tab 高亮
+    if((b.getAttribute('onclick')||'').includes('toggleCampusSettings')) return;
+    b.classList.remove('on');
+  });
   if(btn) btn.classList.add('on');
   closeCampusSubview();
   closeCampusPost();
+  const el=$('campus-settings'); if(el) el.classList.remove('show');
   renderCampus();
 }
 function editCampusWB(){
@@ -5657,10 +5793,30 @@ function doImport(e){
       if(Array.isArray(d.homeWidgets)) window._homeWidgets = d.homeWidgets;
       if(d.homeLayout) window._homeLayout = d.homeLayout;
       if(d.beautifyFx) window._beautifyFx = d.beautifyFx;
+      if(typeof d.chatGlassOpacity === 'number') window._chatGlassOpacity = d.chatGlassOpacity;
+      if(typeof d.globalGlassOpacity === 'number') window._globalGlassOpacity = d.globalGlassOpacity;
+      if(Array.isArray(d.currentTasks)) currentTasks = d.currentTasks;
+      if(Array.isArray(d.guideMessages)) guideMessages = d.guideMessages;
+      if(d.guideMode) guideMode = d.guideMode;
+      if(d.forumTheme) forumTheme = d.forumTheme;
+      if(d.forumWB!=null) forumWB = d.forumWB;
+      if(d.queryMode) queryMode = d.queryMode;
+      if(d.campusTab) campusTab = d.campusTab;
+      if(typeof d.homePageIndex === 'number') homePageIndex = d.homePageIndex;
       if(Array.isArray(d.evalFavorites)) evalFavorites = d.evalFavorites;
       if(Array.isArray(d.homeWidgets)) window._homeWidgets = d.homeWidgets;
       if(d.homeLayout) window._homeLayout = d.homeLayout;
       if(d.beautifyFx) window._beautifyFx = d.beautifyFx;
+      if(typeof d.chatGlassOpacity === 'number') window._chatGlassOpacity = d.chatGlassOpacity;
+      if(typeof d.globalGlassOpacity === 'number') window._globalGlassOpacity = d.globalGlassOpacity;
+      if(Array.isArray(d.currentTasks)) currentTasks = d.currentTasks;
+      if(Array.isArray(d.guideMessages)) guideMessages = d.guideMessages;
+      if(d.guideMode) guideMode = d.guideMode;
+      if(d.forumTheme) forumTheme = d.forumTheme;
+      if(d.forumWB!=null) forumWB = d.forumWB;
+      if(d.queryMode) queryMode = d.queryMode;
+      if(d.campusTab) campusTab = d.campusTab;
+      if(typeof d.homePageIndex === 'number') homePageIndex = d.homePageIndex;
       if(d.forumTheme) forumTheme = d.forumTheme;
       if(d.forumWB!=null) forumWB = d.forumWB;
       if(Array.isArray(d.guideMessages)) guideMessages = d.guideMessages;
@@ -5851,8 +6007,9 @@ function defaultWidgetFields(kind, style){
     return {
       title: 'Just Like That',
       sub: '· in the moment°+♡',
-      cover: '🎵',
-      badge: '♡'
+      cover: '',
+      badge: '',
+      bg: ''
     };
   }
   if(kind==='cute' || style==='cute'){
@@ -5911,7 +6068,8 @@ function widgetHTML(w){
         <span class="wt-pill" data-fk="tag4">${esc(f.tag4)}</span>
       </div>`;
   } else if(style==='music'){
-    inner = `<div class="wm-cover">${avatarOrEmoji(f.cover)}</div>
+    const coverInner = f.cover ? avatarOrEmoji(f.cover) : '';
+    inner = `<div class="wm-cover">${coverInner}</div>
       <div class="wm-info">
         <div class="wm-title" data-fk="title">${esc(f.title)}</div>
         <div class="wm-sub" data-fk="sub">${esc(f.sub)}</div>
@@ -5927,7 +6085,12 @@ function widgetHTML(w){
     const big = (f.clockStyle==='big') ? ' big' : '';
     inner = `<div class="wc-time">${esc(t)}</div>
       ${(f.showDate!=='0')?`<div class="wc-date">${esc(d)}</div>`:''}`;
-    return `<div class="widget ${sizeCls}${big}" data-style="clock" data-wid="${w.id}" data-kind="clock" data-size="${w.size||'sm'}" onclick="onWidgetTap('${w.id}')">${inner}${editHint}</div>`;
+    const mat = w.material || 'normal';
+    const matCls = mat==='glass' ? ' mat-glass' : mat==='liquid' ? ' mat-liquid' : '';
+    const bg = w.bg || f.bg || '';
+    const bgCls = bg ? ' has-bg' : '';
+    const bgStyle = bg ? ` background-image:url(${bg});` : '';
+    return `<div class="widget ${sizeCls}${big}${matCls}${bgCls}" data-style="clock" data-wid="${w.id}" data-kind="clock" data-size="${w.size||'sm'}" style="${bgStyle}" onclick="onWidgetTap('${w.id}')">${inner}${editHint}</div>`;
   } else {
     // status / heat / quote glass cards
     let title=f.title, body=f.body, sub=f.sub;
@@ -5941,7 +6104,12 @@ function widgetHTML(w){
       <div class="w-sub" data-fk="sub">${esc(sub||'')}</div>`;
   }
 
-  return `<div class="widget ${sizeCls}" data-style="${style}" data-wid="${w.id}" data-kind="${w.kind}" data-size="${w.size||'sm'}" onclick="onWidgetTap('${w.id}')">${inner}${editHint}</div>`;
+  const mat = w.material || 'normal';
+  const matCls = mat==='glass' ? ' mat-glass' : mat==='liquid' ? ' mat-liquid' : '';
+  const bg = w.bg || f.bg || '';
+  const bgCls = bg ? ' has-bg' : '';
+  const bgStyle = bg ? ` background-image:url(${bg});` : '';
+  return `<div class="widget ${sizeCls}${matCls}${bgCls}" data-style="${style}" data-wid="${w.id}" data-kind="${w.kind}" data-size="${w.size||'sm'}" style="${bgStyle}" onclick="onWidgetTap('${w.id}')">${inner}${editHint}</div>`;
 }
 function esc(v){ return escapeHtml(String(v??'')); }
 function avatarOrEmoji(v){
@@ -5988,15 +6156,27 @@ function openWidgetEdit(id){
     return `<label style="display:block;font-size:12px;color:var(--muted);margin:10px 0 4px;">${fieldLabel(k)}</label>
       <input data-field="${k}" value="${esc(f[k])}" style="width:100%;background:var(--input);border:none;border-radius:10px;padding:10px;color:var(--text);font-size:15px;">`;
   }).join('') + `
-    <label style="display:block;font-size:12px;color:var(--muted);margin:12px 0 4px;">样式</label>
+    <label style="display:block;font-size:12px;color:var(--muted);margin:12px 0 4px;">样式模板</label>
     <select data-field="__style" style="width:100%;background:var(--input);border:none;border-radius:10px;padding:10px;color:var(--text);">
       ${['diary','tags','music','cute','clock','glass'].map(s=>`<option value="${s}" ${(w.style||'')===s?'selected':''}>${styleLabel(s)}</option>`).join('')}
+    </select>
+    <label style="display:block;font-size:12px;color:var(--muted);margin:12px 0 4px;">材质</label>
+    <select data-field="__material" style="width:100%;background:var(--input);border:none;border-radius:10px;padding:10px;color:var(--text);">
+      <option value="normal" ${(w.material||'normal')==='normal'?'selected':''}>普通</option>
+      <option value="glass" ${w.material==='glass'?'selected':''}>毛玻璃</option>
+      <option value="liquid" ${w.material==='liquid'?'selected':''}>液态玻璃</option>
     </select>
     <label style="display:block;font-size:12px;color:var(--muted);margin:12px 0 4px;">尺寸</label>
     <select data-field="__size" style="width:100%;background:var(--input);border:none;border-radius:10px;padding:10px;color:var(--text);">
       <option value="sm" ${w.size!=='md'?'selected':''}>小（半宽）</option>
       <option value="md" ${w.size==='md'?'selected':''}>中（全宽）</option>
-    </select>`;
+    </select>
+    <label style="display:block;font-size:12px;color:var(--muted);margin:12px 0 4px;">背景图（链接或本地）</label>
+    <input data-field="__bg" value="${esc(w.bg||f.bg||'')}" placeholder="http(s):// 或先点下方上传" style="width:100%;background:var(--input);border:none;border-radius:10px;padding:10px;color:var(--text);font-size:14px;">
+    <div style="display:flex;gap:8px;margin-top:8px;">
+      <button type="button" class="btn btn-secondary" style="flex:1;" onclick="uploadWidgetBg()">上传背景</button>
+      <button type="button" class="btn btn-secondary" style="flex:1;" onclick="clearWidgetBg()">清除背景</button>
+    </div>`;
   $('widget-edit-sheet')?.classList.add('show');
 }
 function fieldLabel(k){
@@ -6006,6 +6186,28 @@ function fieldLabel(k){
 }
 function styleLabel(s){
   return ({diary:'日记卡片',tags:'标签环绕',music:'音乐卡片',cute:'可爱头像',clock:'时间日期',glass:'毛玻璃卡片'})[s]||s;
+}
+function uploadWidgetBg(){
+  const input=document.createElement('input'); input.type='file'; input.accept='image/*';
+  input.onchange=async e=>{
+    const file=e.target.files?.[0]; if(!file) return;
+    try{
+      const data = await compressImage(file, 1200, 0.75);
+      const inp = document.querySelector('#widget-edit-fields [data-field="__bg"]');
+      if(inp) inp.value = data;
+      const id = window._editingWidgetId;
+      const w = (window._homeWidgets||[]).find(x=>x.id===id);
+      if(w){ w.bg = data; }
+    }catch(err){ alert('上传失败'); }
+  };
+  input.click();
+}
+function clearWidgetBg(){
+  const inp = document.querySelector('#widget-edit-fields [data-field="__bg"]');
+  if(inp) inp.value = '';
+  const id = window._editingWidgetId;
+  const w = (window._homeWidgets||[]).find(x=>x.id===id);
+  if(w){ w.bg = ''; if(w.fields) w.fields.bg=''; }
 }
 function closeWidgetEdit(){
   $('widget-edit-sheet')?.classList.remove('show');
@@ -6021,6 +6223,8 @@ function saveWidgetEdit(){
     const k = el.getAttribute('data-field');
     if(k==='__style'){ w.style = el.value; return; }
     if(k==='__size'){ w.size = el.value; return; }
+    if(k==='__material'){ w.material = el.value; return; }
+    if(k==='__bg'){ w.bg = el.value; fields.bg = el.value; return; }
     if(el.type==='checkbox'){ fields[k] = el.checked ? '1' : '0'; return; }
     fields[k] = el.value;
   });
@@ -6128,6 +6332,8 @@ function applyBeautifyFx(){
   window._beautifyFx.mode = document.querySelector('#fx-mode-seg button.active')?.getAttribute('data-fx') || window._beautifyFx.mode || 'normal';
   window._beautifyFx.desk = !!$('fx-scope-desk')?.checked;
   window._beautifyFx.global = !!$('fx-scope-global')?.checked;
+  const ga = parseInt($('fx-global-alpha')?.value, 10);
+  if(!isNaN(ga)) window._globalGlassOpacity = ga / 100;
   applyDeskFx();
   applyGlobalFx();
   saveAll();
@@ -6147,6 +6353,8 @@ function applyDeskFx(){
   const home = $('home'); if(!home) return;
   home.classList.remove('desk-fx-glass','desk-fx-liquid','desk-fx-normal');
   const fx = window._beautifyFx || {};
+  const alpha = window._globalGlassOpacity ?? 0.55;
+  document.documentElement.style.setProperty('--global-glass-alpha', String(alpha));
   if(fx.desk === false) return;
   const mode = fx.mode || 'normal';
   home.classList.add('desk-fx-'+mode);
@@ -6154,6 +6362,8 @@ function applyDeskFx(){
 function applyGlobalFx(){
   document.body.classList.remove('global-fx-glass','global-fx-liquid','global-fx-normal');
   const fx = window._beautifyFx || {};
+  const alpha = window._globalGlassOpacity ?? 0.55;
+  document.documentElement.style.setProperty('--global-glass-alpha', String(alpha));
   if(!fx.global) return;
   document.body.classList.add('global-fx-'+(fx.mode||'normal'));
 }
@@ -6162,6 +6372,9 @@ function syncBeautifyFxUI(){
   setBeautifyFx(fx.mode||'normal');
   if($('fx-scope-desk')) $('fx-scope-desk').checked = fx.desk !== false;
   if($('fx-scope-global')) $('fx-scope-global').checked = !!fx.global;
+  const ga = Math.round((window._globalGlassOpacity ?? 0.55) * 100);
+  if($('fx-global-alpha')) $('fx-global-alpha').value = ga;
+  if($('fx-global-alpha-val')) $('fx-global-alpha-val').textContent = ga + '%';
 }
 
 
