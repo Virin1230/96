@@ -849,16 +849,16 @@
     background-image: radial-gradient(rgba(255,255,255,.04) 1px, transparent 1px);
   }
   #page-chat .bubble-row.me .b-text {
-    background: var(--bubble-me, #0a84ff); color: #fff; border-radius: 18px 18px 6px 18px;
+    background: #d4d0d8 !important; color: #1c1c1e !important; border-radius: 18px 18px 6px 18px;
   }
-  [data-theme="light"] #page-chat .bubble-row.me .b-text {
-    background: var(--bubble-me, #007aff); color: #fff;
+  [data-theme="dark"] #page-chat .bubble-row.me .b-text {
+    background: #3a3540 !important; color: #f5f5f7 !important;
   }
   #page-chat .bubble-row.him .b-text {
-    background: var(--bubble-him, #2c2c2e); color: var(--text); border-radius: 18px 18px 18px 6px;
+    background: #ece8ee !important; color: #1c1c1e !important; border-radius: 18px 18px 18px 6px;
   }
-  [data-theme="light"] #page-chat .bubble-row.him .b-text {
-    background: var(--bubble-him, #e9e9eb); color: var(--text);
+  [data-theme="dark"] #page-chat .bubble-row.him .b-text {
+    background: #2c2c2e !important; color: #f5f5f7 !important;
   }
   #page-chat .input-bar {
     background: rgba(255,255,255,.95); border-top: .5px solid rgba(0,0,0,.06);
@@ -969,88 +969,6 @@
   .heat-top-row { display: flex; gap: 8px; margin-bottom: 12px; }
   .heat-top-row .btn { flex: 1; }
 
-
-  /* smoother interactions — Apple / Emil style */
-  .app, .btn, .nav-back, .nav-right, .opt, .story-opt-btn, .cw-post, .forum-card, .card {
-    transition: transform 120ms ease-out, opacity 120ms ease-out, background 150ms ease-out;
-  }
-  .app:active, .btn:active, .nav-back:active, .nav-right:active {
-    transform: scale(0.96);
-  }
-  .page {
-    transition: opacity 180ms ease-out, transform 220ms cubic-bezier(.22,.61,.36,1);
-  }
-  .page.show { animation: pageIn 220ms ease-out; }
-  @keyframes pageIn {
-    from { opacity: 0.85; transform: translateY(6px); }
-    to { opacity: 1; transform: none; }
-  }
-
-  /* home edit mode */
-  .home-wrap.editing .app { animation: jiggle 0.28s ease-in-out infinite alternate; }
-  .home-wrap.editing .app:nth-child(odd) { animation-delay: 0.05s; }
-  .home-wrap.editing .app:nth-child(3n) { animation-delay: 0.1s; }
-  @keyframes jiggle {
-    from { transform: rotate(-1.2deg); }
-    to { transform: rotate(1.2deg); }
-  }
-  .home-wrap.editing .app.dragging {
-    animation: none; opacity: 0.92; transform: scale(1.08);
-    z-index: 50; box-shadow: 0 12px 40px rgba(0,0,0,.45);
-  }
-  .home-edit-bar {
-    display: none; position: absolute; top: 48px; left: 12px; right: 12px; z-index: 40;
-    background: rgba(30,30,32,.72); backdrop-filter: blur(24px) saturate(180%);
-    -webkit-backdrop-filter: blur(24px) saturate(180%);
-    border: .5px solid rgba(255,255,255,.14); border-radius: 16px;
-    padding: 10px 12px; align-items: center; justify-content: space-between; gap: 8px;
-  }
-  .home-wrap.editing .home-edit-bar { display: flex; }
-  .home-edit-bar button {
-    border: 0; background: rgba(255,255,255,.12); color: #fff;
-    padding: 8px 12px; border-radius: 12px; font-size: 13px; font-weight: 600; cursor: pointer;
-  }
-  .home-edit-bar button.done { background: var(--blue); }
-  .widget {
-    grid-column: span 2; min-height: 72px; border-radius: 20px; padding: 12px 14px;
-    background: rgba(255,255,255,.12); backdrop-filter: blur(28px) saturate(160%);
-    -webkit-backdrop-filter: blur(28px) saturate(160%);
-    border: .5px solid rgba(255,255,255,.18);
-    box-shadow: 0 8px 28px rgba(0,0,0,.2);
-    color: #fff; display: flex; flex-direction: column; justify-content: space-between;
-    position: relative; overflow: hidden; cursor: pointer;
-  }
-  .widget.small { grid-column: span 2; min-height: 72px; }
-  .widget.medium { grid-column: span 4; min-height: 88px; }
-  .widget .w-title { font-size: 12px; opacity: .78; font-weight: 600; letter-spacing: .2px; }
-  .widget .w-body { font-size: 20px; font-weight: 600; letter-spacing: -.3px; line-height: 1.2; }
-  .widget .w-sub { font-size: 11px; opacity: .65; margin-top: 4px; }
-  .widget .w-del {
-    display: none; position: absolute; top: 6px; left: 6px; width: 22px; height: 22px;
-    border-radius: 50%; background: #ff453a; color: #fff; border: 0; font-size: 14px;
-    align-items: center; justify-content: center; cursor: pointer; line-height: 1;
-  }
-  .home-wrap.editing .widget .w-del { display: flex; }
-  .home-wrap.editing .widget { animation: jiggle 0.28s ease-in-out infinite alternate; }
-  .widget-picker {
-    display: none; position: absolute; inset: 0; z-index: 60;
-    background: rgba(0,0,0,.55); backdrop-filter: blur(8px);
-    padding: 60px 18px 40px; overflow-y: auto;
-  }
-  .widget-picker.show { display: block; }
-  .widget-picker .wp-card {
-    background: rgba(40,40,44,.92); border-radius: 18px; padding: 14px; margin-bottom: 10px;
-    border: .5px solid rgba(255,255,255,.12); color: #fff; cursor: pointer;
-  }
-  .widget-picker .wp-card:active { transform: scale(0.98); }
-  .app-del {
-    display: none; position: absolute; top: -4px; left: -4px; width: 20px; height: 20px;
-    border-radius: 50%; background: #ff453a; color: #fff; border: 0; font-size: 12px;
-    align-items: center; justify-content: center; z-index: 5; cursor: pointer;
-  }
-  .home-wrap.editing .app { position: relative; }
-  .home-wrap.editing .app .app-del { display: flex; }
-
 </style>
 </head>
 <body data-theme="dark">
@@ -1060,31 +978,17 @@
 
     <!-- 桌面 -->
     <div class="home-wrap show" id="home">
-      <div class="home-edit-bar" id="home-edit-bar">
-        <button type="button" onclick="openWidgetPicker()">＋ 小组件</button>
-        <button type="button" class="done" onclick="exitHomeEdit()">完成</button>
-      </div>
       <div class="home-top">
         <div class="time" id="clock">22:16</div>
         <div class="date" id="date">9月17日 周四</div>
       </div>
-      <div class="widget-picker" id="widget-picker">
-        <div style="color:#fff;font-size:17px;font-weight:700;margin-bottom:12px;">添加小组件</div>
-        <div class="wp-card" onclick="addHomeWidget('clock')"><div style="font-weight:600;">时钟</div><div style="font-size:12px;opacity:.7;margin-top:4px;">大号时间 · 简约毛玻璃</div></div>
-        <div class="wp-card" onclick="addHomeWidget('status')"><div style="font-weight:600;">今日状态</div><div style="font-size:12px;opacity:.7;margin-top:4px;">羞耻 / 服从速览</div></div>
-        <div class="wp-card" onclick="addHomeWidget('task')"><div style="font-weight:600;">线下任务</div><div style="font-size:12px;opacity:.7;margin-top:4px;">当前任务数</div></div>
-        <div class="wp-card" onclick="addHomeWidget('heat')"><div style="font-weight:600;">发情提醒</div><div style="font-size:12px;opacity:.7;margin-top:4px;">发情日历提醒</div></div>
-        <div class="wp-card" onclick="addHomeWidget('quote')"><div style="font-weight:600;">一句话</div><div style="font-size:12px;opacity:.7;margin-top:4px;">随机羞辱短句</div></div>
-        <button type="button" style="width:100%;margin-top:12px;padding:12px;border:0;border-radius:14px;background:rgba(255,255,255,.15);color:#fff;font-weight:600;" onclick="closeWidgetPicker()">取消</button>
-      </div>
       <div class="home-pages page1" id="home-pages">
         <div class="home-page" id="home-page-1">
-          <div class="apps" id="home-widgets-row" style="margin-bottom:8px;"></div>
-          <div class="apps" id="home-apps-1">
+          <div class="apps">
             <div class="app" onclick="openApp('messages')"><div class="app-icon" id="icon-messages" style="background:linear-gradient(180deg,#5ac8fa,#007aff);">💬</div><div class="app-name">消息</div></div>
             <div class="app" onclick="openApp('contacts')"><div class="app-icon" id="icon-contacts" style="background:linear-gradient(180deg,#ff9f0a,#ff375f);">👤</div><div class="app-name">通讯录</div></div>
             <div class="app" onclick="openApp('offline')"><div class="app-icon" id="icon-offline" style="background:linear-gradient(180deg,#ffd60a,#ff9f0a);">📍</div><div class="app-name">线下</div></div>
-            <div class="app" onclick="openApp('train')"><div class="app-icon" id="icon-train" style="background:linear-gradient(180deg,#ff6482,#ff2d55);">🔒</div><div class="app-name">汪</div></div>
+            <div class="app" onclick="openApp('train')"><div class="app-icon" id="icon-train" style="background:linear-gradient(180deg,#ff6482,#ff2d55);">🔒</div><div class="app-name">主人的母狗</div></div>
             <div class="app" onclick="openApp('worldbook')"><div class="app-icon" id="icon-worldbook" style="background:linear-gradient(180deg,#bf5af2,#5856d6);">📖</div><div class="app-name">世界书</div></div>
             <div class="app" onclick="openApp('diary')"><div class="app-icon" id="icon-diary" style="background:linear-gradient(180deg,#da8fff,#af52de);">📓</div><div class="app-name">日记</div></div>
             <div class="app" onclick="openApp('rules')"><div class="app-icon" id="icon-rules" style="background:linear-gradient(180deg,#30d158,#248a3d);">📋</div><div class="app-name">守则</div></div>
@@ -1096,8 +1000,10 @@
         </div>
         <div class="home-page" id="home-page-2">
           <div class="apps">
+            <div class="app" onclick="openApp('forum')"><div class="app-icon" id="icon-forum" style="background:linear-gradient(180deg,#ff375f,#ff9f0a);">🔥</div><div class="app-name">今夜可约</div></div>
             <div class="app" onclick="openApp('live')"><div class="app-icon" id="icon-live" style="background:linear-gradient(180deg,#ff453a,#ff2d55);">📡</div><div class="app-name">发骚直播</div></div>
             <div class="app" onclick="openApp('auction')"><div class="app-icon" id="icon-auction" style="background:linear-gradient(180deg,#ffd60a,#ff9f0a);">💰</div><div class="app-name">身体拍卖</div></div>
+            <div class="app" onclick="openApp('album')"><div class="app-icon" id="icon-album" style="background:linear-gradient(180deg,#bf5af2,#ff375f);">📷</div><div class="app-name">被操相册</div></div>
             <div class="app" onclick="openApp('heat')"><div class="app-icon" id="icon-heat" style="background:linear-gradient(180deg,#ff6482,#bf5af2);">📅</div><div class="app-name">发情日历</div></div>
             <div class="app" onclick="openApp('campus')"><div class="app-icon" id="icon-campus" style="background:linear-gradient(180deg,#64d2ff,#5e5ce6);">🏫</div><div class="app-name">校园墙</div></div>
             <div class="app" onclick="openApp('query')"><div class="app-icon" id="icon-query" style="background:linear-gradient(180deg,#8e8e93,#1c1c1e);">🔍</div><div class="app-name">查询</div></div>
@@ -1354,11 +1260,11 @@
       </div>
     </div>
 
-    <!-- 汪（原调教） -->
+    <!-- 主人的母狗（原调教） -->
     <div class="page" id="page-train">
       <div class="nav">
         <button class="nav-back" onclick="goHome()">‹ 桌面</button>
-        <div class="nav-title">汪</div>
+        <div class="nav-title">主人的母狗</div>
         <div style="display:flex;gap:2px;">
           <button class="nav-right" style="min-width:auto;padding:8px;" onclick="openApp('favs')" title="收藏">★</button>
           <button class="nav-right" style="min-width:auto;padding:8px;" onclick="toggleFeatureSettings('train')" title="设置">⚙</button>
@@ -1570,6 +1476,53 @@
 
 
     
+    <!-- 今夜可约（约炮论坛） -->
+    <div class="page forum-night" id="page-forum">
+      <div class="nav" style="background:rgba(18,12,18,.92);position:relative;">
+        <button class="nav-back" onclick="goHome()">‹</button>
+        <div class="nav-title">今夜可约</div>
+        <div style="display:flex;gap:4px;">
+          <button class="nav-right" style="min-width:auto;" onclick="toggleForumSettings()">⚙</button>
+          <button class="nav-right" style="min-width:auto;" onclick="newForumPost()">＋</button>
+        </div>
+        <div class="cw-settings" id="forum-settings">
+          <div style="font-size:13px;font-weight:600;margin-bottom:8px;">设置</div>
+          <div style="font-size:12px;color:var(--muted);margin-bottom:4px;">主题色</div>
+          <select id="forum-theme" onchange="setForumTheme(this.value)" style="width:100%;background:var(--input);border:none;border-radius:10px;padding:8px;color:var(--text);margin-bottom:10px;">
+            <option value="pink">粉红</option>
+            <option value="red">暗红</option>
+            <option value="purple">紫色</option>
+            <option value="blue">蓝色</option>
+          </select>
+          <button class="btn btn-secondary" style="width:100%;" onclick="editForumWB()">绑定世界书</button>
+        </div>
+      </div>
+      <div class="forum-ticker" id="forum-ticker">刚刚有人约成功 · 滨江区 · 女找男</div>
+      <div class="forum-tabs" id="forum-tabs">
+        <button class="forum-tab on" onclick="setForumTab('city',this)">同城约炮</button>
+        <button class="forum-tab" onclick="setForumTab('today',this)">今日可约</button>
+        <button class="forum-tab" onclick="setForumTab('diary',this)">约炮日记</button>
+        <button class="forum-tab" onclick="setForumTab('special',this)">特殊需求</button>
+        <button class="forum-tab" onclick="setForumTab('auth',this)">认证曝光</button>
+        <button class="forum-tab" onclick="setForumTab('plaza',this)">求约大厅</button>
+      </div>
+      <div style="padding:8px 10px;display:flex;gap:6px;background:#120e14;">
+        <button class="btn btn-secondary" style="flex:1;padding:7px;font-size:12px;border-radius:12px;" onclick="forumPartialRefresh('list')">刷新本区</button>
+        <button class="btn btn-secondary" style="flex:1;padding:7px;font-size:12px;border-radius:12px;" onclick="forumPartialRefresh('ticker')">刷新动态</button>
+        <button class="btn btn-secondary" style="flex:1;padding:7px;font-size:12px;border-radius:12px;" onclick="forumPartialRefresh('filters')">筛选</button>
+      </div>
+      <div class="scroll" style="padding:12px;background:#0c0a0e;" id="forum-list"></div>
+    </div>
+
+    <div class="page forum-night" id="page-forum-detail">
+      <div class="nav" style="background:rgba(18,12,18,.92);">
+        <button class="nav-back" onclick="openApp('forum')">‹ 返回</button>
+        <div class="nav-title">帖子详情</div>
+        <button class="nav-right" onclick="forumReply()">回复</button>
+      </div>
+      <div class="scroll" style="padding:12px;background:#0c0a0e;" id="forum-detail"></div>
+    </div>
+
     <!-- 公开发骚直播间 -->
     <div class="page" id="page-live">
       <div class="nav">
@@ -1647,6 +1600,39 @@
     <!-- 身体拍卖行 -->
     
     
+    <!-- 被操相册 · 苹果相册风格 -->
+    <div class="page" id="page-album">
+      <div class="nav">
+        <button class="nav-back" id="alb-back" onclick="albumNavBack()">‹</button>
+        <div class="nav-title" id="alb-title">相册</div>
+        <button class="nav-right" onclick="genAlbumShot()">＋</button>
+      </div>
+      <div class="scroll" style="padding:0 0 20px;" id="album-list"></div>
+      <div class="msg-edit-bar" id="album-edit-bar">
+        <button class="btn btn-secondary" style="flex:1;" onclick="exitAlbumEdit()">取消</button>
+        <button class="btn btn-danger" style="flex:1;" onclick="deleteAlbumSelected()">删除</button>
+      </div>
+      <div class="alb-detail-sheet" id="alb-detail">
+        <button onclick="closeAlbDetail()" style="position:absolute;top:44px;left:12px;border:0;background:none;color:#fff;font-size:17px;">关闭</button>
+        <div id="alb-detail-body" style="flex:1;overflow-y:auto;padding-top:20px;"></div>
+      </div>
+    </div>
+
+    <!-- 身体拍卖行 · 真实拍卖模拟 -->
+    <div class="page" id="page-auction">
+      <div class="nav">
+        <button class="nav-back" onclick="goHome()">‹ 桌面</button>
+        <div class="nav-title">身体拍卖行</div>
+        <button class="nav-right" onclick="refreshAuctionLots()">刷新拍品</button>
+      </div>
+      <div style="padding:8px 12px;background:var(--nav);border-bottom:.5px solid var(--border);display:flex;gap:8px;">
+        <button class="btn btn-secondary" style="flex:1;padding:8px;" onclick="setAucTab('live')">正在拍卖</button>
+        <button class="btn btn-secondary" style="flex:1;padding:8px;" onclick="setAucTab('upcoming')">即将开始</button>
+        <button class="btn btn-secondary" style="flex:1;padding:8px;" onclick="setAucTab('ended')">已结束</button>
+      </div>
+      <div class="scroll" style="padding:12px;" id="auction-list"></div>
+    </div>
+
     <!-- 发情日历 -->
     <div class="page" id="page-heat">
       <div class="nav">
@@ -1683,22 +1669,20 @@
         <button class="nav-back" onclick="goHome()">‹</button>
         <div class="nav-title">校园墙</div>
         <button class="nav-right" onclick="toggleCampusSettings()">⚙</button>
-        <div class="cw-settings" id="campus-settings" style="z-index:500;min-width:240px;padding:14px;">
-          <div style="font-size:14px;font-weight:700;margin-bottom:12px;">校园墙设置</div>
-          <div style="font-size:12px;color:var(--muted);margin-bottom:6px;">主题色</div>
-          <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;" id="campus-color-picks">
-            <button type="button" onclick="setCampusTheme('pink')" style="width:28px;height:28px;border-radius:50%;border:2px solid transparent;background:#ff2d55;cursor:pointer;" data-c="pink"></button>
-            <button type="button" onclick="setCampusTheme('blue')" style="width:28px;height:28px;border-radius:50%;border:2px solid transparent;background:#0a84ff;cursor:pointer;" data-c="blue"></button>
-            <button type="button" onclick="setCampusTheme('purple')" style="width:28px;height:28px;border-radius:50%;border:2px solid transparent;background:#bf5af2;cursor:pointer;" data-c="purple"></button>
-            <button type="button" onclick="setCampusTheme('green')" style="width:28px;height:28px;border-radius:50%;border:2px solid transparent;background:#30d158;cursor:pointer;" data-c="green"></button>
-            <button type="button" onclick="setCampusTheme('orange')" style="width:28px;height:28px;border-radius:50%;border:2px solid transparent;background:#ff9f0a;cursor:pointer;" data-c="orange"></button>
-          </div>
-          <div style="font-size:12px;color:var(--muted);margin-bottom:6px;">绑定世界书（逗号分隔）</div>
-          <input type="text" id="campus-wb-input" placeholder="全局规则,校园专属" style="width:100%;background:var(--input);border:none;border-radius:10px;padding:10px;color:var(--text);margin-bottom:12px;font-size:14px;">
-          <button class="btn btn-primary" style="width:100%;margin-bottom:8px;border-radius:12px;" onclick="saveCampusSettings()">保存设置</button>
-          <button class="btn btn-secondary" style="width:100%;margin-bottom:6px;border-radius:12px;" onclick="exportCampus()">导出本区数据</button>
-          <button class="btn btn-secondary" style="width:100%;margin-bottom:6px;border-radius:12px;" onclick="importCampus()">导入</button>
-          <button class="btn btn-danger" style="width:100%;border-radius:12px;" onclick="clearCampus()">清空校园墙</button>
+        <div class="cw-settings" id="campus-settings">
+          <div style="font-size:13px;font-weight:600;margin-bottom:8px;">设置</div>
+          <div style="font-size:12px;color:var(--muted);margin-bottom:4px;">主题色</div>
+          <select id="campus-theme" onchange="setCampusTheme(this.value)" style="width:100%;background:var(--input);border:none;border-radius:10px;padding:8px;color:var(--text);margin-bottom:10px;">
+            <option value="pink">粉红</option>
+            <option value="blue">蓝色</option>
+            <option value="purple">紫色</option>
+            <option value="green">绿色</option>
+            <option value="orange">橙色</option>
+          </select>
+          <button class="btn btn-secondary" style="width:100%;margin-bottom:6px;" onclick="editCampusWB()">绑定世界书</button>
+          <button class="btn btn-secondary" style="width:100%;margin-bottom:6px;" onclick="exportCampus()">导出</button>
+          <button class="btn btn-secondary" style="width:100%;margin-bottom:6px;" onclick="importCampus()">导入</button>
+          <button class="btn btn-danger" style="width:100%;" onclick="clearCampus()">清空</button>
         </div>
       </div>
       <div class="cw-search">
@@ -1849,7 +1833,6 @@ let offlineWordCount = 800;
 let diaryWordCount = 500;
 let rulesWordCount = 400;
 let trainWordCount = 400;
-let homeWidgets = []; // desktop widgets
 let bodyData = {};
 let diaries = [];
 let ruleVersions = [];
@@ -2001,7 +1984,7 @@ function loadAll() {
       conversations=d.conversations||{}; contacts=d.contacts||[];
       pendingRequests=d.pendingRequests||[];
       if(d.memorySources) memorySources = Object.assign(memorySources, d.memorySources);
-      // 汪固定只读主人
+      // 主人的母狗固定只读主人
       memorySources.train = ['master'];
       if(typeof d.offlineWordCount === 'number') offlineWordCount = d.offlineWordCount;
       if(typeof d.diaryWordCount === 'number') diaryWordCount = d.diaryWordCount;
@@ -2022,11 +2005,6 @@ function loadAll() {
       if(d.campusWB) campusWB = d.campusWB;
       if(d.campusTheme) campusTheme = d.campusTheme;
       if(Array.isArray(d.queryResults)) queryResults = d.queryResults;
-      if(Array.isArray(d.homeWidgets)) homeWidgets = d.homeWidgets;
-      if(Array.isArray(d.currentTasks)) currentTasks = d.currentTasks;
-      if(d.liveWB) window._liveWB = d.liveWB;
-      if(d.storyWB) window._storyWB = d.storyWB;
-      if(d.storyBg) window._storyBg = d.storyBg;
       if(d.queryWB) queryWB = d.queryWB;
       if(Array.isArray(d.auctionLots)) auctionLots = d.auctionLots;
       if(d.heatCycleStart) window._heatCycleStart = d.heatCycleStart;
@@ -2093,16 +2071,11 @@ function saveAll() {
     offlineArchives,worldBooks,apiProfiles,currentProfileId,
     conversations,contacts,pendingRequests, meProfile, memorySources,
     offlineWordCount, diaryWordCount, rulesWordCount, trainWordCount, doneTaskKeys, appIcons, evalFavorites, mediaSkin, forumPosts, liveBg, liveHistory, auctionParts, albumShots, auctionLots, heatCycleStart: window._heatCycleStart,
-    beautyPresets, currentBeautyPreset, campusData, campusWB, campusTheme, queryResults, queryWB,
-    homeWidgets, currentTasks,
-    liveWB: window._liveWB||'', storyWB: window._storyWB||'', storyBg: window._storyBg||'',
-    guideMode: (typeof guideMode!=='undefined'?guideMode:'offline'),
-    uiTheme: document.documentElement.getAttribute('data-theme')||'dark'
+    beautyPresets, currentBeautyPreset, campusData, campusWB, campusTheme, queryResults, queryWB
   }));
   // 同步头像给旧逻辑兼容
   if(meProfile.avatarImg) localStorage.setItem('myAvatar', meProfile.avatarImg);
   else localStorage.removeItem('myAvatar');
-  try{ localStorage.setItem('homeHiddenApps', JSON.stringify(window._homeHiddenApps||[])); }catch(_){}
 }
 
 function updateClock() {
@@ -2117,7 +2090,6 @@ function goHome() {
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('show'));
   const h = $('home');
   if(h){ h.classList.add('show'); }
-  try{ renderHomeWidgets(); }catch(_){}
   // 直播强制模式不能退出
   if(window._liveForced && window._liveActive){
     openApp('live');
@@ -2125,8 +2097,6 @@ function goHome() {
   }
 }
 function openApp(name) {
-  if(name==='forum'||name==='album'){ alert('该功能已移除'); return; }
-  if(typeof homeEditMode!=='undefined' && homeEditMode) exitHomeEdit();
   const h=$('home'); if(h) h.classList.remove('show');
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('show'));
   const pg = $(`page-${name}`);
@@ -2626,14 +2596,6 @@ function renderMessages(){
   else list.style.removeProperty('--bubble-me');
   if(c.bubbleHim) list.style.setProperty('--bubble-him', c.bubbleHim);
   else list.style.removeProperty('--bubble-him');
-  // 同步到 page-chat 根，防止被主题样式覆盖
-  const pageChat = $('page-chat');
-  if(pageChat){
-    if(c.bubbleMe) pageChat.style.setProperty('--bubble-me', c.bubbleMe);
-    else pageChat.style.removeProperty('--bubble-me');
-    if(c.bubbleHim) pageChat.style.setProperty('--bubble-him', c.bubbleHim);
-    else pageChat.style.removeProperty('--bubble-him');
-  }
 
   (c.messages||[]).forEach((m,i)=>{
     const row=document.createElement('div'); row.className=`bubble-row ${m.who} ${m.type||''}`; row.dataset.index=i;
@@ -3447,24 +3409,31 @@ function deleteTask(i){
 async function refreshTasks(silent){
   const p = getActiveProfile();
   const prev = Array.isArray(currentTasks) ? currentTasks.slice() : [];
-  const existingTitles = prev.map(t => t.title||'').filter(Boolean);
+  if(!p.url||!p.key){
+    // 无API时用本地池，追加而不是清空
+    const pool=[...taskPool];
+    const add=[];
+    for(let i=0;i<3;i++) if(pool.length) add.push(pool.splice(Math.floor(Math.random()*pool.length),1)[0]);
+    currentTasks = add.concat(prev);
+    if(!silent) renderTasks();
+    return;
+  }
   if(!silent){
+    // 保留旧任务显示，只在顶部提示
     const tip = document.createElement('div');
     tip.id='task-refresh-tip'; tip.style.cssText='text-align:center;padding:12px;color:#888;font-size:13px;';
     tip.textContent='正在生成新任务…（旧任务保留）';
-    const box=$('task-container'); if(box){ const old=$('task-refresh-tip'); if(old) old.remove(); box.insertBefore(tip, box.firstChild); }
+    const box=$('task-container'); if(box) box.insertBefore(tip, box.firstChild);
   }
   try{
-    if(!p.url||!p.key) throw new Error('no api');
-    const avoid = existingTitles.length ? ('不要和这些已有任务重复：' + existingTitles.slice(0,12).join('、')) : '';
     const raw = await callAI(
-      '你是调教母狗的主人。请生成3个足够恶俗、下贱、羞辱、露出、物化的线下任务。每个任务必须包含title、desc、type、difficulty、reward字段。输出纯JSON数组，不要其他文字。任务要具体可执行，重口、变态、羞耻感拉满。每次生成必须是全新的、不一样的玩法与场景。' + avoid,
-      '生成3个全新的母狗线下任务，风格极致恶俗物化，与之前完全不同。随机种子：' + Date.now()
+      '你是调教母狗的主人。请生成3个足够恶俗、下贱、羞辱、露出、物化的线下任务。每个任务必须包含title、desc、type、difficulty、reward字段。输出纯JSON数组，不要其他文字。任务要具体可执行，重口、变态、羞耻感拉满。',
+      '生成3个新的母狗线下任务，风格要极致恶俗物化。'
     );
     let arr;
     try{
-      const mm = raw.match(/\[[\s\S]*\]/);
-      arr = mm ? JSON.parse(mm[0]) : null;
+      const m = raw.match(/\[[\s\S]*\]/);
+      arr = m ? JSON.parse(m[0]) : null;
     }catch(e){ arr=null; }
     let add=[];
     if(Array.isArray(arr) && arr.length){
@@ -3476,13 +3445,14 @@ async function refreshTasks(silent){
         reward: t.reward||'羞耻+'
       }));
     } else {
-      const pool=[...taskPool].sort(()=>Math.random()-0.5);
-      add = pool.slice(0,3);
+      const pool=[...taskPool];
+      for(let i=0;i<3;i++) if(pool.length) add.push(pool.splice(Math.floor(Math.random()*pool.length),1)[0]);
     }
     currentTasks = add.concat(prev);
   }catch(e){
-    const pool=[...taskPool].sort(()=>Math.random()-0.5);
-    currentTasks = pool.slice(0,3).concat(prev);
+    const pool=[...taskPool]; const add=[];
+    for(let i=0;i<3;i++) if(pool.length) add.push(pool.splice(Math.floor(Math.random()*pool.length),1)[0]);
+    currentTasks = add.concat(prev);
   }
   if(!silent) renderTasks();
 }
@@ -3966,10 +3936,10 @@ function renderBeautify(){
   refreshBeautifyPresetSel();
   const apps = [
     {id:'messages',name:'消息'},{id:'contacts',name:'通讯录'},{id:'offline',name:'线下'},
-    {id:'train',name:'汪'},{id:'worldbook',name:'世界书'},{id:'diary',name:'日记'},
+    {id:'train',name:'主人的母狗'},{id:'worldbook',name:'世界书'},{id:'diary',name:'日记'},
     {id:'rules',name:'守则'},{id:'me',name:'母狗'},{id:'guide',name:'小狗乖乖'},
-    {id:'live',name:'发骚直播'},{id:'auction',name:'身体拍卖'},
-    {id:'heat',name:'发情日历'},{id:'campus',name:'校园墙'},{id:'query',name:'查询'},
+    {id:'forum',name:'今夜可约'},{id:'live',name:'发骚直播'},{id:'auction',name:'身体拍卖'},
+    {id:'album',name:'被操相册'},{id:'heat',name:'发情日历'},{id:'campus',name:'校园墙'},{id:'query',name:'查询'},
     {id:'beautify',name:'美化'},{id:'settings',name:'设置'}
   ];
   const box = $('beautify-list'); if(!box) return;
@@ -4992,25 +4962,11 @@ async function heatForceReport(type){
 function toggleCampusSettings(){
   const el=$('campus-settings'); if(!el) return;
   el.classList.toggle('show');
-  if(el.classList.contains('show')){
-    if($('campus-wb-input')) $('campus-wb-input').value = campusWB || '';
-    setCampusTheme(campusTheme||'pink');
-  }
 }
 function setCampusTheme(t){
   campusTheme = t || 'pink';
   applyCampusTheme();
-  document.querySelectorAll('#campus-color-picks button').forEach(b=>{
-    b.style.borderColor = (b.dataset.c===campusTheme) ? '#fff' : 'transparent';
-    b.style.transform = (b.dataset.c===campusTheme) ? 'scale(1.15)' : 'scale(1)';
-  });
-}
-function saveCampusSettings(){
-  campusWB = ($('campus-wb-input')?.value || '').trim();
   saveAll();
-  applyCampusTheme();
-  alert('校园墙设置已保存');
-  $('campus-settings')?.classList.remove('show');
 }
 function applyCampusTheme(){
   const pg = $('page-campus'); if(!pg) return;
@@ -5263,48 +5219,24 @@ async function runQuery(){
 
 
 function exportData(){
-  // 全量备份：所有软件所有可修改数据
+  // 全量备份：API、聊天、世界书、任务、日记、论坛、美化、收藏等一切本地数据
   const data = {
-    version: 5,
+    version: 4,
     exportedAt: Date.now(),
-    // 核心状态
-    cor, shame, body, obey, mainFinished, bodyData,
-    // 消息 / 通讯录
-    conversations, contacts, pendingRequests, meProfile,
-    // 线下
-    currentTasks, offlineArchives, doneTaskKeys, offlineWordCount,
-    memorySources,
-    // 世界书
-    worldBooks,
-    // 日记 / 守则
-    diaries, diaryWordCount, ruleVersions, rulesWordCount,
-    // 汪（调教）
-    trainWordCount, evalFavorites,
-    // 小狗乖乖
-    guideMode, guideMessages: (typeof guideMessages!=='undefined'?guideMessages:[]),
-    // 美化
-    appIcons, mediaSkin, beautyPresets, currentBeautyPreset,
-    // 设置 / API
-    apiProfiles, currentProfileId, uiTheme,
+    cor, shame, body, obey, mainFinished,
+    bodyData, diaries, ruleVersions, offlineArchives, worldBooks,
+    apiProfiles, currentProfileId,
+    conversations, contacts, pendingRequests,
+    meProfile, memorySources,
+    offlineWordCount, diaryWordCount, rulesWordCount, trainWordCount,
+    doneTaskKeys, appIcons, evalFavorites, mediaSkin, forumPosts,
+    liveBg, liveHistory, auctionParts, albumShots, auctionLots,
+    heatCycleStart: window._heatCycleStart,
+    beautyPresets, currentBeautyPreset, campusData, campusWB, campusTheme, queryResults, queryWB,
+    uiTheme, guideMode,
     wallpaper: localStorage.getItem('wallpaper') || '',
     myAvatar: meProfile.avatarImg || '',
-    // 发骚直播
-    liveBg, liveHistory,
-    liveWB: window._liveWB || '',
-    // 身体拍卖
-    auctionParts, auctionLots,
-    // 发情日历
-    heatCycleStart: window._heatCycleStart,
-    // 校园墙
-    campusData, campusWB, campusTheme,
-    // 查询
-    queryResults, queryWB, queryMode: (typeof queryMode!=='undefined'?queryMode:'near'),
-    // 桌面小组件与布局
-    homeWidgets: (typeof homeWidgets!=='undefined'?homeWidgets:[]),
-    homeLayout: (typeof homeLayout!=='undefined'?homeLayout:null),
-    // 故事临时
-    storyWB: window._storyWB || '',
-    storyBg: window._storyBg || '',
+    currentTasks,
     extraLocal: {
       bitchPhoneV3: localStorage.getItem('bitchPhoneV3'),
       uiTheme: localStorage.getItem('uiTheme'),
@@ -5337,11 +5269,6 @@ function doImport(e){
       if(d.campusWB) campusWB = d.campusWB;
       if(d.campusTheme) campusTheme = d.campusTheme;
       if(Array.isArray(d.queryResults)) queryResults = d.queryResults;
-      if(Array.isArray(d.homeWidgets)) homeWidgets = d.homeWidgets;
-      if(Array.isArray(d.currentTasks)) currentTasks = d.currentTasks;
-      if(d.liveWB) window._liveWB = d.liveWB;
-      if(d.storyWB) window._storyWB = d.storyWB;
-      if(d.storyBg) window._storyBg = d.storyBg;
       if(d.queryWB) queryWB = d.queryWB;
       if(Array.isArray(d.auctionLots)) auctionLots = d.auctionLots;
       if(d.heatCycleStart) window._heatCycleStart = d.heatCycleStart;
@@ -5407,207 +5334,8 @@ function clearStoryBg(){
   saveAll();
 }
 
-
-// ========== 桌面编辑 / 小组件 ==========
-let homeEditMode = false;
-let homeWidgets = []; // {id, type, size}
-let _homeLongTimer = null;
-let _dragApp = null;
-
-function enterHomeEdit(){
-  homeEditMode = true;
-  $('home')?.classList.add('editing');
-  renderHomeWidgets();
-  // mark apps deletable (hide only from layout, not delete data)
-  document.querySelectorAll('#home-page-1 .app, #home-page-2 .app').forEach(app=>{
-    if(app.querySelector('.app-del')) return;
-    const btn = document.createElement('button');
-    btn.className = 'app-del';
-    btn.type = 'button';
-    btn.textContent = '−';
-    btn.onclick = (e)=>{
-      e.stopPropagation();
-      if(!confirm('从桌面移除这个图标？（应用数据不会删除）')) return;
-      app.style.display = 'none';
-      app.dataset.hidden = '1';
-      saveHomeLayout();
-    };
-    app.style.position = 'relative';
-    app.appendChild(btn);
-  });
-  initAppDrag();
-}
-function exitHomeEdit(){
-  homeEditMode = false;
-  $('home')?.classList.remove('editing');
-  closeWidgetPicker();
-  document.querySelectorAll('.app-del').forEach(el=>el.remove());
-  saveHomeLayout();
-  saveAll();
-}
-function openWidgetPicker(){ $('widget-picker')?.classList.add('show'); }
-function closeWidgetPicker(){ $('widget-picker')?.classList.remove('show'); }
-function addHomeWidget(type){
-  homeWidgets.push({ id: 'w'+Date.now(), type, size: type==='clock'||type==='quote' ? 'medium' : 'small' });
-  closeWidgetPicker();
-  renderHomeWidgets();
-  saveAll();
-}
-function removeHomeWidget(id){
-  homeWidgets = homeWidgets.filter(w=>w.id!==id);
-  renderHomeWidgets();
-  saveAll();
-}
-function renderHomeWidgets(){
-  const box = $('home-widgets-row'); if(!box) return;
-  if(!homeWidgets.length){ box.innerHTML=''; return; }
-  const quotes = ['今天也是被使用的一天','湿润待命','乖一点','报备身体','不许夹腿'];
-  box.innerHTML = homeWidgets.map(w=>{
-    let body='', sub='', title='';
-    if(w.type==='clock'){
-      title='时间'; body = ($('clock')?.textContent)||'--:--'; sub = ($('date')?.textContent)||'';
-    } else if(w.type==='status'){
-      title='今日状态'; body = '羞耻 '+(typeof shame!=='undefined'?shame:'—'); sub = '服从 '+(typeof obey!=='undefined'?obey:'—');
-    } else if(w.type==='task'){
-      title='线下'; body = (currentTasks?.length||0)+' 个任务'; sub = '点按进入';
-    } else if(w.type==='heat'){
-      title='发情日历'; body = '查看周期'; sub = '易受孕 / 求操日';
-    } else if(w.type==='quote'){
-      title=''; body = quotes[Math.floor(Math.random()*quotes.length)]; sub = '汪';
-    }
-    const openMap = {task:"openApp('offline')", heat:"openApp('heat')", status:"openApp('me')", clock:'', quote:''};
-    const click = homeEditMode ? '' : (openMap[w.type]||'');
-    return `<div class="widget ${w.size||'small'}" data-wid="${w.id}" ${click?`onclick="${click}"`:''}>
-      <button class="w-del" type="button" onclick="event.stopPropagation();removeHomeWidget('${w.id}')">−</button>
-      <div class="w-title">${title}</div>
-      <div class="w-body">${body}</div>
-      <div class="w-sub">${sub}</div>
-    </div>`;
-  }).join('');
-}
-function saveHomeLayout(){
-  const hidden = [];
-  document.querySelectorAll('#home .app[data-hidden="1"]').forEach(el=>{
-    const name = el.querySelector('.app-name')?.textContent || '';
-    if(name) hidden.push(name);
-  });
-  window._homeHiddenApps = hidden;
-  try{ localStorage.setItem('homeHiddenApps', JSON.stringify(hidden)); }catch(_){}
-}
-function restoreHomeLayout(){
-  try{
-    const hidden = JSON.parse(localStorage.getItem('homeHiddenApps')||'[]');
-    window._homeHiddenApps = hidden;
-    document.querySelectorAll('#home .app').forEach(el=>{
-      const name = el.querySelector('.app-name')?.textContent || '';
-      if(hidden.includes(name)){ el.style.display='none'; el.dataset.hidden='1'; }
-    });
-  }catch(_){}
-}
-function initAppDrag(){
-  const grids = [document.getElementById('home-apps-1'), document.querySelector('#home-page-2 .apps')].filter(Boolean);
-  grids.forEach(grid=>{
-    let dragging=null, placeholder=null, startIdx=-1;
-    grid.querySelectorAll('.app').forEach(app=>{
-      app.style.touchAction = 'none';
-      app.addEventListener('pointerdown', onDown);
-    });
-    function onDown(e){
-      if(!homeEditMode) return;
-      if(e.target.closest('.app-del')) return;
-      const app = e.currentTarget;
-      dragging = app;
-      startIdx = [...grid.children].indexOf(app);
-      app.classList.add('dragging');
-      app.setPointerCapture(e.pointerId);
-      const rect = app.getBoundingClientRect();
-      app.dataset.ox = e.clientX - rect.left;
-      app.dataset.oy = e.clientY - rect.top;
-      placeholder = document.createElement('div');
-      placeholder.style.cssText = 'width:60px;height:78px;opacity:0.3;';
-      app.addEventListener('pointermove', onMove);
-      app.addEventListener('pointerup', onUp);
-      app.addEventListener('pointercancel', onUp);
-    }
-    function onMove(e){
-      if(!dragging) return;
-      e.preventDefault();
-      dragging.style.position = 'fixed';
-      dragging.style.zIndex = '80';
-      dragging.style.left = (e.clientX - (parseFloat(dragging.dataset.ox)||30)) + 'px';
-      dragging.style.top = (e.clientY - (parseFloat(dragging.dataset.oy)||30)) + 'px';
-      dragging.style.pointerEvents = 'none';
-      const els = [...grid.querySelectorAll('.app:not(.dragging)')];
-      let target = null;
-      for(const el of els){
-        const r = el.getBoundingClientRect();
-        if(e.clientX > r.left && e.clientX < r.right && e.clientY > r.top && e.clientY < r.bottom){
-          target = el; break;
-        }
-      }
-      if(target && target !== dragging){
-        const all = [...grid.children];
-        const from = all.indexOf(dragging);
-        const to = all.indexOf(target);
-        if(from < to) grid.insertBefore(dragging, target.nextSibling);
-        else grid.insertBefore(dragging, target);
-      }
-    }
-    function onUp(e){
-      if(!dragging) return;
-      dragging.classList.remove('dragging');
-      dragging.style.position = '';
-      dragging.style.zIndex = '';
-      dragging.style.left = '';
-      dragging.style.top = '';
-      dragging.style.pointerEvents = '';
-      dragging.removeEventListener('pointermove', onMove);
-      dragging.removeEventListener('pointerup', onUp);
-      dragging.removeEventListener('pointercancel', onUp);
-      dragging = null;
-      saveHomeLayout();
-    }
-  });
-}
-
-// long press home to edit
-(function initHomeLongPress(){
-  let timer=null, startX=0, startY=0;
-  const home = () => $('home');
-  document.addEventListener('touchstart', e=>{
-    if(!home()?.classList.contains('show')) return;
-    if(homeEditMode) return;
-    if(!e.target.closest('#home')) return;
-    if(e.target.closest('.dock')) return;
-    startX = e.touches[0].clientX; startY = e.touches[0].clientY;
-    timer = setTimeout(()=>{
-      enterHomeEdit();
-      if(navigator.vibrate) try{ navigator.vibrate(12); }catch(_){}
-    }, 520);
-  }, {passive:true});
-  document.addEventListener('touchmove', e=>{
-    if(!timer) return;
-    const dx = Math.abs(e.touches[0].clientX - startX);
-    const dy = Math.abs(e.touches[0].clientY - startY);
-    if(dx>12 || dy>12){ clearTimeout(timer); timer=null; }
-  }, {passive:true});
-  document.addEventListener('touchend', ()=>{ if(timer){ clearTimeout(timer); timer=null; } });
-  document.addEventListener('touchcancel', ()=>{ if(timer){ clearTimeout(timer); timer=null; } });
-  // desktop mouse long press
-  document.addEventListener('mousedown', e=>{
-    if(!home()?.classList.contains('show')) return;
-    if(homeEditMode) return;
-    if(!e.target.closest('#home')) return;
-    if(e.target.closest('.dock')) return;
-    timer = setTimeout(()=>enterHomeEdit(), 520);
-  });
-  document.addEventListener('mouseup', ()=>{ if(timer){ clearTimeout(timer); timer=null; } });
-})();
-
-
 loadAll();
 try{ applyAppIcons(); }catch(_e){}
-try{ restoreHomeLayout(); renderHomeWidgets(); }catch(_e){}
 </script>
 </body>
 </html>
