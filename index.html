@@ -849,27 +849,25 @@
     background-image: radial-gradient(rgba(255,255,255,.04) 1px, transparent 1px);
   }
   #page-chat .bubble-row.me .b-text {
-    background: var(--bubble-me, #0a84ff) !important;
-    color: #fff !important;
-    border-radius: 18px 18px 6px 18px;
+    background: var(--bubble-me, #d4d0d8); color: #1c1c1e; border-radius: 18px 18px 6px 18px;
   }
-  [data-theme="light"] #page-chat .bubble-row.me .b-text {
-    background: var(--bubble-me, #007aff) !important;
-    color: #fff !important;
+  [data-theme="dark"] #page-chat .bubble-row.me .b-text {
+    background: var(--bubble-me, #3a3540); color: #f5f5f7;
   }
   #page-chat .bubble-row.him .b-text {
-    background: var(--bubble-him, #2c2c2e) !important;
-    color: var(--text) !important;
-    border-radius: 18px 18px 18px 6px;
+    background: var(--bubble-him, #ece8ee); color: #1c1c1e; border-radius: 18px 18px 18px 6px;
   }
-  [data-theme="light"] #page-chat .bubble-row.him .b-text {
-    background: var(--bubble-him, #e9e9eb) !important;
-    color: var(--text) !important;
+  [data-theme="dark"] #page-chat .bubble-row.him .b-text {
+    background: var(--bubble-him, #2c2c2e); color: #f5f5f7;
   }
-  /* 允许角色编辑页设置的气泡色立刻生效 */
-  #page-chat.msg-list, #page-chat .msg-list {
-    --bubble-me: var(--bubble-me);
-    --bubble-him: var(--bubble-him);
+  /* allow per-chat color override to win */
+  #page-chat .msg-list[style*="--bubble-me"] .bubble-row.me .b-text {
+    background: var(--bubble-me) !important;
+    color: var(--bubble-me-fg, #fff) !important;
+  }
+  #page-chat .msg-list[style*="--bubble-him"] .bubble-row.him .b-text {
+    background: var(--bubble-him) !important;
+    color: var(--bubble-him-fg, #1c1c1e) !important;
   }
   #page-chat .input-bar {
     background: rgba(255,255,255,.95); border-top: .5px solid rgba(0,0,0,.06);
@@ -925,11 +923,14 @@
   .cw-post .b { font-size: 14px; color: var(--muted); line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
   .cw-post .meta { font-size: 12px; color: var(--muted); margin-top: 8px; }
   .cw-settings {
-    display: none; position: absolute; right: 12px; top: 80px; z-index: 500;
-    background: var(--card); border-radius: 14px; border: .5px solid var(--border);
-    box-shadow: var(--shadow); padding: 12px; min-width: 200px;
+    display: none; position: absolute; right: 10px; left: 10px; top: 88px; z-index: 500;
+    background: var(--glass-bg, var(--card)); backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    border-radius: 18px; border: .5px solid var(--glass-border, var(--border));
+    box-shadow: var(--shadow); padding: 16px; max-height: 70%; overflow-y: auto;
   }
-  .cw-settings.show { display: block; }
+  .cw-settings.show { display: block; animation: sheetIn .22s cubic-bezier(.22,.61,.36,1); }
+  @keyframes sheetIn { from { opacity:0; transform: translateY(-8px) scale(.98); } to { opacity:1; transform:none; } }
 
   /* live redesign */
   .live-panel {
@@ -981,105 +982,57 @@
   .heat-top-row .btn { flex: 1; }
 
 
-  /* smoother interactions — Apple / Emil style */
-  .app, .btn, .nav-back, .nav-right, .opt, .story-opt-btn, .cw-post, .forum-card, .card {
-    transition: transform 120ms ease-out, opacity 120ms ease-out, background 150ms ease-out;
-  }
-  .app:active, .btn:active, .nav-back:active, .nav-right:active {
-    transform: scale(0.96);
-  }
-  .page {
-    transition: opacity 180ms ease-out, transform 220ms cubic-bezier(.22,.61,.36,1);
-  }
-  .page.show { animation: pageIn 220ms ease-out; }
-  @keyframes pageIn {
-    from { opacity: 0.85; transform: translateY(6px); }
-    to { opacity: 1; transform: none; }
-  }
-
-  /* home edit mode */
-  .home-wrap.editing .app { animation: jiggle 0.28s ease-in-out infinite alternate; }
-  .home-wrap.editing .app:nth-child(odd) { animation-delay: 0.05s; }
-  .home-wrap.editing .app:nth-child(3n) { animation-delay: 0.1s; }
+  /* home edit mode + widgets — apple-ish */
+  .home-wrap.edit-mode .app { animation: jiggle .28s ease-in-out infinite alternate; }
+  .home-wrap.edit-mode .app:nth-child(odd) { animation-delay: .05s; }
+  .home-wrap.edit-mode .app:nth-child(3n) { animation-delay: .1s; }
   @keyframes jiggle {
     from { transform: rotate(-1.2deg); }
     to { transform: rotate(1.2deg); }
   }
-  .home-wrap.editing .app.dragging {
-    animation: none; opacity: 0.92; transform: scale(1.08);
-    z-index: 50; box-shadow: 0 12px 40px rgba(0,0,0,.45);
-  }
-  .home-edit-bar {
-    display: none; position: absolute; top: 48px; left: 12px; right: 12px; z-index: 40;
-    background: rgba(30,30,32,.72); backdrop-filter: blur(24px) saturate(180%);
-    -webkit-backdrop-filter: blur(24px) saturate(180%);
-    border: .5px solid rgba(255,255,255,.14); border-radius: 16px;
-    padding: 10px 12px; align-items: center; justify-content: space-between; gap: 8px;
-  }
-  .home-wrap.editing .home-edit-bar { display: flex; }
-  .home-edit-bar button {
-    border: 0; background: rgba(255,255,255,.12); color: #fff;
-    padding: 8px 12px; border-radius: 12px; font-size: 13px; font-weight: 600; cursor: pointer;
-  }
-  .home-edit-bar button.done { background: var(--blue); }
-  .widget {
-    grid-column: span 2; min-height: 72px; border-radius: 20px; padding: 12px 14px;
-    background: rgba(255,255,255,.12); backdrop-filter: blur(28px) saturate(160%);
-    -webkit-backdrop-filter: blur(28px) saturate(160%);
-    border: .5px solid rgba(255,255,255,.18);
-    box-shadow: 0 8px 28px rgba(0,0,0,.2);
-    color: #fff; display: flex; flex-direction: column; justify-content: space-between;
-    position: relative; overflow: hidden; cursor: pointer;
-  }
-  .widget.small { grid-column: span 2; min-height: 72px; }
-  .widget.medium { grid-column: span 4; min-height: 88px; }
-  .widget .w-title { font-size: 12px; opacity: .78; font-weight: 600; letter-spacing: .2px; }
-  .widget .w-body { font-size: 20px; font-weight: 600; letter-spacing: -.3px; line-height: 1.2; }
-  .widget .w-sub { font-size: 11px; opacity: .65; margin-top: 4px; }
-  .widget .w-del {
-    display: none; position: absolute; top: 6px; left: 6px; width: 22px; height: 22px;
-    border-radius: 50%; background: #ff453a; color: #fff; border: 0; font-size: 14px;
-    align-items: center; justify-content: center; cursor: pointer; line-height: 1;
-  }
-  .home-wrap.editing .widget .w-del { display: flex; }
-  .home-wrap.editing .widget { animation: jiggle 0.28s ease-in-out infinite alternate; }
-  .widget-picker {
-    display: none; position: absolute; inset: 0; z-index: 60;
-    background: rgba(0,0,0,.55); backdrop-filter: blur(8px);
-    padding: 60px 18px 40px; overflow-y: auto;
-  }
-  .widget-picker.show { display: block; }
-  .widget-picker .wp-card {
-    background: rgba(40,40,44,.92); border-radius: 18px; padding: 14px; margin-bottom: 10px;
-    border: .5px solid rgba(255,255,255,.12); color: #fff; cursor: pointer;
-  }
-  .widget-picker .wp-card:active { transform: scale(0.98); }
+  .home-wrap.edit-mode .app.dragging { animation: none; opacity: .92; z-index: 50; transform: scale(1.08); }
+  .app { position: relative; transition: transform .2s cubic-bezier(.22,.61,.36,1); }
   .app-del {
-    display: none; position: absolute; top: -4px; left: -4px; width: 20px; height: 20px;
-    border-radius: 50%; background: #ff453a; color: #fff; border: 0; font-size: 12px;
-    align-items: center; justify-content: center; z-index: 5; cursor: pointer;
+    display: none; position: absolute; top: -6px; left: -6px; width: 22px; height: 22px;
+    border-radius: 50%; background: #3a3a3c; color: #fff; border: none;
+    font-size: 14px; line-height: 1; z-index: 3; cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0,0,0,.35);
   }
-  .home-wrap.editing .app { position: relative; }
-  .home-wrap.editing .app .app-del { display: flex; }
-
-
-  /* smoothness — apple-like motion */
-  .app, .btn, .opt, .forum-tab, .cw-bottom button, .nav-back, .nav-right {
-    transition: transform 160ms cubic-bezier(.22,.61,.36,1), opacity 160ms ease, background 160ms ease;
+  .home-wrap.edit-mode .app-del { display: flex; align-items: center; justify-content: center; }
+  .home-edit-bar {
+    display: none; position: absolute; left: 16px; right: 16px; bottom: 110px; z-index: 40;
+    background: rgba(30,30,32,.72); backdrop-filter: blur(28px) saturate(160%);
+    -webkit-backdrop-filter: blur(28px) saturate(160%);
+    border: 1px solid var(--glass-border); border-radius: 20px; padding: 10px 12px;
+    gap: 8px; align-items: center; justify-content: space-between;
   }
-  .app:active, .btn:active { transform: scale(0.96); }
-  .page {
-    transition: opacity 200ms ease-out, transform 240ms cubic-bezier(.22,.61,.36,1);
+  .home-wrap.edit-mode .home-edit-bar { display: flex; }
+  .home-edit-bar button {
+    border: 0; background: rgba(255,255,255,.12); color: #fff; border-radius: 12px;
+    padding: 8px 12px; font-size: 13px; font-weight: 600; cursor: pointer;
   }
-  .scroll { -webkit-overflow-scrolling: touch; overscroll-behavior: contain; }
-  .bubble-row { animation: bubbleIn 180ms ease-out; }
-  @keyframes bubbleIn {
-    from { opacity: 0; transform: translateY(6px) scale(0.98); }
-    to { opacity: 1; transform: none; }
+  .home-edit-bar button.primary { background: var(--blue); }
+  .widget {
+    grid-column: span 2; border-radius: 22px; padding: 14px 16px; min-height: 88px;
+    background: rgba(255,255,255,.14); backdrop-filter: blur(28px) saturate(160%);
+    -webkit-backdrop-filter: blur(28px) saturate(160%);
+    border: 1px solid rgba(255,255,255,.18); color: #fff;
+    box-shadow: 0 8px 28px rgba(0,0,0,.18); position: relative;
+    cursor: pointer; user-select: none;
   }
-  .card, .forum-card, .task-swipe-inner, .auc-lot {
-    transition: transform 180ms ease, box-shadow 180ms ease;
+  [data-theme="light"] .widget {
+    background: rgba(255,255,255,.55); color: #1c1c1e; border-color: rgba(0,0,0,.08);
   }
+  .widget.w-sm { grid-column: span 2; min-height: 88px; }
+  .widget.w-md { grid-column: span 4; min-height: 100px; }
+  .widget .w-title { font-size: 12px; opacity: .75; font-weight: 600; margin-bottom: 6px; }
+  .widget .w-body { font-size: 15px; font-weight: 600; line-height: 1.35; }
+  .widget .w-sub { font-size: 12px; opacity: .7; margin-top: 6px; }
+  .widget .app-del { top: 6px; right: 6px; left: auto; }
+  .apps { align-content: start; }
+  .page, .home-wrap { transition: opacity .18s ease; }
+  .app:active { transform: scale(.92); }
+  .home-wrap.edit-mode .app:active { transform: scale(1.05); }
 
 </style>
 </head>
@@ -1090,27 +1043,13 @@
 
     <!-- 桌面 -->
     <div class="home-wrap show" id="home">
-      <div class="home-edit-bar" id="home-edit-bar">
-        <button type="button" onclick="openWidgetPicker()">＋ 小组件</button>
-        <button type="button" class="done" onclick="exitHomeEdit()">完成</button>
-      </div>
       <div class="home-top">
         <div class="time" id="clock">22:16</div>
         <div class="date" id="date">9月17日 周四</div>
       </div>
-      <div class="widget-picker" id="widget-picker">
-        <div style="color:#fff;font-size:17px;font-weight:700;margin-bottom:12px;">添加小组件</div>
-        <div class="wp-card" onclick="addHomeWidget('clock')"><div style="font-weight:600;">时钟</div><div style="font-size:12px;opacity:.7;margin-top:4px;">大号时间 · 简约毛玻璃</div></div>
-        <div class="wp-card" onclick="addHomeWidget('status')"><div style="font-weight:600;">今日状态</div><div style="font-size:12px;opacity:.7;margin-top:4px;">羞耻 / 服从速览</div></div>
-        <div class="wp-card" onclick="addHomeWidget('task')"><div style="font-weight:600;">线下任务</div><div style="font-size:12px;opacity:.7;margin-top:4px;">当前任务数</div></div>
-        <div class="wp-card" onclick="addHomeWidget('heat')"><div style="font-weight:600;">发情提醒</div><div style="font-size:12px;opacity:.7;margin-top:4px;">发情日历提醒</div></div>
-        <div class="wp-card" onclick="addHomeWidget('quote')"><div style="font-weight:600;">一句话</div><div style="font-size:12px;opacity:.7;margin-top:4px;">随机羞辱短句</div></div>
-        <button type="button" style="width:100%;margin-top:12px;padding:12px;border:0;border-radius:14px;background:rgba(255,255,255,.15);color:#fff;font-weight:600;" onclick="closeWidgetPicker()">取消</button>
-      </div>
       <div class="home-pages page1" id="home-pages">
         <div class="home-page" id="home-page-1">
-          <div class="apps" id="home-widgets-row" style="margin-bottom:8px;"></div>
-          <div class="apps" id="home-apps-1">
+          <div class="apps">
             <div class="app" onclick="openApp('messages')"><div class="app-icon" id="icon-messages" style="background:linear-gradient(180deg,#5ac8fa,#007aff);">💬</div><div class="app-name">消息</div></div>
             <div class="app" onclick="openApp('contacts')"><div class="app-icon" id="icon-contacts" style="background:linear-gradient(180deg,#ff9f0a,#ff375f);">👤</div><div class="app-name">通讯录</div></div>
             <div class="app" onclick="openApp('offline')"><div class="app-icon" id="icon-offline" style="background:linear-gradient(180deg,#ffd60a,#ff9f0a);">📍</div><div class="app-name">线下</div></div>
@@ -1126,8 +1065,10 @@
         </div>
         <div class="home-page" id="home-page-2">
           <div class="apps">
+            <div class="app" onclick="openApp('forum')"><div class="app-icon" id="icon-forum" style="background:linear-gradient(180deg,#ff375f,#ff9f0a);">🔥</div><div class="app-name">今夜可约</div></div>
             <div class="app" onclick="openApp('live')"><div class="app-icon" id="icon-live" style="background:linear-gradient(180deg,#ff453a,#ff2d55);">📡</div><div class="app-name">发骚直播</div></div>
             <div class="app" onclick="openApp('auction')"><div class="app-icon" id="icon-auction" style="background:linear-gradient(180deg,#ffd60a,#ff9f0a);">💰</div><div class="app-name">身体拍卖</div></div>
+            <div class="app" onclick="openApp('album')"><div class="app-icon" id="icon-album" style="background:linear-gradient(180deg,#bf5af2,#ff375f);">📷</div><div class="app-name">被操相册</div></div>
             <div class="app" onclick="openApp('heat')"><div class="app-icon" id="icon-heat" style="background:linear-gradient(180deg,#ff6482,#bf5af2);">📅</div><div class="app-name">发情日历</div></div>
             <div class="app" onclick="openApp('campus')"><div class="app-icon" id="icon-campus" style="background:linear-gradient(180deg,#64d2ff,#5e5ce6);">🏫</div><div class="app-name">校园墙</div></div>
             <div class="app" onclick="openApp('query')"><div class="app-icon" id="icon-query" style="background:linear-gradient(180deg,#8e8e93,#1c1c1e);">🔍</div><div class="app-name">查询</div></div>
@@ -1135,6 +1076,10 @@
         </div>
       </div>
       <div class="home-dots" id="home-dots"><i class="on"></i><i></i></div>
+      <div class="home-edit-bar" id="home-edit-bar">
+        <button type="button" onclick="addHomeWidget()">＋ 小组件</button>
+        <button type="button" class="primary" onclick="exitHomeEdit()">完成</button>
+      </div>
             <div class="dock">
         <div class="app" onclick="openApp('messages')"><div class="app-icon" id="dock-messages" style="background:linear-gradient(180deg,#5ac8fa,#007aff);">💬</div></div>
         <div class="app" onclick="openApp('train')"><div class="app-icon" id="dock-train" style="background:linear-gradient(180deg,#ff6482,#ff2d55);">🔒</div></div>
@@ -1600,6 +1545,53 @@
 
 
     
+    <!-- 今夜可约（约炮论坛） -->
+    <div class="page forum-night" id="page-forum">
+      <div class="nav" style="background:rgba(18,12,18,.92);position:relative;">
+        <button class="nav-back" onclick="goHome()">‹</button>
+        <div class="nav-title">今夜可约</div>
+        <div style="display:flex;gap:4px;">
+          <button class="nav-right" style="min-width:auto;" onclick="toggleForumSettings()">⚙</button>
+          <button class="nav-right" style="min-width:auto;" onclick="newForumPost()">＋</button>
+        </div>
+        <div class="cw-settings" id="forum-settings">
+          <div style="font-size:13px;font-weight:600;margin-bottom:8px;">设置</div>
+          <div style="font-size:12px;color:var(--muted);margin-bottom:4px;">主题色</div>
+          <select id="forum-theme" onchange="setForumTheme(this.value)" style="width:100%;background:var(--input);border:none;border-radius:10px;padding:8px;color:var(--text);margin-bottom:10px;">
+            <option value="pink">粉红</option>
+            <option value="red">暗红</option>
+            <option value="purple">紫色</option>
+            <option value="blue">蓝色</option>
+          </select>
+          <button class="btn btn-secondary" style="width:100%;" onclick="editForumWB()">绑定世界书</button>
+        </div>
+      </div>
+      <div class="forum-ticker" id="forum-ticker">刚刚有人约成功 · 滨江区 · 女找男</div>
+      <div class="forum-tabs" id="forum-tabs">
+        <button class="forum-tab on" onclick="setForumTab('city',this)">同城约炮</button>
+        <button class="forum-tab" onclick="setForumTab('today',this)">今日可约</button>
+        <button class="forum-tab" onclick="setForumTab('diary',this)">约炮日记</button>
+        <button class="forum-tab" onclick="setForumTab('special',this)">特殊需求</button>
+        <button class="forum-tab" onclick="setForumTab('auth',this)">认证曝光</button>
+        <button class="forum-tab" onclick="setForumTab('plaza',this)">求约大厅</button>
+      </div>
+      <div style="padding:8px 10px;display:flex;gap:6px;background:#120e14;">
+        <button class="btn btn-secondary" style="flex:1;padding:7px;font-size:12px;border-radius:12px;" onclick="forumPartialRefresh('list')">刷新本区</button>
+        <button class="btn btn-secondary" style="flex:1;padding:7px;font-size:12px;border-radius:12px;" onclick="forumPartialRefresh('ticker')">刷新动态</button>
+        <button class="btn btn-secondary" style="flex:1;padding:7px;font-size:12px;border-radius:12px;" onclick="forumPartialRefresh('filters')">筛选</button>
+      </div>
+      <div class="scroll" style="padding:12px;background:#0c0a0e;" id="forum-list"></div>
+    </div>
+
+    <div class="page forum-night" id="page-forum-detail">
+      <div class="nav" style="background:rgba(18,12,18,.92);">
+        <button class="nav-back" onclick="openApp('forum')">‹ 返回</button>
+        <div class="nav-title">帖子详情</div>
+        <button class="nav-right" onclick="forumReply()">回复</button>
+      </div>
+      <div class="scroll" style="padding:12px;background:#0c0a0e;" id="forum-detail"></div>
+    </div>
+
     <!-- 公开发骚直播间 -->
     <div class="page" id="page-live">
       <div class="nav">
@@ -1677,6 +1669,39 @@
     <!-- 身体拍卖行 -->
     
     
+    <!-- 被操相册 · 苹果相册风格 -->
+    <div class="page" id="page-album">
+      <div class="nav">
+        <button class="nav-back" id="alb-back" onclick="albumNavBack()">‹</button>
+        <div class="nav-title" id="alb-title">相册</div>
+        <button class="nav-right" onclick="genAlbumShot()">＋</button>
+      </div>
+      <div class="scroll" style="padding:0 0 20px;" id="album-list"></div>
+      <div class="msg-edit-bar" id="album-edit-bar">
+        <button class="btn btn-secondary" style="flex:1;" onclick="exitAlbumEdit()">取消</button>
+        <button class="btn btn-danger" style="flex:1;" onclick="deleteAlbumSelected()">删除</button>
+      </div>
+      <div class="alb-detail-sheet" id="alb-detail">
+        <button onclick="closeAlbDetail()" style="position:absolute;top:44px;left:12px;border:0;background:none;color:#fff;font-size:17px;">关闭</button>
+        <div id="alb-detail-body" style="flex:1;overflow-y:auto;padding-top:20px;"></div>
+      </div>
+    </div>
+
+    <!-- 身体拍卖行 · 真实拍卖模拟 -->
+    <div class="page" id="page-auction">
+      <div class="nav">
+        <button class="nav-back" onclick="goHome()">‹ 桌面</button>
+        <div class="nav-title">身体拍卖行</div>
+        <button class="nav-right" onclick="refreshAuctionLots()">刷新拍品</button>
+      </div>
+      <div style="padding:8px 12px;background:var(--nav);border-bottom:.5px solid var(--border);display:flex;gap:8px;">
+        <button class="btn btn-secondary" style="flex:1;padding:8px;" onclick="setAucTab('live')">正在拍卖</button>
+        <button class="btn btn-secondary" style="flex:1;padding:8px;" onclick="setAucTab('upcoming')">即将开始</button>
+        <button class="btn btn-secondary" style="flex:1;padding:8px;" onclick="setAucTab('ended')">已结束</button>
+      </div>
+      <div class="scroll" style="padding:12px;" id="auction-list"></div>
+    </div>
+
     <!-- 发情日历 -->
     <div class="page" id="page-heat">
       <div class="nav">
@@ -1713,25 +1738,35 @@
         <button class="nav-back" onclick="goHome()">‹</button>
         <div class="nav-title">校园墙</div>
         <button class="nav-right" onclick="toggleCampusSettings()">⚙</button>
-      </div>
-      <div id="campus-settings" class="feature-settings" style="display:none;padding:14px 16px;background:var(--bg2);border-bottom:.5px solid var(--border);z-index:500;">
-        <div style="font-size:15px;font-weight:700;margin-bottom:12px;letter-spacing:-.3px;">校园墙设置</div>
-        <div style="font-size:12px;color:var(--muted);margin-bottom:8px;">主题色</div>
-        <div style="display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap;" id="campus-color-picks">
-          <button type="button" onclick="setCampusTheme('pink')" style="width:32px;height:32px;border-radius:50%;border:2px solid transparent;background:#ff2d55;cursor:pointer;" data-c="pink"></button>
-          <button type="button" onclick="setCampusTheme('blue')" style="width:32px;height:32px;border-radius:50%;border:2px solid transparent;background:#0a84ff;cursor:pointer;" data-c="blue"></button>
-          <button type="button" onclick="setCampusTheme('purple')" style="width:32px;height:32px;border-radius:50%;border:2px solid transparent;background:#bf5af2;cursor:pointer;" data-c="purple"></button>
-          <button type="button" onclick="setCampusTheme('green')" style="width:32px;height:32px;border-radius:50%;border:2px solid transparent;background:#30d158;cursor:pointer;" data-c="green"></button>
-          <button type="button" onclick="setCampusTheme('orange')" style="width:32px;height:32px;border-radius:50%;border:2px solid transparent;background:#ff9f0a;cursor:pointer;" data-c="orange"></button>
-        </div>
-        <div style="font-size:12px;color:var(--muted);margin-bottom:6px;">绑定世界书</div>
-        <input type="text" id="campus-wb-input" placeholder="全局规则,校园专属" style="width:100%;background:var(--input);border:none;border-radius:12px;padding:12px;color:var(--text);margin-bottom:10px;font-size:15px;">
-        <button class="btn btn-secondary" style="width:100%;border-radius:12px;margin-bottom:8px;" onclick="editCampusWB()">从世界书列表勾选</button>
-        <button class="btn btn-primary" style="width:100%;border-radius:12px;margin-bottom:8px;" onclick="saveCampusSettings()">保存设置</button>
-        <div style="display:flex;gap:8px;">
-          <button class="btn btn-secondary" style="flex:1;border-radius:12px;" onclick="exportCampus()">导出</button>
-          <button class="btn btn-secondary" style="flex:1;border-radius:12px;" onclick="importCampus()">导入</button>
-          <button class="btn btn-danger" style="flex:1;border-radius:12px;" onclick="clearCampus()">清空</button>
+        <div class="cw-settings" id="campus-settings">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+            <div style="font-size:15px;font-weight:700;">校园墙设置</div>
+            <button type="button" onclick="toggleCampusSettings()" style="border:0;background:var(--card2);color:var(--muted);width:28px;height:28px;border-radius:50%;font-size:14px;cursor:pointer;">✕</button>
+          </div>
+          <div style="font-size:12px;color:var(--muted);margin-bottom:6px;">主题色</div>
+          <div class="seg" style="margin-bottom:12px;" id="campus-theme-seg">
+            <button type="button" data-ct="pink" onclick="setCampusTheme('pink')">粉</button>
+            <button type="button" data-ct="blue" onclick="setCampusTheme('blue')">蓝</button>
+            <button type="button" data-ct="purple" onclick="setCampusTheme('purple')">紫</button>
+            <button type="button" data-ct="green" onclick="setCampusTheme('green')">绿</button>
+            <button type="button" data-ct="orange" onclick="setCampusTheme('orange')">橙</button>
+          </div>
+          <select id="campus-theme" style="display:none;">
+            <option value="pink">粉红</option>
+            <option value="blue">蓝色</option>
+            <option value="purple">紫色</option>
+            <option value="green">绿色</option>
+            <option value="orange">橙色</option>
+          </select>
+          <div style="font-size:12px;color:var(--muted);margin-bottom:6px;">绑定世界书（逗号分隔名称）</div>
+          <input type="text" id="campus-wb-input" placeholder="例如：全局规则,校园设定" style="width:100%;background:var(--input);border:none;border-radius:10px;padding:10px 12px;color:var(--text);font-size:14px;margin-bottom:8px;outline:none;">
+          <button class="btn btn-secondary" style="width:100%;margin-bottom:10px;" onclick="editCampusWB()">从世界书列表勾选</button>
+          <div style="display:flex;gap:8px;margin-bottom:8px;">
+            <button class="btn btn-secondary" style="flex:1;" onclick="exportCampus()">导出</button>
+            <button class="btn btn-secondary" style="flex:1;" onclick="importCampus()">导入</button>
+          </div>
+          <button class="btn btn-primary" style="width:100%;margin-bottom:8px;" onclick="saveCampusSettings()">保存设置</button>
+          <button class="btn btn-danger" style="width:100%;" onclick="clearCampus()">清空帖子</button>
         </div>
       </div>
       <div class="cw-search">
@@ -1882,7 +1917,6 @@ let offlineWordCount = 800;
 let diaryWordCount = 500;
 let rulesWordCount = 400;
 let trainWordCount = 400;
-let homeWidgets = []; // desktop widgets
 let bodyData = {};
 let diaries = [];
 let ruleVersions = [];
@@ -2034,7 +2068,7 @@ function loadAll() {
       conversations=d.conversations||{}; contacts=d.contacts||[];
       pendingRequests=d.pendingRequests||[];
       if(d.memorySources) memorySources = Object.assign(memorySources, d.memorySources);
-      // 汪固定只读主人
+      // 汪（原调教）固定只读主人
       memorySources.train = ['master'];
       if(typeof d.offlineWordCount === 'number') offlineWordCount = d.offlineWordCount;
       if(typeof d.diaryWordCount === 'number') diaryWordCount = d.diaryWordCount;
@@ -2042,6 +2076,8 @@ function loadAll() {
       if(typeof d.trainWordCount === 'number') trainWordCount = d.trainWordCount;
       if(Array.isArray(d.doneTaskKeys)) doneTaskKeys = d.doneTaskKeys;
       if(d.appIcons) appIcons = d.appIcons;
+      if(Array.isArray(d.homeWidgets)) window._homeWidgets = d.homeWidgets;
+      if(d.homeLayout) window._homeLayout = d.homeLayout;
       if(Array.isArray(d.evalFavorites)) evalFavorites = d.evalFavorites;
       if(d.mediaSkin) mediaSkin = Object.assign(mediaSkin, d.mediaSkin);
       if(Array.isArray(d.forumPosts)) forumPosts = d.forumPosts;
@@ -2055,18 +2091,6 @@ function loadAll() {
       if(d.campusWB) campusWB = d.campusWB;
       if(d.campusTheme) campusTheme = d.campusTheme;
       if(Array.isArray(d.queryResults)) queryResults = d.queryResults;
-      if(Array.isArray(d.homeWidgets)) homeWidgets = d.homeWidgets;
-      if(Array.isArray(d.homeHiddenApps)){
-        window._homeHiddenApps = d.homeHiddenApps;
-        try{ localStorage.setItem('homeHiddenApps', JSON.stringify(d.homeHiddenApps)); }catch(_){}
-      }
-      if(Array.isArray(d.currentTasks)) currentTasks = d.currentTasks;
-      if(Array.isArray(d.forumPosts)) forumPosts = d.forumPosts;
-      if(d.forumTheme) forumTheme = d.forumTheme;
-      if(d.forumWB!=null) forumWB = d.forumWB;
-      if(d.liveWB) window._liveWB = d.liveWB;
-      if(d.storyWB) window._storyWB = d.storyWB;
-      if(d.storyBg) window._storyBg = d.storyBg;
       if(d.queryWB) queryWB = d.queryWB;
       if(Array.isArray(d.auctionLots)) auctionLots = d.auctionLots;
       if(d.heatCycleStart) window._heatCycleStart = d.heatCycleStart;
@@ -2133,16 +2157,11 @@ function saveAll() {
     offlineArchives,worldBooks,apiProfiles,currentProfileId,
     conversations,contacts,pendingRequests, meProfile, memorySources,
     offlineWordCount, diaryWordCount, rulesWordCount, trainWordCount, doneTaskKeys, appIcons, evalFavorites, mediaSkin, forumPosts, liveBg, liveHistory, auctionParts, albumShots, auctionLots, heatCycleStart: window._heatCycleStart,
-    beautyPresets, currentBeautyPreset, campusData, campusWB, campusTheme, queryResults, queryWB,
-    homeWidgets, currentTasks,
-    liveWB: window._liveWB||'', storyWB: window._storyWB||'', storyBg: window._storyBg||'',
-    guideMode: (typeof guideMode!=='undefined'?guideMode:'offline'),
-    uiTheme: document.documentElement.getAttribute('data-theme')||'dark'
+    beautyPresets, currentBeautyPreset, campusData, campusWB, campusTheme, queryResults, queryWB
   }));
   // 同步头像给旧逻辑兼容
   if(meProfile.avatarImg) localStorage.setItem('myAvatar', meProfile.avatarImg);
   else localStorage.removeItem('myAvatar');
-  try{ localStorage.setItem('homeHiddenApps', JSON.stringify(window._homeHiddenApps||[])); }catch(_){}
 }
 
 function updateClock() {
@@ -2157,7 +2176,6 @@ function goHome() {
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('show'));
   const h = $('home');
   if(h){ h.classList.add('show'); }
-  try{ renderHomeWidgets(); }catch(_){}
   // 直播强制模式不能退出
   if(window._liveForced && window._liveActive){
     openApp('live');
@@ -2165,8 +2183,6 @@ function goHome() {
   }
 }
 function openApp(name) {
-  if(name==='forum'||name==='album'){ alert('该功能已移除'); return; }
-  if(typeof homeEditMode!=='undefined' && homeEditMode) exitHomeEdit();
   const h=$('home'); if(h) h.classList.remove('show');
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('show'));
   const pg = $(`page-${name}`);
@@ -2662,17 +2678,32 @@ function renderMessages(){
   // 主题
   const fx = c.chatFx || 'normal';
   list.classList.toggle('glass-mode', fx==='glass');
-  if(c.bubbleMe) list.style.setProperty('--bubble-me', c.bubbleMe);
-  else list.style.removeProperty('--bubble-me');
-  if(c.bubbleHim) list.style.setProperty('--bubble-him', c.bubbleHim);
-  else list.style.removeProperty('--bubble-him');
-  // 同步到 page-chat 根，防止被主题样式覆盖
-  const pageChat = $('page-chat');
-  if(pageChat){
-    if(c.bubbleMe) pageChat.style.setProperty('--bubble-me', c.bubbleMe);
-    else pageChat.style.removeProperty('--bubble-me');
-    if(c.bubbleHim) pageChat.style.setProperty('--bubble-him', c.bubbleHim);
-    else pageChat.style.removeProperty('--bubble-him');
+  if(c.bubbleMe) {
+    list.style.setProperty('--bubble-me', c.bubbleMe);
+    // auto text contrast: bright bg -> dark text
+    try{
+      const hex=(c.bubbleMe||'').replace('#','');
+      const full = hex.length===3 ? hex.split('').map(x=>x+x).join('') : hex;
+      const r=parseInt(full.slice(0,2),16), g=parseInt(full.slice(2,4),16), b=parseInt(full.slice(4,6),16);
+      const lum=(0.299*r+0.587*g+0.114*b)/255;
+      list.style.setProperty('--bubble-me-fg', lum>0.62 ? '#1c1c1e' : '#ffffff');
+    }catch(_){ list.style.setProperty('--bubble-me-fg', '#ffffff'); }
+  } else {
+    list.style.removeProperty('--bubble-me');
+    list.style.removeProperty('--bubble-me-fg');
+  }
+  if(c.bubbleHim) {
+    list.style.setProperty('--bubble-him', c.bubbleHim);
+    try{
+      const hex=(c.bubbleHim||'').replace('#','');
+      const full = hex.length===3 ? hex.split('').map(x=>x+x).join('') : hex;
+      const r=parseInt(full.slice(0,2),16), g=parseInt(full.slice(2,4),16), b=parseInt(full.slice(4,6),16);
+      const lum=(0.299*r+0.587*g+0.114*b)/255;
+      list.style.setProperty('--bubble-him-fg', lum>0.62 ? '#1c1c1e' : '#ffffff');
+    }catch(_){ list.style.setProperty('--bubble-him-fg', '#1c1c1e'); }
+  } else {
+    list.style.removeProperty('--bubble-him');
+    list.style.removeProperty('--bubble-him-fg');
   }
 
   (c.messages||[]).forEach((m,i)=>{
@@ -2756,11 +2787,6 @@ function renderMessages(){
       }
     };
   });
-  // 强制应用角色自定义气泡颜色
-  try{
-    if(c && c.bubbleMe) list.querySelectorAll('.bubble-row.me .b-text').forEach(el=>el.style.setProperty('background', c.bubbleMe, 'important'));
-    if(c && c.bubbleHim) list.querySelectorAll('.bubble-row.him .b-text').forEach(el=>el.style.setProperty('background', c.bubbleHim, 'important'));
-  }catch(_e){}
 }
 function playVoiceMsg(msg){
   if(!msg) return;
@@ -3492,44 +3518,67 @@ function deleteTask(i){
 async function refreshTasks(silent){
   const p = getActiveProfile();
   const prev = Array.isArray(currentTasks) ? currentTasks.slice() : [];
-  const existingTitles = prev.map(t => t.title||'').filter(Boolean);
+  const existingTitles = prev.map(t=>t.title||'').filter(Boolean);
+  if(!p.url||!p.key){
+    const pool=[...taskPool].filter(t=>!existingTitles.includes(t.title));
+    const add=[];
+    for(let i=0;i<3;i++) if(pool.length) add.push(pool.splice(Math.floor(Math.random()*pool.length),1)[0]);
+    // still try to diversify if pool empty
+    while(add.length<3 && taskPool.length){
+      const t = taskPool[Math.floor(Math.random()*taskPool.length)];
+      if(!add.find(x=>x.title===t.title)) add.push({...t, title:t.title+(add.length?(' ·变体'+(add.length+1)):'')});
+      else break;
+    }
+    currentTasks = add.concat(prev).slice(0,12);
+    if(!silent) renderTasks();
+    return;
+  }
   if(!silent){
     const tip = document.createElement('div');
-    tip.id='task-refresh-tip'; tip.style.cssText='text-align:center;padding:12px;color:#888;font-size:13px;';
-    tip.textContent='正在生成新任务…（旧任务保留）';
-    const box=$('task-container'); if(box){ const old=$('task-refresh-tip'); if(old) old.remove(); box.insertBefore(tip, box.firstChild); }
+    tip.id='task-refresh-tip'; tip.style.cssText='text-align:center;padding:10px;color:var(--pink);font-size:13px;';
+    tip.textContent='正在生成全新任务…';
+    const box=$('task-container');
+    if(box) box.prepend(tip);
   }
   try{
-    if(!p.url||!p.key) throw new Error('no api');
-    const avoid = existingTitles.length ? ('不要和这些已有任务重复：' + existingTitles.slice(0,12).join('、')) : '';
+    const mem = getMemoryContext('offline');
+    const girlName = meProfile.name || '凌幼薇';
+    const avoid = existingTitles.slice(0,8).join('、') || '无';
     const raw = await callAI(
-      '你是调教母狗的主人。请生成3个足够恶俗、下贱、羞辱、露出、物化的线下任务。每个任务必须包含title、desc、type、difficulty、reward字段。输出纯JSON数组，不要其他文字。任务要具体可执行，重口、变态、羞耻感拉满。每次生成必须是全新的、不一样的玩法与场景。' + avoid,
-      '生成3个全新的母狗线下任务，风格极致恶俗物化，与之前完全不同。随机种子：' + Date.now()
+      `你是调教母狗的主人，正在给「${girlName}」布置线下任务。
+请生成3个彼此不同、且与已有任务标题不重复的全新恶俗任务。
+必须具体可执行、重口、羞辱、物化。参考世界书常驻。
+禁止与以下标题重复：${avoid}
+只输出JSON数组，每项字段：title,desc,type,difficulty,reward。不要其它文字。`,
+      `${mem}请生成3个全新线下任务（与已有不同）。时间戳种子：${Date.now()}`,
+      2000
     );
-    let arr;
-    try{
-      const mm = raw.match(/\[[\s\S]*\]/);
-      arr = mm ? JSON.parse(mm[0]) : null;
-    }catch(e){ arr=null; }
-    let add=[];
+    let arr=[];
+    try{ const mm=raw.match(/\[[\s\S]*\]/); arr=mm?JSON.parse(mm[0]):[]; }catch(_){}
     if(Array.isArray(arr) && arr.length){
-      add = arr.slice(0,3).map(t=>({
-        title: t.title||'恶俗任务',
+      const mapped = arr.map(t=>({
+        title: t.title||'新任务',
         desc: t.desc||t.description||'',
-        type: t.type||'调教',
+        type: t.type||'任务',
         difficulty: t.difficulty||'中',
-        reward: t.reward||'羞耻+'
-      }));
+        reward: t.reward||'完成后汇报'
+      })).filter(t=>t.title && t.desc);
+      // prepend new unique ones
+      const fresh = mapped.filter(t=>!existingTitles.includes(t.title));
+      currentTasks = (fresh.length?fresh:mapped).concat(prev).slice(0,12);
     } else {
+      // fallback diversify local pool
       const pool=[...taskPool].sort(()=>Math.random()-0.5);
-      add = pool.slice(0,3);
+      currentTasks = pool.slice(0,3).concat(prev).slice(0,12);
     }
-    currentTasks = add.concat(prev);
   }catch(e){
+    console.warn(e);
     const pool=[...taskPool].sort(()=>Math.random()-0.5);
-    currentTasks = pool.slice(0,3).concat(prev);
+    currentTasks = pool.slice(0,3).concat(prev).slice(0,12);
   }
+  $('task-refresh-tip')?.remove();
   if(!silent) renderTasks();
+  saveAll();
 }
 async function wishTask(){
   const wish = prompt('说出你的愿望（越下贱越好，AI会把它变成可执行的恶俗任务）：\n例如：想被当众玩逼 / 想真空上班一天 / 想被陌生人摸');
@@ -4013,8 +4062,8 @@ function renderBeautify(){
     {id:'messages',name:'消息'},{id:'contacts',name:'通讯录'},{id:'offline',name:'线下'},
     {id:'train',name:'汪'},{id:'worldbook',name:'世界书'},{id:'diary',name:'日记'},
     {id:'rules',name:'守则'},{id:'me',name:'母狗'},{id:'guide',name:'小狗乖乖'},
-    {id:'live',name:'发骚直播'},{id:'auction',name:'身体拍卖'},
-    {id:'heat',name:'发情日历'},{id:'campus',name:'校园墙'},{id:'query',name:'查询'},
+    {id:'forum',name:'今夜可约'},{id:'live',name:'发骚直播'},{id:'auction',name:'身体拍卖'},
+    {id:'album',name:'被操相册'},{id:'heat',name:'发情日历'},{id:'campus',name:'校园墙'},{id:'query',name:'查询'},
     {id:'beautify',name:'美化'},{id:'settings',name:'设置'}
   ];
   const box = $('beautify-list'); if(!box) return;
@@ -5036,33 +5085,38 @@ async function heatForceReport(type){
 // ========== 校园墙 ==========
 function toggleCampusSettings(){
   const el=$('campus-settings'); if(!el) return;
-  const show = el.style.display === 'none' || !el.style.display;
-  el.style.display = show ? 'block' : 'none';
-  if(show){
+  const open = !el.classList.contains('show');
+  el.classList.toggle('show', open);
+  if(open){
     if($('campus-wb-input')) $('campus-wb-input').value = campusWB || '';
-    setCampusTheme(campusTheme||'pink');
+    if($('campus-theme')) $('campus-theme').value = campusTheme||'pink';
+    document.querySelectorAll('#campus-theme-seg button').forEach(b=>{
+      b.classList.toggle('active', b.getAttribute('data-ct')===(campusTheme||'pink'));
+    });
   }
 }
 function setCampusTheme(t){
   campusTheme = t || 'pink';
   applyCampusTheme();
-  document.querySelectorAll('#campus-color-picks button').forEach(b=>{
-    b.style.borderColor = (b.dataset.c===campusTheme) ? '#fff' : 'transparent';
-    b.style.transform = (b.dataset.c===campusTheme) ? 'scale(1.15)' : 'scale(1)';
+  document.querySelectorAll('#campus-theme-seg button').forEach(b=>{
+    b.classList.toggle('active', b.getAttribute('data-ct')===campusTheme);
   });
-}
-function saveCampusSettings(){
-  campusWB = ($('campus-wb-input')?.value || '').trim();
-  saveAll();
-  applyCampusTheme();
-  alert('校园墙设置已保存');
-  const el=$('campus-settings'); if(el) el.style.display='none';
+  if($('campus-theme')) $('campus-theme').value = campusTheme;
 }
 function applyCampusTheme(){
   const pg = $('page-campus'); if(!pg) return;
   ['pink','blue','purple','green','orange'].forEach(x=>pg.classList.remove('campus-theme-'+x));
   pg.classList.add('campus-theme-'+(campusTheme||'pink'));
   if($('campus-theme')) $('campus-theme').value = campusTheme||'pink';
+}
+function saveCampusSettings(){
+  const v = ($('campus-wb-input')?.value||'').trim();
+  campusWB = v;
+  if($('campus-theme')) campusTheme = $('campus-theme').value || campusTheme || 'pink';
+  applyCampusTheme();
+  saveAll();
+  const el=$('campus-settings'); if(el) el.classList.remove('show');
+  alert('校园墙设置已保存');
 }
 function setCampusTab(tab, btn){
   campusTab = tab;
@@ -5309,61 +5363,58 @@ async function runQuery(){
 
 
 function exportData(){
-  // 全量备份：所有软件所有可修改数据
+  // 全量备份：每个软件全部数据
   const data = {
     version: 5,
     exportedAt: Date.now(),
     // 核心状态
     cor, shame, body, obey, mainFinished, bodyData,
     // 消息 / 通讯录
-    conversations, contacts, pendingRequests, meProfile,
+    conversations, contacts, pendingRequests,
     // 线下
     currentTasks, offlineArchives, doneTaskKeys, offlineWordCount,
-    memorySources,
     // 世界书
     worldBooks,
-    // 日记 / 守则
-    diaries, diaryWordCount, ruleVersions, rulesWordCount,
+    // 日记
+    diaries, diaryWordCount,
+    // 守则
+    ruleVersions, rulesWordCount,
     // 汪（调教）
     trainWordCount, evalFavorites,
+    // 小狗 / 人设
+    meProfile, memorySources,
     // 小狗乖乖
-    guideMode, guideMessages: (typeof guideMessages!=='undefined'?guideMessages:[]),
+    guideMode, guideMessages,
     // 美化
     appIcons, mediaSkin, beautyPresets, currentBeautyPreset,
     // 设置 / API
     apiProfiles, currentProfileId, uiTheme,
-    wallpaper: localStorage.getItem('wallpaper') || '',
-    myAvatar: meProfile.avatarImg || '',
+    // 今夜可约
+    forumPosts, forumTab, forumTheme, forumWB,
     // 发骚直播
     liveBg, liveHistory,
-    liveWB: window._liveWB || '',
     // 身体拍卖
-    auctionParts, auctionLots,
+    auctionParts, auctionLots, auctionPublic, aucTab,
+    // 被操相册
+    albumShots, albumView,
     // 发情日历
-    heatCycleStart: window._heatCycleStart,
+    heatCycleStart: window._heatCycleStart, heatMonth: heatMonth ? heatMonth.toISOString() : null,
     // 校园墙
-    campusData, campusWB, campusTheme,
+    campusData, campusWB, campusTheme, campusTab,
     // 查询
-    queryResults, queryWB, queryMode: (typeof queryMode!=='undefined'?queryMode:'near'),
-    // 相册
-    albumShots: (typeof albumShots!=='undefined'?albumShots:[]),
-    // 今夜可约
-    forumPosts: (typeof forumPosts!=='undefined'?forumPosts:[]),
-    forumTheme: (typeof forumTheme!=='undefined'?forumTheme:'pink'),
-    forumWB: (typeof forumWB!=='undefined'?forumWB:''),
-    // 桌面小组件与布局
-    homeWidgets: (typeof homeWidgets!=='undefined'?homeWidgets:[]),
-    homeHiddenApps: window._homeHiddenApps || JSON.parse(localStorage.getItem('homeHiddenApps')||'[]'),
-    homeLayout: (typeof homeLayout!=='undefined'?homeLayout:null),
-    // 故事临时
-    storyWB: window._storyWB || '',
-    storyBg: window._storyBg || '',
+    queryResults, queryWB, queryMode,
+    // 桌面布局 / 小组件
+    homeLayout: window._homeLayout || null,
+    homeWidgets: window._homeWidgets || [],
+    homePageIndex,
+    // 壁纸等
+    wallpaper: localStorage.getItem('wallpaper') || '',
+    myAvatar: meProfile.avatarImg || '',
     extraLocal: {
       bitchPhoneV3: localStorage.getItem('bitchPhoneV3'),
       uiTheme: localStorage.getItem('uiTheme'),
       wallpaper: localStorage.getItem('wallpaper'),
-      myAvatar: localStorage.getItem('myAvatar'),
-      homeHiddenApps: localStorage.getItem('homeHiddenApps')
+      myAvatar: localStorage.getItem('myAvatar')
     }
   };
   const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
@@ -5391,17 +5442,19 @@ function doImport(e){
       if(d.campusWB) campusWB = d.campusWB;
       if(d.campusTheme) campusTheme = d.campusTheme;
       if(Array.isArray(d.queryResults)) queryResults = d.queryResults;
-      if(Array.isArray(d.homeWidgets)) homeWidgets = d.homeWidgets;
-      if(Array.isArray(d.currentTasks)) currentTasks = d.currentTasks;
-      if(d.liveWB) window._liveWB = d.liveWB;
-      if(d.storyWB) window._storyWB = d.storyWB;
-      if(d.storyBg) window._storyBg = d.storyBg;
       if(d.queryWB) queryWB = d.queryWB;
       if(Array.isArray(d.auctionLots)) auctionLots = d.auctionLots;
       if(d.heatCycleStart) window._heatCycleStart = d.heatCycleStart;
       if(Array.isArray(d.doneTaskKeys)) doneTaskKeys = d.doneTaskKeys;
       if(d.appIcons) appIcons = d.appIcons;
+      if(Array.isArray(d.homeWidgets)) window._homeWidgets = d.homeWidgets;
+      if(d.homeLayout) window._homeLayout = d.homeLayout;
       if(Array.isArray(d.evalFavorites)) evalFavorites = d.evalFavorites;
+      if(Array.isArray(d.homeWidgets)) window._homeWidgets = d.homeWidgets;
+      if(d.homeLayout) window._homeLayout = d.homeLayout;
+      if(d.forumTheme) forumTheme = d.forumTheme;
+      if(d.forumWB!=null) forumWB = d.forumWB;
+      if(Array.isArray(d.guideMessages)) guideMessages = d.guideMessages;
       Object.assign(window, d);
       if(d.myAvatar && !meProfile.avatarImg) meProfile.avatarImg = d.myAvatar;
       saveAll(); loadAll(); alert('导入成功'); goHome();
@@ -5463,205 +5516,192 @@ function clearStoryBg(){
 
 
 // ========== 桌面编辑 / 小组件 ==========
-let homeEditMode = false;
-let homeWidgets = []; // {id, type, size}
-let _homeLongTimer = null;
-let _dragApp = null;
+window._homeWidgets = window._homeWidgets || [];
+window._homeEdit = false;
+window._homeLayout = window._homeLayout || null; // optional order of app ids per page
 
 function enterHomeEdit(){
-  homeEditMode = true;
-  $('home')?.classList.add('editing');
-  renderHomeWidgets();
-  // mark apps deletable (hide only from layout, not delete data)
-  document.querySelectorAll('#home-page-1 .app, #home-page-2 .app').forEach(app=>{
+  window._homeEdit = true;
+  $('home')?.classList.add('edit-mode');
+  document.querySelectorAll('#home .app').forEach(app=>{
     if(app.querySelector('.app-del')) return;
-    const btn = document.createElement('button');
-    btn.className = 'app-del';
-    btn.type = 'button';
-    btn.textContent = '−';
-    btn.onclick = (e)=>{
-      e.stopPropagation();
-      if(!confirm('从桌面移除这个图标？（应用数据不会删除）')) return;
-      app.style.display = 'none';
-      app.dataset.hidden = '1';
-      saveHomeLayout();
-    };
-    app.style.position = 'relative';
+    const btn=document.createElement('button');
+    btn.className='app-del'; btn.type='button'; btn.textContent='−';
+    btn.onclick=(e)=>{ e.stopPropagation(); removeHomeApp(app); };
     app.appendChild(btn);
   });
-  initAppDrag();
+  document.querySelectorAll('#home .widget').forEach(w=>{
+    if(w.querySelector('.app-del')) return;
+    const btn=document.createElement('button');
+    btn.className='app-del'; btn.type='button'; btn.textContent='−';
+    btn.onclick=(e)=>{ e.stopPropagation(); removeHomeWidget(w); };
+    w.appendChild(btn);
+  });
+  enableHomeDrag();
 }
 function exitHomeEdit(){
-  homeEditMode = false;
-  $('home')?.classList.remove('editing');
-  closeWidgetPicker();
-  document.querySelectorAll('.app-del').forEach(el=>el.remove());
+  window._homeEdit = false;
+  $('home')?.classList.remove('edit-mode');
+  document.querySelectorAll('#home .app-del').forEach(el=>el.remove());
+  disableHomeDrag();
   saveHomeLayout();
   saveAll();
 }
-function openWidgetPicker(){ $('widget-picker')?.classList.add('show'); }
-function closeWidgetPicker(){ $('widget-picker')?.classList.remove('show'); }
-function addHomeWidget(type){
-  homeWidgets.push({ id: 'w'+Date.now(), type, size: type==='clock'||type==='quote' ? 'medium' : 'small' });
-  closeWidgetPicker();
-  renderHomeWidgets();
-  saveAll();
+function toggleHomeEdit(){
+  if(window._homeEdit) exitHomeEdit(); else enterHomeEdit();
 }
-function removeHomeWidget(id){
-  homeWidgets = homeWidgets.filter(w=>w.id!==id);
-  renderHomeWidgets();
-  saveAll();
-}
-function renderHomeWidgets(){
-  const box = $('home-widgets-row'); if(!box) return;
-  if(!homeWidgets.length){ box.innerHTML=''; return; }
-  const quotes = ['今天也是被使用的一天','湿润待命','乖一点','报备身体','不许夹腿'];
-  box.innerHTML = homeWidgets.map(w=>{
-    let body='', sub='', title='';
-    if(w.type==='clock'){
-      title='时间'; body = ($('clock')?.textContent)||'--:--'; sub = ($('date')?.textContent)||'';
-    } else if(w.type==='status'){
-      title='今日状态'; body = '羞耻 '+(typeof shame!=='undefined'?shame:'—'); sub = '服从 '+(typeof obey!=='undefined'?obey:'—');
-    } else if(w.type==='task'){
-      title='线下'; body = (currentTasks?.length||0)+' 个任务'; sub = '点按进入';
-    } else if(w.type==='heat'){
-      title='发情日历'; body = '查看周期'; sub = '易受孕 / 求操日';
-    } else if(w.type==='quote'){
-      title=''; body = quotes[Math.floor(Math.random()*quotes.length)]; sub = '汪';
-    }
-    const openMap = {task:"openApp('offline')", heat:"openApp('heat')", status:"openApp('me')", clock:'', quote:''};
-    const click = homeEditMode ? '' : (openMap[w.type]||'');
-    return `<div class="widget ${w.size||'small'}" data-wid="${w.id}" ${click?`onclick="${click}"`:''}>
-      <button class="w-del" type="button" onclick="event.stopPropagation();removeHomeWidget('${w.id}')">−</button>
-      <div class="w-title">${title}</div>
-      <div class="w-body">${body}</div>
-      <div class="w-sub">${sub}</div>
-    </div>`;
-  }).join('');
+function removeHomeApp(appEl){
+  if(!appEl) return;
+  // hide app (soft delete) by data-hidden
+  const name = appEl.querySelector('.app-name')?.textContent || '';
+  if(!confirm('从桌面移除「'+name+'」？（可在设置里恢复默认布局）')) return;
+  appEl.style.display='none';
+  appEl.dataset.hidden='1';
+  saveHomeLayout();
 }
 function saveHomeLayout(){
-  const hidden = [];
-  document.querySelectorAll('#home .app[data-hidden="1"]').forEach(el=>{
-    const name = el.querySelector('.app-name')?.textContent || '';
-    if(name) hidden.push(name);
+  const pages = [];
+  document.querySelectorAll('.home-page').forEach(page=>{
+    const apps = [...page.querySelectorAll('.apps > .app, .apps > .widget')].map(el=>{
+      if(el.classList.contains('widget')){
+        return {type:'widget', id: el.dataset.wid, kind: el.dataset.kind, size: el.dataset.size||'sm'};
+      }
+      const onclick = el.getAttribute('onclick')||'';
+      const m = onclick.match(/openApp\\('([^']+)'\\)/);
+      return {type:'app', id: m?m[1]:'', hidden: el.dataset.hidden==='1'};
+    });
+    pages.push(apps);
   });
-  window._homeHiddenApps = hidden;
-  try{ localStorage.setItem('homeHiddenApps', JSON.stringify(hidden)); }catch(_){}
+  window._homeLayout = pages;
+  try{ localStorage.setItem('homeLayoutV1', JSON.stringify(pages)); }catch(_){}
 }
-function restoreHomeLayout(){
-  try{
-    const hidden = JSON.parse(localStorage.getItem('homeHiddenApps')||'[]');
-    window._homeHiddenApps = hidden;
-    document.querySelectorAll('#home .app').forEach(el=>{
-      const name = el.querySelector('.app-name')?.textContent || '';
-      if(hidden.includes(name)){ el.style.display='none'; el.dataset.hidden='1'; }
-    });
-  }catch(_){}
+function addHomeWidget(){
+  const kinds = [
+    {k:'status', label:'身体状态'},
+    {k:'heat', label:'发情日'},
+    {k:'quote', label:'今日守则'},
+    {k:'clock', label:'时间卡片'}
+  ];
+  const pick = prompt('添加小组件类型：\\n1.身体状态\\n2.发情日\\n3.今日守则\\n4.时间卡片', '1');
+  if(pick===null) return;
+  const idx = Math.max(0, Math.min(3, (parseInt(pick,10)||1)-1));
+  const kind = kinds[idx].k;
+  const id = 'w'+Date.now();
+  window._homeWidgets = window._homeWidgets || [];
+  window._homeWidgets.push({id, kind, size:'sm', page: homePageIndex||0});
+  renderHomeWidgets();
+  if(window._homeEdit) enterHomeEdit();
+  saveAll();
 }
-function initAppDrag(){
-  const grids = [document.getElementById('home-apps-1'), document.querySelector('#home-page-2 .apps')].filter(Boolean);
-  grids.forEach(grid=>{
-    let dragging=null, placeholder=null, startIdx=-1;
-    grid.querySelectorAll('.app').forEach(app=>{
-      app.style.touchAction = 'none';
-      app.addEventListener('pointerdown', onDown);
-    });
-    function onDown(e){
-      if(!homeEditMode) return;
-      if(e.target.closest('.app-del')) return;
-      const app = e.currentTarget;
-      dragging = app;
-      startIdx = [...grid.children].indexOf(app);
-      app.classList.add('dragging');
-      app.setPointerCapture(e.pointerId);
-      const rect = app.getBoundingClientRect();
-      app.dataset.ox = e.clientX - rect.left;
-      app.dataset.oy = e.clientY - rect.top;
-      placeholder = document.createElement('div');
-      placeholder.style.cssText = 'width:60px;height:78px;opacity:0.3;';
-      app.addEventListener('pointermove', onMove);
-      app.addEventListener('pointerup', onUp);
-      app.addEventListener('pointercancel', onUp);
-    }
-    function onMove(e){
-      if(!dragging) return;
-      e.preventDefault();
-      dragging.style.position = 'fixed';
-      dragging.style.zIndex = '80';
-      dragging.style.left = (e.clientX - (parseFloat(dragging.dataset.ox)||30)) + 'px';
-      dragging.style.top = (e.clientY - (parseFloat(dragging.dataset.oy)||30)) + 'px';
-      dragging.style.pointerEvents = 'none';
-      const els = [...grid.querySelectorAll('.app:not(.dragging)')];
-      let target = null;
-      for(const el of els){
-        const r = el.getBoundingClientRect();
-        if(e.clientX > r.left && e.clientX < r.right && e.clientY > r.top && e.clientY < r.bottom){
-          target = el; break;
-        }
-      }
-      if(target && target !== dragging){
-        const all = [...grid.children];
-        const from = all.indexOf(dragging);
-        const to = all.indexOf(target);
-        if(from < to) grid.insertBefore(dragging, target.nextSibling);
-        else grid.insertBefore(dragging, target);
-      }
-    }
-    function onUp(e){
-      if(!dragging) return;
-      dragging.classList.remove('dragging');
-      dragging.style.position = '';
-      dragging.style.zIndex = '';
-      dragging.style.left = '';
-      dragging.style.top = '';
-      dragging.style.pointerEvents = '';
-      dragging.removeEventListener('pointermove', onMove);
-      dragging.removeEventListener('pointerup', onUp);
-      dragging.removeEventListener('pointercancel', onUp);
-      dragging = null;
-      saveHomeLayout();
-    }
+function removeHomeWidget(el){
+  const id = el?.dataset?.wid;
+  if(!id) return;
+  window._homeWidgets = (window._homeWidgets||[]).filter(w=>w.id!==id);
+  el.remove();
+  saveAll();
+}
+function widgetHTML(w){
+  const girl = (meProfile&&meProfile.name)||'小狗';
+  let title='', body='', sub='';
+  if(w.kind==='status'){
+    title='身体状态'; body='待命中 · 湿润'; sub=girl+' · 随时可用';
+  } else if(w.kind==='heat'){
+    const {type, day} = (typeof heatCycleDay==='function') ? heatCycleDay(new Date()) : {type:null, day:0};
+    const map={fertile:'易受孕日', want:'求操日', force:'强制发情'};
+    title='发情日历'; body=map[type]||'普通日'; sub='周期第 '+(day+1)+' 天';
+  } else if(w.kind==='quote'){
+    title='守则摘录';
+    const r = (ruleVersions&&ruleVersions[0]&&ruleVersions[0].content)||'听话，汇报，被使用。';
+    body = String(r).split('\\n').filter(Boolean)[0]||'听话。';
+    sub='双击桌面可编辑';
+  } else {
+    title='现在'; body=( $('clock')?.textContent || '' ); sub=($('date')?.textContent||'');
+  }
+  const size = w.size==='md' ? 'w-md' : 'w-sm';
+  return `<div class="widget ${size}" data-wid="${w.id}" data-kind="${w.kind}" data-size="${w.size||'sm'}" onclick="if(!window._homeEdit){ if('${w.kind}'==='heat')openApp('heat'); else if('${w.kind}'==='status')openApp('train'); else if('${w.kind}'==='quote')openApp('rules'); }">
+    <div class="w-title">${title}</div>
+    <div class="w-body">${escapeHtml(body)}</div>
+    <div class="w-sub">${escapeHtml(sub)}</div>
+  </div>`;
+}
+function renderHomeWidgets(){
+  // remove existing widgets then inject into page apps grids
+  document.querySelectorAll('.home-page .widget').forEach(el=>el.remove());
+  const list = window._homeWidgets || [];
+  list.forEach(w=>{
+    const page = document.querySelectorAll('.home-page')[w.page||0];
+    const grid = page?.querySelector('.apps');
+    if(!grid) return;
+    grid.insertAdjacentHTML('afterbegin', widgetHTML(w));
   });
 }
 
-// long press home to edit
-(function initHomeLongPress(){
-  let timer=null, startX=0, startY=0;
-  const home = () => $('home');
-  document.addEventListener('touchstart', e=>{
-    if(!home()?.classList.contains('show')) return;
-    if(homeEditMode) return;
-    if(!e.target.closest('#home')) return;
-    if(e.target.closest('.dock')) return;
-    startX = e.touches[0].clientX; startY = e.touches[0].clientY;
-    timer = setTimeout(()=>{
-      enterHomeEdit();
-      if(navigator.vibrate) try{ navigator.vibrate(12); }catch(_){}
-    }, 520);
-  }, {passive:true});
-  document.addEventListener('touchmove', e=>{
-    if(!timer) return;
-    const dx = Math.abs(e.touches[0].clientX - startX);
-    const dy = Math.abs(e.touches[0].clientY - startY);
-    if(dx>12 || dy>12){ clearTimeout(timer); timer=null; }
-  }, {passive:true});
-  document.addEventListener('touchend', ()=>{ if(timer){ clearTimeout(timer); timer=null; } });
-  document.addEventListener('touchcancel', ()=>{ if(timer){ clearTimeout(timer); timer=null; } });
-  // desktop mouse long press
-  document.addEventListener('mousedown', e=>{
-    if(!home()?.classList.contains('show')) return;
-    if(homeEditMode) return;
-    if(!e.target.closest('#home')) return;
-    if(e.target.closest('.dock')) return;
-    timer = setTimeout(()=>enterHomeEdit(), 520);
+let _dragApp = null;
+function enableHomeDrag(){
+  document.querySelectorAll('#home .apps .app, #home .apps .widget').forEach(el=>{
+    el.addEventListener('touchstart', onHomeDragStart, {passive:false});
+    el.addEventListener('mousedown', onHomeDragStart);
   });
-  document.addEventListener('mouseup', ()=>{ if(timer){ clearTimeout(timer); timer=null; } });
+}
+function disableHomeDrag(){
+  document.querySelectorAll('#home .apps .app, #home .apps .widget').forEach(el=>{
+    el.removeEventListener('touchstart', onHomeDragStart);
+    el.removeEventListener('mousedown', onHomeDragStart);
+  });
+}
+function onHomeDragStart(e){
+  if(!window._homeEdit) return;
+  if(e.target.closest('.app-del')) return;
+  const el = e.currentTarget;
+  _dragApp = el;
+  el.classList.add('dragging');
+  const move = (ev)=>{
+    // visual only; swap on end by elementFromPoint
+  };
+  const up = (ev)=>{
+    el.classList.remove('dragging');
+    const pt = (ev.changedTouches&&ev.changedTouches[0]) || ev;
+    const target = document.elementFromPoint(pt.clientX, pt.clientY);
+    const other = target?.closest('.apps .app, .apps .widget');
+    if(other && other!==el && other.parentElement===el.parentElement){
+      const parent = el.parentElement;
+      const all = [...parent.children];
+      const i = all.indexOf(el), j = all.indexOf(other);
+      if(i>=0 && j>=0){
+        if(i<j) parent.insertBefore(el, other.nextSibling);
+        else parent.insertBefore(el, other);
+      }
+      saveHomeLayout();
+    }
+    document.removeEventListener('touchend', up);
+    document.removeEventListener('mouseup', up);
+    _dragApp=null;
+  };
+  document.addEventListener('touchend', up, {once:true});
+  document.addEventListener('mouseup', up, {once:true});
+}
+
+// double-click / double-tap home to edit
+(function(){
+  let lastTap=0;
+  const home=$('home');
+  if(!home) return;
+  home.addEventListener('click', (e)=>{
+    if(e.target.closest('.app') || e.target.closest('.dock') || e.target.closest('.home-edit-bar') || e.target.closest('.widget')) return;
+    const now=Date.now();
+    if(now-lastTap<320){ toggleHomeEdit(); lastTap=0; }
+    else lastTap=now;
+  });
+  home.addEventListener('dblclick', (e)=>{
+    if(e.target.closest('.app') || e.target.closest('.dock') || e.target.closest('.widget')) return;
+    toggleHomeEdit();
+  });
 })();
 
 
 loadAll();
 try{ applyAppIcons(); }catch(_e){}
-try{ restoreHomeLayout(); renderHomeWidgets(); }catch(_e){}
+try{ renderHomeWidgets(); }catch(_e){}
 </script>
 </body>
 </html>
