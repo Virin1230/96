@@ -140,7 +140,7 @@
   .page { position: absolute; inset: 0; background: var(--bg); display: none; flex-direction: column; }
   .page.show { display: flex; }
   .nav {
-    height: 48px; padding: 0 8px 0 4px; display: flex; align-items: center; justify-content: space-between;
+    height: 56px; padding: 0 8px 0 4px; display: flex; align-items: center; justify-content: space-between;
     background: var(--nav); backdrop-filter: blur(40px) saturate(200%);
     -webkit-backdrop-filter: blur(40px) saturate(200%);
     border-bottom: .33px solid var(--border); margin-top: 34px; flex-shrink: 0;
@@ -770,15 +770,16 @@
             <div class="app" onclick="openApp('auction')"><div class="app-icon" id="icon-auction" style="background:linear-gradient(180deg,#ffd60a,#ff9f0a);">💰</div><div class="app-name">身体拍卖</div></div>
             <div class="app" onclick="openApp('album')"><div class="app-icon" id="icon-album" style="background:linear-gradient(180deg,#bf5af2,#ff375f);">📷</div><div class="app-name">被操相册</div></div>
             <div class="app" onclick="openApp('heat')"><div class="app-icon" id="icon-heat" style="background:linear-gradient(180deg,#ff6482,#bf5af2);">📅</div><div class="app-name">发情日历</div></div>
+            <div class="app" onclick="openApp('campus')"><div class="app-icon" id="icon-campus" style="background:linear-gradient(180deg,#64d2ff,#5e5ce6);">🏫</div><div class="app-name">校园墙</div></div>
           </div>
         </div>
       </div>
       <div class="home-dots" id="home-dots"><i class="on"></i><i></i></div>
-      <div class="dock">
-        <div class="app" onclick="openApp('messages')"><div class="app-icon" style="background:linear-gradient(180deg,#5ac8fa,#007aff);">💬</div></div>
-        <div class="app" onclick="openApp('train')"><div class="app-icon" style="background:linear-gradient(180deg,#ff6482,#ff2d55);">🔒</div></div>
-        <div class="app" onclick="openApp('me')"><div class="app-icon" style="background:linear-gradient(180deg,#ff8a80,#ff375f);">🐶</div></div>
-        <div class="app" onclick="openApp('settings')"><div class="app-icon" style="background:linear-gradient(180deg,#8e8e93,#636366);">⚙️</div></div>
+            <div class="dock">
+        <div class="app" onclick="openApp('messages')"><div class="app-icon" id="dock-messages" style="background:linear-gradient(180deg,#5ac8fa,#007aff);">💬</div></div>
+        <div class="app" onclick="openApp('train')"><div class="app-icon" id="dock-train" style="background:linear-gradient(180deg,#ff6482,#ff2d55);">🔒</div></div>
+        <div class="app" onclick="openApp('me')"><div class="app-icon" id="dock-me" style="background:linear-gradient(180deg,#ff8a80,#ff375f);">🐶</div></div>
+        <div class="app" onclick="openApp('settings')"><div class="app-icon" id="dock-settings" style="background:linear-gradient(180deg,#8e8e93,#636366);">⚙️</div></div>
       </div>
     </div>
 
@@ -1116,9 +1117,17 @@
       <div class="nav">
         <button class="nav-back" onclick="goHome()">‹ 桌面</button>
         <div class="nav-title">美化</div>
-        <button class="nav-right" onclick="saveMediaSkin()">保存</button>
+        <button class="nav-right" onclick="saveMediaSkin();saveBeautifyPreset(true)">保存</button>
       </div>
       <div class="scroll" style="padding:12px;">
+        <div class="card" style="border-radius:16px;">
+          <h4>图标预设</h4>
+          <div style="display:flex;gap:8px;margin:8px 0;">
+            <select id="beauty-preset-sel" style="flex:1;background:var(--input);border:none;border-radius:10px;padding:10px;color:var(--text);font-size:15px;" onchange="loadBeautifyPreset(this.value)"></select>
+            <button class="btn btn-secondary" style="flex:0;padding:0 12px;" onclick="saveBeautifyPreset()">存为预设</button>
+          </div>
+          <button class="btn btn-danger" style="width:100%;" onclick="deleteBeautifyPreset()">删除当前预设</button>
+        </div>
         <div class="card">
           <h4>红包样式</h4>
           <label style="font-size:12px;color:var(--muted);">主色</label>
@@ -1355,6 +1364,37 @@
 
 
 
+
+    <!-- 校园墙 -->
+    <div class="page" id="page-campus">
+      <div class="nav">
+        <button class="nav-back" onclick="goHome()">‹ 桌面</button>
+        <div class="nav-title">校园墙</div>
+        <button class="nav-right" onclick="toggleCampusMenu()">···</button>
+      </div>
+      <div id="campus-menu" style="display:none;padding:8px 12px;background:var(--nav);border-bottom:.5px solid var(--border);gap:6px;flex-wrap:wrap;">
+        <button class="btn btn-secondary" style="flex:1;padding:8px;font-size:12px;" onclick="exportCampus()">导出</button>
+        <button class="btn btn-secondary" style="flex:1;padding:8px;font-size:12px;" onclick="importCampus()">导入</button>
+        <button class="btn btn-danger" style="flex:1;padding:8px;font-size:12px;" onclick="clearCampus()">清空</button>
+        <button class="btn btn-secondary" style="flex:1;padding:8px;font-size:12px;" onclick="editCampusWB()">世界书</button>
+      </div>
+      <div class="forum-tabs" id="campus-tabs" style="background:var(--nav);">
+        <button class="forum-tab on" onclick="setCampusTab('gossip',this)">八卦区</button>
+        <button class="forum-tab" onclick="setCampusTab('nsfw',this)">NSFW区</button>
+        <button class="forum-tab" onclick="setCampusTab('boys',this)">男生论坛</button>
+        <button class="forum-tab" onclick="setCampusTab('girls',this)">女生论坛</button>
+      </div>
+      <div style="padding:8px 12px;background:var(--bg2);border-bottom:.5px solid var(--border);">
+        <input type="text" id="campus-hint" placeholder="生成方向（可选，如：表白学长、厕所偷情…）" style="width:100%;background:var(--input);border:none;border-radius:10px;padding:10px;color:var(--text);font-size:14px;margin-bottom:8px;">
+        <button class="btn btn-primary" style="width:100%;" onclick="refreshCampusSection()">AI 刷新本区</button>
+      </div>
+      <div class="scroll" style="padding:12px;" id="campus-list"></div>
+      <div class="msg-edit-bar" id="campus-edit-bar">
+        <button class="btn btn-secondary" style="flex:1;" onclick="exitCampusEdit()">取消</button>
+        <button class="btn btn-danger" style="flex:1;" onclick="deleteCampusSelected()">删除所选</button>
+      </div>
+    </div>
+
     <!-- 设置 -->
     <div class="page" id="page-settings">
       <div class="nav">
@@ -1495,6 +1535,10 @@ let albumView = 'years'; // years | albums | grid
 let heatMonth = new Date();
 let aucTab = 'live';
 let auctionLots = [];
+let campusData = { gossip:[], nsfw:[], boys:[], girls:[], boysChat:[] };
+let campusTab = 'gossip';
+let campusWB = ''; // 绑定的世界书名称，逗号分隔
+
 
 
 
@@ -1602,6 +1646,10 @@ function loadAll() {
       if(Array.isArray(d.liveHistory)) liveHistory = d.liveHistory;
       if(d.auctionParts) auctionParts = d.auctionParts;
       if(Array.isArray(d.albumShots)) albumShots = d.albumShots;
+      if(d.beautyPresets) beautyPresets = d.beautyPresets;
+      if(d.currentBeautyPreset) currentBeautyPreset = d.currentBeautyPreset;
+      if(d.campusData) campusData = d.campusData;
+      if(d.campusWB) campusWB = d.campusWB;
       if(Array.isArray(d.auctionLots)) auctionLots = d.auctionLots;
       if(d.heatCycleStart) window._heatCycleStart = d.heatCycleStart;
       if(d.meProfile) meProfile = Object.assign(meProfile, d.meProfile);
@@ -1666,7 +1714,8 @@ function saveAll() {
     cor,shame,body,obey,mainFinished,bodyData,diaries,ruleVersions,
     offlineArchives,worldBooks,apiProfiles,currentProfileId,
     conversations,contacts,pendingRequests, meProfile, memorySources,
-    offlineWordCount, diaryWordCount, rulesWordCount, trainWordCount, doneTaskKeys, appIcons, evalFavorites, mediaSkin, forumPosts, liveBg, liveHistory, auctionParts, albumShots, auctionLots, heatCycleStart: window._heatCycleStart
+    offlineWordCount, diaryWordCount, rulesWordCount, trainWordCount, doneTaskKeys, appIcons, evalFavorites, mediaSkin, forumPosts, liveBg, liveHistory, auctionParts, albumShots, auctionLots, heatCycleStart: window._heatCycleStart,
+    beautyPresets, currentBeautyPreset, campusData, campusWB
   }));
   // 同步头像给旧逻辑兼容
   if(meProfile.avatarImg) localStorage.setItem('myAvatar', meProfile.avatarImg);
@@ -1732,6 +1781,7 @@ function openApp(name) {
   if(name==='auction') renderAuction();
   if(name==='album') renderAlbum();
   if(name==='heat'){ renderHeatCalendar(); checkHeatToday(true); }
+  if(name==='campus') renderCampus();
   if(name==='forum-detail') {}
   applyAppIcons();
 }
@@ -1973,15 +2023,18 @@ function getWorldBookPrompt(extraNames=[], context=''){
     if(w.constant) return true; // 常驻无视 delay
     return nowCount >= (w.delay||0);
   });
+  // 第一步：所有常驻条目无条件注入
   eligible.forEach(w=>{
+    if(w.constant) picked.set(w.id||w.name, w);
+  });
+  // 第二步：关键词 / 显式关联
+  eligible.forEach(w=>{
+    if(w.constant) return;
     const explicit=linked.has(w.name);
-    const main=w.constant || explicit || (w.keywords||[]).some(k=>k && text.includes(String(k).toLowerCase()));
+    const main=explicit || (w.keywords||[]).some(k=>k && text.includes(String(k).toLowerCase()));
     if(!main)return;
-    // 常驻条目：无视概率与次关键词，强制注入
-    if(!w.constant){
-      if(w.probability<100 && Math.random()*100>w.probability)return;
-      if(w.secondary?.length && !w.secondary.some(k=>text.includes(String(k).toLowerCase()))) return;
-    }
+    if(w.probability<100 && Math.random()*100>w.probability)return;
+    if(w.secondary?.length && !w.secondary.some(k=>text.includes(String(k).toLowerCase()))) return;
     picked.set(w.id||w.name,w);
   });
   // 递归最多3轮，避免世界书无限膨胀
@@ -3372,20 +3425,27 @@ async function setWallpaper(e){
 // ========== 美化图标 ==========
 function applyAppIcons(){
   Object.keys(appIcons||{}).forEach(id=>{
-    const el = document.getElementById('icon-'+id);
-    if(!el || !appIcons[id]) return;
-    el.style.backgroundImage = `url(${appIcons[id]})`;
-    el.style.backgroundSize = 'cover';
-    el.style.backgroundPosition = 'center';
-    el.textContent = '';
+    const data = appIcons[id];
+    if(!data) return;
+    ['icon-'+id, 'dock-'+id].forEach(eid=>{
+      const el = document.getElementById(eid);
+      if(!el) return;
+      el.style.backgroundImage = `url(${data})`;
+      el.style.backgroundSize = 'cover';
+      el.style.backgroundPosition = 'center';
+      el.textContent = '';
+    });
   });
 }
 function renderBeautify(){
+  refreshBeautifyPresetSel();
   const apps = [
     {id:'messages',name:'消息'},{id:'contacts',name:'通讯录'},{id:'offline',name:'线下'},
     {id:'train',name:'主人的母狗'},{id:'worldbook',name:'世界书'},{id:'diary',name:'日记'},
     {id:'rules',name:'守则'},{id:'me',name:'母狗'},{id:'guide',name:'小狗乖乖'},
-    {id:'forum',name:'今夜可约'},{id:'live',name:'发骚直播'},{id:'auction',name:'身体拍卖'},{id:'album',name:'被操相册'},{id:'beautify',name:'美化'},{id:'settings',name:'设置'}
+    {id:'forum',name:'今夜可约'},{id:'live',name:'发骚直播'},{id:'auction',name:'身体拍卖'},
+    {id:'album',name:'被操相册'},{id:'heat',name:'发情日历'},{id:'campus',name:'校园墙'},
+    {id:'beautify',name:'美化'},{id:'settings',name:'设置'}
   ];
   const box = $('beautify-list'); if(!box) return;
   box.innerHTML = apps.map(a=>`
@@ -3439,7 +3499,69 @@ function pickAppIcon(id){
   };
   input.click();
 }
-function resetAppIcon(id){ delete appIcons[id]; saveAll(); location.reload(); }
+function resetAppIcon(id){ delete appIcons[id]; saveAll(); applyAppIcons(); renderBeautify(); }
+
+let beautyPresets = {}; // name -> { appIcons, mediaSkin }
+let currentBeautyPreset = '';
+
+function refreshBeautifyPresetSel(){
+  const sel = $('beauty-preset-sel'); if(!sel) return;
+  const names = Object.keys(beautyPresets||{});
+  sel.innerHTML = '<option value="">（当前未命名）</option>' + names.map(n=>`<option value="${escapeHtml(n)}">${escapeHtml(n)}</option>`).join('');
+  if(currentBeautyPreset && beautyPresets[currentBeautyPreset]) sel.value = currentBeautyPreset;
+}
+function saveBeautifyPreset(silent){
+  // 先同步红包皮肤
+  if(typeof saveMediaSkin==='function'){
+    mediaSkin.redpackColor = $('skin-rp1')?.value || mediaSkin.redpackColor;
+    mediaSkin.redpackColor2 = $('skin-rp2')?.value || mediaSkin.redpackColor2;
+    mediaSkin.transferColor = $('skin-tf1')?.value || mediaSkin.transferColor;
+    mediaSkin.transferColor2 = $('skin-tf2')?.value || mediaSkin.transferColor2;
+  }
+  let name = currentBeautyPreset;
+  if(!name){
+    name = prompt('预设名称', '我的预设'+(Object.keys(beautyPresets).length+1));
+    if(!name || !name.trim()) return;
+    name = name.trim();
+  } else if(!silent){
+    if(!confirm('覆盖预设「'+name+'」？')) {
+      const n2 = prompt('另存为新名称', name+'_副本');
+      if(!n2||!n2.trim()) return;
+      name = n2.trim();
+    }
+  }
+  beautyPresets[name] = {
+    appIcons: JSON.parse(JSON.stringify(appIcons||{})),
+    mediaSkin: JSON.parse(JSON.stringify(mediaSkin||{}))
+  };
+  currentBeautyPreset = name;
+  saveAll();
+  refreshBeautifyPresetSel();
+  if(!silent) alert('预设已保存：'+name);
+}
+function loadBeautifyPreset(name){
+  if(!name || !beautyPresets[name]) return;
+  const p = beautyPresets[name];
+  appIcons = JSON.parse(JSON.stringify(p.appIcons||{}));
+  mediaSkin = Object.assign({}, mediaSkin, p.mediaSkin||{});
+  currentBeautyPreset = name;
+  saveAll();
+  applyAppIcons();
+  loadMediaSkinUI();
+  renderBeautify();
+  alert('已切换到预设：'+name);
+}
+function deleteBeautifyPreset(){
+  const sel = $('beauty-preset-sel');
+  const name = sel?.value || currentBeautyPreset;
+  if(!name){ alert('没有选中预设'); return; }
+  if(!confirm('删除预设「'+name+'」？')) return;
+  delete beautyPresets[name];
+  if(currentBeautyPreset===name) currentBeautyPreset='';
+  saveAll(); refreshBeautifyPresetSel();
+}
+
+
 
 // ========== 聊天工具：图片/语音/红包/转账 ==========
 function toggleChatTools(){
@@ -4256,6 +4378,195 @@ async function heatForceReport(type){
   prompt('可复制发给主人：', raw||'');
 }
 
+
+// ========== 校园墙 ==========
+function toggleCampusMenu(){
+  const m=$('campus-menu'); if(!m)return;
+  m.style.display = m.style.display==='none'||!m.style.display ? 'flex' : 'none';
+}
+function setCampusTab(tab, btn){
+  campusTab = tab;
+  document.querySelectorAll('#campus-tabs .forum-tab').forEach(b=>b.classList.remove('on'));
+  if(btn) btn.classList.add('on');
+  renderCampus();
+}
+function editCampusWB(){
+  const v = prompt('绑定世界书名称（逗号分隔，可空）', campusWB||'');
+  if(v===null) return;
+  campusWB = v.trim();
+  saveAll();
+  alert('已绑定：'+(campusWB||'无'));
+}
+function renderCampus(){
+  if(!campusData) campusData = { gossip:[], nsfw:[], boys:[], girls:[], boysChat:[] };
+  const box = $('campus-list'); if(!box) return;
+  const list = campusData[campusTab] || [];
+  if(campusTab==='boys'){
+    box.innerHTML = renderBoysForum(list) + renderBoysChat();
+    bindCampusCards();
+    return;
+  }
+  if(campusTab==='girls'){
+    box.innerHTML = renderGirlsForum(list);
+    bindCampusCards();
+    return;
+  }
+  box.innerHTML = list.map((p,i)=>campusPostHtml(p)).join('') ||
+    '<div style="text-align:center;color:var(--muted);padding:40px;">本区暂无帖子<br>可填写方向后点「AI 刷新本区」</div>';
+  bindCampusCards();
+}
+function campusPostHtml(p){
+  return `<div class="forum-card campus-card" data-id="${p.id}" style="cursor:pointer;">
+    <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:6px;">
+      <span style="color:var(--pink);font-weight:600;">${escapeHtml(p.user||'匿名')}</span>
+      <span>${p.time?new Date(p.time).toLocaleString():''}</span>
+    </div>
+    <div style="font-size:15px;font-weight:600;margin-bottom:6px;color:var(--text);">${escapeHtml(p.title||'')}</div>
+    <div style="font-size:13.5px;color:var(--muted);line-height:1.5;white-space:pre-wrap;">${escapeHtml(p.body||'')}</div>
+    ${p.tag?`<div style="margin-top:8px;"><span class="wb-pill">${escapeHtml(p.tag)}</span></div>`:''}
+  </div>`;
+}
+function renderBoysForum(list){
+  const ranks = list.filter(x=>x.kind==='rank');
+  const reviews = list.filter(x=>x.kind==='review');
+  const posts = list.filter(x=>!x.kind || x.kind==='post');
+  let html = '';
+  if(ranks.length){
+    html += '<div style="font-weight:700;margin-bottom:8px;color:var(--text);">女生排行榜</div>';
+    html += ranks.map(p=>campusPostHtml(p)).join('');
+  }
+  if(reviews.length){
+    html += '<div style="font-weight:700;margin:14px 0 8px;color:var(--text);">操过体验感</div>';
+    html += reviews.map(p=>campusPostHtml(p)).join('');
+  }
+  if(posts.length){
+    html += '<div style="font-weight:700;margin:14px 0 8px;color:var(--text);">讨论</div>';
+    html += posts.map(p=>campusPostHtml(p)).join('');
+  }
+  return html || '<div style="color:var(--muted);padding:20px;text-align:center;">暂无内容</div>';
+}
+function renderBoysChat(){
+  const chat = campusData.boysChat || [];
+  return `<div style="font-weight:700;margin:16px 0 8px;">匿名群聊</div>
+    <div class="card" style="border-radius:14px;max-height:220px;overflow-y:auto;" id="campus-boys-chat">
+      ${chat.map(m=>`<div style="font-size:13px;margin-bottom:6px;"><b style="color:var(--pink);">${escapeHtml(m.user)}</b>：${escapeHtml(m.text)}</div>`).join('')||'<div style="color:var(--muted);">还没有人说话</div>'}
+    </div>
+    <div style="display:flex;gap:8px;margin-top:8px;">
+      <input type="text" id="campus-chat-input" placeholder="匿名发言…" style="flex:1;background:var(--input);border:none;border-radius:10px;padding:10px;color:var(--text);">
+      <button class="btn btn-primary" style="flex:0;padding:0 14px;" onclick="sendCampusChat()">发送</button>
+    </div>`;
+}
+function renderGirlsForum(list){
+  const ranks = list.filter(x=>x.kind==='rank');
+  const fantasy = list.filter(x=>x.kind==='fantasy');
+  const posts = list.filter(x=>!x.kind || x.kind==='post');
+  let html='';
+  if(ranks.length){
+    html += '<div style="font-weight:700;margin-bottom:8px;">排名</div>'+ranks.map(p=>campusPostHtml(p)).join('');
+  }
+  if(fantasy.length){
+    html += '<div style="font-weight:700;margin:14px 0 8px;">匿名意淫区</div>'+fantasy.map(p=>campusPostHtml(p)).join('');
+  }
+  if(posts.length){
+    html += '<div style="font-weight:700;margin:14px 0 8px;">讨论</div>'+posts.map(p=>campusPostHtml(p)).join('');
+  }
+  return html || '<div style="color:var(--muted);padding:20px;text-align:center;">暂无内容</div>';
+}
+function bindCampusCards(){
+  document.querySelectorAll('.campus-card').forEach(el=>{
+    el.ondblclick = (ev)=>{
+      ev.preventDefault();
+      window._campusEdit = true;
+      $('campus-edit-bar')?.classList.add('show');
+      el.classList.add('msel');
+      el.style.outline = '2px solid var(--blue)';
+    };
+    el.onclick = ()=>{
+      if(!window._campusEdit) return;
+      el.classList.toggle('msel');
+      el.style.outline = el.classList.contains('msel') ? '2px solid var(--blue)' : '';
+    };
+  });
+}
+function exitCampusEdit(){
+  window._campusEdit=false;
+  $('campus-edit-bar')?.classList.remove('show');
+  document.querySelectorAll('.campus-card.msel').forEach(el=>{ el.classList.remove('msel'); el.style.outline=''; });
+}
+function deleteCampusSelected(){
+  const ids = [...document.querySelectorAll('.campus-card.msel')].map(el=>el.dataset.id);
+  if(!ids.length){ alert('请先选择'); return; }
+  if(!confirm('删除选中的 '+ids.length+' 条？')) return;
+  const arr = campusData[campusTab]||[];
+  campusData[campusTab] = arr.filter(p=>!ids.includes(p.id));
+  saveAll(); exitCampusEdit(); renderCampus();
+}
+function sendCampusChat(){
+  const v=($('campus-chat-input')?.value||'').trim(); if(!v) return;
+  campusData.boysChat = campusData.boysChat||[];
+  campusData.boysChat.push({ user: '匿名'+(Math.floor(Math.random()*90)+10), text:v, time:Date.now() });
+  $('campus-chat-input').value='';
+  saveAll(); renderCampus();
+}
+async function refreshCampusSection(){
+  const hint = ($('campus-hint')?.value||'').trim();
+  const linked = (campusWB||'').split(/[,，]/).map(x=>x.trim()).filter(Boolean);
+  const prompts = {
+    gossip: `生成3-5条「校园八卦区」帖子。主题可含：情感八卦、有人在校园某处打炮被撞见、表白学长/学姐、花痴、宿舍趣闻等。名字必须像真实中国大学生姓名。输出JSON数组，字段：user,title,body,tag。${hint?'用户指定方向：'+hint:''}`,
+    nsfw: `生成3-5条同校「NSFW约炮/色情交友」帖子，真实姓名风格，含大致院系或年级暗示。输出JSON数组：user,title,body,tag。${hint?'方向：'+hint:''}`,
+    boys: `生成男生论坛内容：1) 2-3条女生排行（最骚/最想操/最母狗，kind=rank，真实女名）；2) 2条操过体验评价（kind=review）；3) 1-2条普通讨论（kind=post）。输出JSON数组：user,title,body,tag,kind。${hint?'方向：'+hint:''}`,
+    girls: `生成女生论坛内容：1) 最帅/最想谈恋爱/最想被调教排名（kind=rank，真实男名）；2) 2条匿名意淫（kind=fantasy）；可加讨论。输出JSON数组：user,title,body,tag,kind。${hint?'方向：'+hint:''}`
+  };
+  const system = `你是校园墙内容生成器。必须严格参考世界书常驻条目。姓名要真实自然。只输出JSON数组，不要其他文字。`;
+  const raw = await callAI(system, prompts[campusTab]||prompts.gossip, 3000, linked);
+  let arr=[]; try{ const m=raw.match(/\[[\s\S]*\]/); arr=m?JSON.parse(m[0]):[]; }catch(_){}
+  if(!Array.isArray(arr)||!arr.length){ alert('生成失败，请检查API'); return; }
+  const mapped = arr.map((p,i)=>({
+    id: 'cp'+Date.now()+i,
+    user: p.user||'匿名',
+    title: p.title||'无题',
+    body: p.body||'',
+    tag: p.tag||'',
+    kind: p.kind||'post',
+    time: Date.now()
+  }));
+  campusData[campusTab] = (campusData[campusTab]||[]).concat(mapped); // 保留旧帖，追加新帖
+  // 男生论坛顺便刷几句群聊
+  if(campusTab==='boys'){
+    const chatRaw = await callAI('生成4条校园男生匿名群聊短句，JSON数组：[{"user":"匿名xx","text":"..."}]。真实口吻。','群聊', 600, linked);
+    try{
+      const m=chatRaw.match(/\[[\s\S]*\]/); const c=m?JSON.parse(m[0]):[];
+      if(Array.isArray(c)) campusData.boysChat = (campusData.boysChat||[]).concat(c.map(x=>({user:x.user||'匿名', text:x.text||'', time:Date.now()})));
+    }catch(_){}
+  }
+  saveAll(); renderCampus();
+  alert('已追加 '+mapped.length+' 条（旧帖保留）');
+}
+function exportCampus(){
+  const blob = new Blob([JSON.stringify({campusData, campusWB}, null, 2)], {type:'application/json'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
+  a.download='校园墙_'+new Date().toISOString().slice(0,10)+'.json'; a.click();
+}
+function importCampus(){
+  const input=document.createElement('input'); input.type='file'; input.accept='application/json';
+  input.onchange=async e=>{
+    const f=e.target.files?.[0]; if(!f)return;
+    try{
+      const text=await f.text(); const d=JSON.parse(text);
+      if(d.campusData) campusData=d.campusData;
+      if(d.campusWB!=null) campusWB=d.campusWB;
+      saveAll(); renderCampus(); alert('导入成功');
+    }catch(err){ alert('导入失败'); }
+  };
+  input.click();
+}
+function clearCampus(){
+  if(!confirm('清空校园墙全部内容？')) return;
+  campusData = { gossip:[], nsfw:[], boys:[], girls:[], boysChat:[] };
+  saveAll(); renderCampus();
+}
+
+
 function exportData(){
   // 全量备份：API、聊天、世界书、任务、日记、论坛、美化、收藏等一切本地数据
   const data = {
@@ -4270,6 +4581,7 @@ function exportData(){
     doneTaskKeys, appIcons, evalFavorites, mediaSkin, forumPosts,
     liveBg, liveHistory, auctionParts, albumShots, auctionLots,
     heatCycleStart: window._heatCycleStart,
+    beautyPresets, currentBeautyPreset, campusData, campusWB,
     uiTheme, guideMode,
     wallpaper: localStorage.getItem('wallpaper') || '',
     myAvatar: meProfile.avatarImg || '',
@@ -4300,6 +4612,10 @@ function doImport(e){
       if(Array.isArray(d.liveHistory)) liveHistory = d.liveHistory;
       if(d.auctionParts) auctionParts = d.auctionParts;
       if(Array.isArray(d.albumShots)) albumShots = d.albumShots;
+      if(d.beautyPresets) beautyPresets = d.beautyPresets;
+      if(d.currentBeautyPreset) currentBeautyPreset = d.currentBeautyPreset;
+      if(d.campusData) campusData = d.campusData;
+      if(d.campusWB) campusWB = d.campusWB;
       if(Array.isArray(d.auctionLots)) auctionLots = d.auctionLots;
       if(d.heatCycleStart) window._heatCycleStart = d.heatCycleStart;
       if(Array.isArray(d.doneTaskKeys)) doneTaskKeys = d.doneTaskKeys;
@@ -4329,6 +4645,7 @@ function clearAll(){
 })();
 
 loadAll();
+try{ applyAppIcons(); }catch(_e){}
 </script>
 </body>
 </html>
