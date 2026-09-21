@@ -1590,6 +1590,52 @@
   }
   #assistive-dot.faded { opacity: .35; }
 
+  /* 世界书分组勾选 */
+  .wb-group-block {
+    border: .5px solid var(--border); border-radius: 12px;
+    margin-bottom: 8px; overflow: hidden; background: var(--card);
+  }
+  .wb-group-head {
+    display: flex; align-items: center; gap: 8px;
+    padding: 10px 12px; cursor: pointer; user-select: none;
+    background: var(--card2); font-size: 13px; font-weight: 600;
+  }
+  .wb-group-head .chev { margin-left: auto; color: var(--muted); font-size: 12px; transition: transform .2s; }
+  .wb-group-block.open .wb-group-head .chev { transform: rotate(180deg); }
+  .wb-group-body { display: none; padding: 4px 10px 10px; }
+  .wb-group-block.open .wb-group-body { display: block; }
+  .wb-group-body label {
+    display: flex; align-items: center; gap: 8px;
+    padding: 7px 4px; font-size: 13px; color: var(--text);
+  }
+  .wb-group-count { font-size: 11px; color: var(--muted); font-weight: 500; margin-left: 4px; }
+  /* offline bottom */
+  .offline-bottom {
+    display: flex; border-top: .5px solid var(--border);
+    background: var(--nav); padding: 6px 0 calc(6px + env(safe-area-inset-bottom));
+    flex-shrink: 0;
+  }
+  .offline-bottom button {
+    flex: 1; border: 0; background: none; color: var(--muted);
+    font-size: 11px; padding: 6px 0; cursor: pointer;
+    display: flex; flex-direction: column; align-items: center; gap: 2px;
+  }
+  .offline-bottom button.on { color: var(--blue); font-weight: 600; }
+  .offline-bottom button span { font-size: 18px; }
+  #chat-send.icon-btn:disabled, #chat-send:disabled,
+  button.live-send-btn:disabled {
+    opacity: .35; background: #555 !important; pointer-events: none;
+  }
+  .date-contact-chip {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 8px 12px; border-radius: 20px; margin: 4px;
+    background: var(--input); font-size: 13px; cursor: pointer;
+    border: 1px solid transparent;
+  }
+  .date-contact-chip.on {
+    border-color: var(--blue); background: rgba(10,132,255,.15); color: var(--blue);
+  }
+
 </style>
 </head>
 <body data-theme="dark">
@@ -1613,7 +1659,7 @@
           <div class="apps">
             <div class="app" onclick="openApp('messages')"><div class="app-icon" id="icon-messages" style="background:linear-gradient(180deg,#5ac8fa,#007aff);"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z"/></svg></div><div class="app-name">消息</div></div>
             <div class="app" onclick="openApp('contacts')"><div class="app-icon" id="icon-contacts" style="background:linear-gradient(180deg,#ff9f0a,#ff375f);"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg></div><div class="app-name">通讯录</div></div>
-            <div class="app" onclick="openApp('offline')"><div class="app-icon" id="icon-offline" style="background:linear-gradient(180deg,#ffd60a,#ff9f0a);"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"><path d="M12 21s7-5.5 7-11a7 7 0 1 0-14 0c0 5.5 7 11 7 11z"/><circle cx="12" cy="10" r="2.5" fill="#fff" stroke="none"/></svg></div><div class="app-name">线下</div></div>
+            <div class="app" onclick="openApp('offline')"><div class="app-icon" id="icon-offline" style="background:linear-gradient(180deg,#ffd60a,#ff9f0a);"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"><path d="M12 21s7-5.5 7-11a7 7 0 1 0-14 0c0 5.5 7 11 7 11z"/><circle cx="12" cy="10" r="2.5" fill="#fff" stroke="none"/></svg></div><div class="app-name">线下约会</div></div>
             <div class="app" onclick="openApp('train')"><div class="app-icon" id="icon-train" style="background:linear-gradient(180deg,#ff6482,#ff2d55);"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></div><div class="app-name">汪</div></div>
             <div class="app" onclick="openApp('worldbook')"><div class="app-icon" id="icon-worldbook" style="background:linear-gradient(180deg,#bf5af2,#5856d6);"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"><path d="M4 5a3 3 0 0 1 3-2h13v16H7a3 3 0 0 0-3 3z"/><path d="M4 5v14"/></svg></div><div class="app-name">世界书</div></div>
             <div class="app" onclick="openApp('diary')"><div class="app-icon" id="icon-diary" style="background:linear-gradient(180deg,#da8fff,#af52de);"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"><path d="M5 4h11a2 2 0 0 1 2 2v14l-4-2-4 2-4-2-4 2V6a2 2 0 0 1 2-2z"/></svg></div><div class="app-name">日记</div></div>
@@ -1884,14 +1930,14 @@
       </div>
     </div>
 
-    <!-- 线下 -->
+    <!-- 线下约会 -->
     <div class="page" id="page-offline">
       <div class="nav">
         <button class="nav-back" onclick="goHome()">‹ 桌面</button>
-        <div class="nav-title">线下任务</div>
+        <div class="nav-title" id="offline-nav-title">任务</div>
         <div style="display:flex;gap:2px;position:relative;z-index:5;">
-          <button class="nav-right" style="min-width:auto;padding:8px;" onclick="toggleFeatureSettings('offline')" title="设置">⚙</button>
-          <button class="nav-right" style="min-width:auto;padding:8px;" onclick="refreshTasks()">刷新</button>
+          <button class="nav-right" style="min-width:auto;padding:8px;" id="offline-settings-btn" onclick="toggleFeatureSettings('offline')">⚙</button>
+          <button class="nav-right" style="min-width:auto;padding:8px;" id="offline-refresh-btn" onclick="refreshTasks()">刷新</button>
         </div>
       </div>
       <div id="offline-settings" class="feature-settings" style="display:none;padding:10px 12px;background:#141414;border-bottom:.5px solid var(--border);">
@@ -1905,18 +1951,25 @@
           <button type="button" class="btn btn-secondary" style="width:100%;margin-bottom:6px;" onclick="setAppBgUrl('offline')">使用链接背景</button>
           <div id="appbg-preview-offline" style="height:48px;border-radius:10px;background:var(--card2);background-size:cover;background-position:center;border:.5px solid var(--border);"></div>
         </div>
-
         <div style="font-size:12px;color:#ff8a80;margin-bottom:6px;display:none;">每轮生成字数</div>
-        <input type="number" id="offline-word-count" style="display:none" value="800" min="200" max="4000" step="100" style="width:100%;background:#2c2c2e;border:none;border-radius:10px;padding:10px 12px;color:#fff;font-size:16px;outline:none;margin-bottom:10px;">
+        <input type="number" id="offline-word-count" style="display:none" value="800" min="200" max="4000" step="100">
         <div style="font-size:12px;color:#ff8a80;margin-bottom:6px;">记忆来源（勾选聊天记录）</div>
         <div id="offline-memory-list" style="max-height:140px;overflow-y:auto;margin-bottom:10px;"></div>
+        <div style="font-size:12px;color:#ff8a80;margin-bottom:6px;">绑定世界书</div>
+        <div id="offline-wb-checks" style="max-height:180px;overflow-y:auto;margin-bottom:10px;"></div>
+        <input type="hidden" id="offline-wb-hidden" value="">
         <button class="btn btn-primary" style="width:100%;" onclick="saveFeatureSettings('offline')">保存设置</button>
-        <div style="font-size:11px;color:#666;margin-top:6px;">第一轮从接到任务后凌幼薇的准备工作开始</div>
+        <div style="font-size:11px;color:#666;margin-top:6px;">设置对任务与约会均生效</div>
       </div>
       <div class="scroll" style="padding:12px;" id="task-container"></div>
-      <div style="padding:10px 12px; border-top:.5px solid var(--border); display:flex; gap:8px;">
+      <div class="scroll" style="padding:12px;display:none;" id="date-container"></div>
+      <div style="padding:10px 12px; border-top:.5px solid var(--border); display:flex; gap:8px;" id="offline-task-actions">
         <button class="btn btn-secondary" style="flex:1;" onclick="wishTask()">许愿</button>
         <button class="btn btn-secondary" style="flex:1;" onclick="showArchive()">存档</button>
+      </div>
+      <div class="offline-bottom" id="offline-tabs">
+        <button type="button" class="on" onclick="setOfflineTab('tasks')"><span>📋</span>任务</button>
+        <button type="button" onclick="setOfflineTab('dates')"><span>📍</span>约会</button>
       </div>
     </div>
 
@@ -1949,8 +2002,9 @@
         </div>
         <label style="font-size:12px;color:#aaa;">主题色</label>
         <input type="color" id="story-theme-color" value="#ff6482" style="width:100%;height:36px;border:none;margin:6px 0 10px;">
-        <label style="font-size:12px;color:#aaa;">绑定世界书（逗号分隔名称）</label>
-        <input type="text" id="story-wb" placeholder="全局规则,线下专属" style="width:100%;background:#2c2c2e;border:none;border-radius:10px;padding:10px;color:#fff;margin:6px 0 10px;">
+        <label style="font-size:12px;color:#aaa;">绑定世界书（分组勾选）</label>
+        <div id="story-wb-checks" style="margin:6px 0 10px;max-height:160px;overflow-y:auto;"></div>
+        <input type="hidden" id="story-wb" value="">
         <button class="btn btn-primary" style="width:100%;margin-bottom:8px;" onclick="saveStorySettings()">保存设置</button>
         <button class="btn btn-secondary" style="width:100%;margin-bottom:8px;" onclick="saveCurrentStory()">存档当前进度</button>
         <button class="btn btn-secondary" style="width:100%;" onclick="showArchive()">查看存档</button>
@@ -2375,7 +2429,7 @@
           <h4>绑定世界书（勾选）</h4>
           <div id="live-wb-checks" style="margin-top:6px;"></div>
         </div>
-        <button class="action-btn red" style="width:calc(100% - 0px);margin:8px 0;" onclick="startLiveSession()">🔴 开始直播</button>
+        <button class="action-btn red" style="width:calc(100% - 0px);margin:8px 0;" onclick="startLiveSession()"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="8"/></svg> 开始直播</button>
         <div id="live-history" style="margin-top:12px;"></div>
       </div>
       <div id="live-room" class="live-stage" style="display:none;">
@@ -2406,8 +2460,8 @@
         </div>
         <div class="live-bar">
           <input type="text" id="live-input" placeholder="汇报…" style="flex:1;background:rgba(255,255,255,.12);border:none;border-radius:18px;padding:9px 14px;color:#fff;font-size:15px;outline:none;">
-          <button title="上报" onclick="sendLiveReport()" style="border:0;background:var(--green);color:#fff;width:40px;height:40px;border-radius:50%;font-size:18px;">↑</button>
-          <button title="结束" onclick="endLive()" style="border:0;background:rgba(255,255,255,.2);color:#fff;width:40px;height:40px;border-radius:50%;font-size:16px;">⏹</button>
+          <button title="上报" id="live-send-btn" class="live-send-btn" onclick="sendLiveReport()" style="border:0;background:var(--green);color:#fff;width:40px;height:40px;border-radius:50%;font-size:18px;">↑</button>
+          <button title="结束" onclick="endLive()" style="border:0;background:rgba(255,255,255,.2);color:#fff;width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;padding:0;"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="6" width="12" height="12" rx="2"/></svg></button>
         </div>
       </div>
     </div>
@@ -2593,8 +2647,9 @@
         </div>
         <div class="card" style="border-radius:16px;">
           <h4 style="margin-bottom:10px;">绑定世界书</h4>
-          <input type="text" id="campus-wb-input" placeholder="例如：全局规则,校园设定" style="width:100%;background:var(--input);border:none;border-radius:12px;padding:12px;color:var(--text);font-size:15px;margin-bottom:10px;outline:none;">
-          <button class="btn btn-secondary" style="width:100%;" onclick="editCampusWB()">从世界书列表勾选</button>
+          <div id="campus-wb-checks" style="max-height:200px;overflow-y:auto;margin-bottom:10px;"></div>
+          <input type="hidden" id="campus-wb-input" value="">
+          <button class="btn btn-secondary" style="width:100%;" onclick="renderGroupedWBChecks('campus-wb-checks', campusWB||'', 'syncCampusWB()')">刷新世界书列表</button>
         </div>
         <div class="card" style="border-radius:16px;">
           <h4 style="margin-bottom:10px;">数据</h4>
@@ -3071,6 +3126,7 @@ function openApp(name) {
   document.querySelectorAll('.feature-settings').forEach(el=>el.style.display='none');
   if(name==='campus-settings'){
     if($('campus-wb-input')) $('campus-wb-input').value = campusWB || '';
+    renderGroupedWBChecks('campus-wb-checks', campusWB||'', 'syncCampusWB()');
     if($('campus-theme')) $('campus-theme').value = campusTheme||'pink';
     document.querySelectorAll('#campus-theme-seg button').forEach(b=>{
       b.classList.toggle('active', b.getAttribute('data-ct')===(campusTheme||'pink'));
@@ -3081,8 +3137,9 @@ function openApp(name) {
   if(name==='worldbook') renderWorldBooks();
   if(name==='offline'){
     renderMemoryList('offline');
-    renderTasks();
     if($('offline-word-count')) $('offline-word-count').value = offlineWordCount;
+    renderGroupedWBChecks('offline-wb-checks', window._offlineWB||'', 'syncOfflineWB()');
+    setOfflineTab(window._offlineTab||'tasks');
   }
   if(name==='train'){
     memorySources.train = ['master'];
@@ -3376,38 +3433,142 @@ function collectWBText(context){
 }
 
 // ========== 世界书多选（勾选，不手打） ==========
+function groupWorldBooks(){
+  const map = {};
+  (worldBooks||[]).filter(w=>w && w.name).forEach(w=>{
+    const g = (w.group && String(w.group).trim()) || '默认';
+    if(!map[g]) map[g] = [];
+    map[g].push(w);
+  });
+  return map;
+}
 function fillWBPicker(containerId, hiddenId, selectedCsv){
   const box = $(containerId); if(!box) return;
   const selected = new Set((selectedCsv||'').split(/[,，]/).map(x=>x.trim()).filter(Boolean));
-  const list = (worldBooks||[]).filter(w=>w && w.name);
-  if(!list.length){
+  const groups = groupWorldBooks();
+  const gnames = Object.keys(groups);
+  if(!gnames.length){
     box.innerHTML = '<span style="font-size:12px;color:var(--muted);">暂无世界书，请先在世界书里添加</span>';
     return;
   }
-  box.innerHTML = list.map(w=>{
-    const on = selected.has(w.name) || (w.constant && selected.size===0 && false);
-    return `<label><input type="checkbox" value="${escapeHtml(w.name)}" ${selected.has(w.name)?'checked':''} onchange="syncWBPicker('${containerId}','${hiddenId}')"> ${escapeHtml(w.name)}${w.constant?' ·常驻':''}</label>`;
+  box.innerHTML = gnames.map((g,gi)=>{
+    const items = groups[g];
+    const allOn = items.every(w=>selected.has(w.name));
+    const someOn = items.some(w=>selected.has(w.name));
+    const openCls = someOn ? ' open' : (gi===0 ? ' open' : '');
+    return `<div class="wb-group-block${openCls}" data-group="${escapeHtml(g)}">
+      <div class="wb-group-head" onclick="toggleWBGroup(this)">
+        <input type="checkbox" ${allOn?'checked':''} ${someOn&&!allOn?'data-indeterminate="1"':''}
+          onclick="event.stopPropagation(); toggleWBGroupAll('${containerId}','${hiddenId}', '${escapeHtml(g)}', this.checked)">
+        <span>${escapeHtml(g)}</span>
+        <span class="wb-group-count">${items.length}</span>
+        <span class="chev">▾</span>
+      </div>
+      <div class="wb-group-body">
+        ${items.map(w=>`<label><input type="checkbox" value="${escapeHtml(w.name)}" ${selected.has(w.name)?'checked':''} onchange="syncWBPicker('${containerId}','${hiddenId}')"> ${escapeHtml(w.name)}${w.constant?' ·常驻':''}</label>`).join('')}
+      </div>
+    </div>`;
   }).join('');
+  // indeterminate state
+  box.querySelectorAll('input[data-indeterminate="1"]').forEach(el=>{ el.indeterminate = true; });
+  syncWBPicker(containerId, hiddenId);
+}
+function toggleWBGroup(headEl){
+  const block = headEl && headEl.closest('.wb-group-block');
+  if(block) block.classList.toggle('open');
+}
+function toggleWBGroupAll(containerId, hiddenId, groupName, checked){
+  const box = $(containerId); if(!box) return;
+  const block = [...box.querySelectorAll('.wb-group-block')].find(b=>b.getAttribute('data-group')===groupName);
+  if(!block) return;
+  block.querySelectorAll('.wb-group-body input[type=checkbox]').forEach(el=>{ el.checked = !!checked; });
+  block.classList.add('open');
   syncWBPicker(containerId, hiddenId);
 }
 function syncWBPicker(containerId, hiddenId){
   const box = $(containerId); const hid = $(hiddenId);
   if(!box || !hid) return;
-  const vals = [...box.querySelectorAll('input[type=checkbox]:checked')].map(el=>el.value);
+  const vals = [...box.querySelectorAll('.wb-group-body input[type=checkbox]:checked')].map(el=>el.value);
   hid.value = vals.join(',');
+  // update group checkbox states
+  box.querySelectorAll('.wb-group-block').forEach(block=>{
+    const kids = [...block.querySelectorAll('.wb-group-body input[type=checkbox]')];
+    const headCb = block.querySelector('.wb-group-head input[type=checkbox]');
+    if(!headCb || !kids.length) return;
+    const n = kids.filter(k=>k.checked).length;
+    headCb.checked = n===kids.length;
+    headCb.indeterminate = n>0 && n<kids.length;
+  });
+}
+function renderGroupedWBChecks(containerId, selectedCsv, onChangeAttr){
+  // 无 hidden：直接 onchange 回调属性字符串，如 saveLiveWBChecks()
+  const box = $(containerId); if(!box) return;
+  const selected = new Set((selectedCsv||'').split(/[,，]/).map(x=>x.trim()).filter(Boolean));
+  const groups = groupWorldBooks();
+  const gnames = Object.keys(groups);
+  if(!gnames.length){
+    box.innerHTML = '<div style="font-size:13px;color:var(--muted);">暂无世界书</div>';
+    return;
+  }
+  const change = onChangeAttr || '';
+  box.innerHTML = gnames.map((g,gi)=>{
+    const items = groups[g];
+    const allOn = items.every(w=>selected.has(w.name));
+    const someOn = items.some(w=>selected.has(w.name));
+    const openCls = someOn || gi===0 ? ' open' : '';
+    return `<div class="wb-group-block${openCls}" data-group="${escapeHtml(g)}">
+      <div class="wb-group-head" onclick="toggleWBGroup(this)">
+        <input type="checkbox" ${allOn?'checked':''}
+          onclick="event.stopPropagation(); (function(cb){ const b=cb.closest('.wb-group-block'); b.querySelectorAll('.wb-group-body input[type=checkbox]').forEach(x=>x.checked=cb.checked); b.classList.add('open'); ${change} })(this)">
+        <span>${escapeHtml(g)}</span>
+        <span class="wb-group-count">${items.length}</span>
+        <span class="chev">▾</span>
+      </div>
+      <div class="wb-group-body">
+        ${items.map(w=>`<label><input type="checkbox" value="${escapeHtml(w.name)}" data-wbname="${escapeHtml(w.name)}" ${selected.has(w.name)?'checked':''} onchange="${change}"> ${escapeHtml(w.name)}${w.constant?' ·常驻':''}</label>`).join('')}
+      </div>
+    </div>`;
+  }).join('');
+  box.querySelectorAll('.wb-group-block').forEach(block=>{
+    const kids = [...block.querySelectorAll('.wb-group-body input[type=checkbox]')];
+    const headCb = block.querySelector('.wb-group-head input[type=checkbox]');
+    if(!headCb||!kids.length) return;
+    const n = kids.filter(k=>k.checked).length;
+    headCb.checked = n===kids.length;
+    headCb.indeterminate = n>0 && n<kids.length;
+  });
+}
+function collectCheckedWBNames(containerId){
+  const box = $(containerId); if(!box) return '';
+  return [...box.querySelectorAll('.wb-group-body input[type=checkbox]:checked')].map(el=>el.value||el.getAttribute('data-wbname')).filter(Boolean).join(',');
 }
 function openWBPickerModal(currentCsv, onDone){
-  const names = (worldBooks||[]).map(w=>w.name).filter(Boolean);
-  if(!names.length){ alert('暂无世界书'); onDone && onDone(currentCsv||''); return; }
-  const selected = new Set((currentCsv||'').split(/[,，]/).map(x=>x.trim()).filter(Boolean));
-  // 简易多选：循环 confirm 太差，用 prompt 列表编号
-  const lines = names.map((n,i)=>`${i+1}. ${n}${selected.has(n)?' ✓':''}`).join('\n');
-  const raw = prompt('输入要绑定的世界书序号，逗号分隔（已标✓为当前）\n'+lines, 
-    names.map((n,i)=>selected.has(n)?String(i+1):'').filter(Boolean).join(','));
-  if(raw===null) return;
-  const idxs = raw.split(/[,，\s]+/).map(x=>parseInt(x,10)-1).filter(i=>i>=0 && i<names.length);
-  const result = [...new Set(idxs.map(i=>names[i]))].join(',');
-  onDone && onDone(result);
+  // 用页面内浮层代替 prompt，按分组勾选
+  let layer = document.getElementById('wb-modal-layer');
+  if(!layer){
+    layer = document.createElement('div');
+    layer.id = 'wb-modal-layer';
+    layer.style.cssText = 'position:absolute;inset:0;z-index:9999;background:rgba(0,0,0,.55);display:flex;align-items:flex-end;justify-content:center;';
+    layer.innerHTML = `<div style="width:100%;max-height:78%;background:var(--card);border-radius:18px 18px 0 0;padding:16px;overflow:y:auto;border:.5px solid var(--border);">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+        <b style="font-size:16px;">选择世界书</b>
+        <button type="button" id="wb-modal-close" style="border:0;background:none;color:var(--blue);font-size:15px;">完成</button>
+      </div>
+      <div id="wb-modal-list"></div>
+    </div>`;
+    (document.querySelector('.phone')||document.body).appendChild(layer);
+  }
+  layer.style.display = 'flex';
+  window._wbModalDone = onDone;
+  renderGroupedWBChecks('wb-modal-list', currentCsv||'', '');
+  const close = ()=>{
+    const v = collectCheckedWBNames('wb-modal-list');
+    layer.style.display = 'none';
+    if(typeof window._wbModalDone === 'function') window._wbModalDone(v);
+    window._wbModalDone = null;
+  };
+  document.getElementById('wb-modal-close').onclick = close;
+  layer.onclick = (e)=>{ if(e.target===layer) close(); };
 }
 
 function getWorldBookPrompt(extraNames=[], context=''){
@@ -3449,6 +3610,11 @@ function getWorldBookPrompt(extraNames=[], context=''){
 }
 
 // 从勾选的聊天记录里收集记忆上下文
+function getActiveMessages(c){
+  if(!c || !Array.isArray(c.messages)) return [];
+  // 已删除的消息不进记忆（兼容 soft-delete 与硬删后残留标记）
+  return c.messages.filter(m => m && !m.deleted && m.text != null);
+}
 function getMemoryContext(feature){
   let ids = memorySources[feature] || [];
   if(feature === 'train') ids = ['master']; // 专属主人
@@ -3456,8 +3622,10 @@ function getMemoryContext(feature){
   let parts = [];
   ids.forEach(id=>{
     const c = conversations[id];
-    if(!c || !c.messages || !c.messages.length) return;
-    const recent = c.messages.slice(-12).map(m=>{
+    if(!c) return;
+    const msgs = getActiveMessages(c);
+    if(!msgs.length) return;
+    const recent = msgs.slice(-12).map(m=>{
       const who = m.who==='me' ? (meProfile.name||'凌幼薇') : (c.remark||c.name||'对方');
       return who + '：' + (m.text||'');
     }).join('\n');
@@ -3468,9 +3636,20 @@ function getMemoryContext(feature){
 }
 
 // ========== AI ==========
+function setAIBusy(busy){
+  window._aiBusy = !!busy;
+  const send = $('chat-send');
+  if(send){ send.disabled = !!busy; send.style.opacity = busy ? '.35' : ''; }
+  document.querySelectorAll('.live-send-btn, #live-send-btn').forEach(el=>{
+    el.disabled = !!busy;
+  });
+}
 async function callAI(system, user, maxTokens=3000, linkedWB=[]) {
   const p = getActiveProfile();
   if(!p.url || !p.key) return '【未配置API】请先去「设置」填好 API 地址和 Key，然后点保存。';
+  // 外层已 setAIBusy 时不再重复；若未设置则在此兜底
+  const __busyOwned = !window._aiBusy;
+  if(__busyOwned) setAIBusy(true);
 
   // 每次生成前强制读取世界书常驻条目
   const wb = getWorldBookPrompt(linkedWB, user);
@@ -3553,6 +3732,8 @@ async function callAI(system, user, maxTokens=3000, linkedWB=[]) {
 4. 用电脑浏览器的开发者工具(F12) → Network 看具体被拦原因。`;
     }
     return '【请求失败】' + msg;
+  } finally {
+    if(typeof __busyOwned !== 'undefined' && __busyOwned) setAIBusy(false);
   }
 }
 
@@ -3728,6 +3909,7 @@ function playVoiceMsg(msg){
 function delMessage(i){
   const c=conversations[currentChatId]; if(!c||!c.messages||!c.messages[i]) return;
   if(!confirm('删除这条消息？')) return;
+  c.messages[i].deleted = true;
   c.messages.splice(i,1);
   if(c.messages.length){ const last=c.messages[c.messages.length-1]; c.last=last.text.replace(/\n/g,' '); c.time=Date.now(); }
   else { c.last='暂无消息'; }
@@ -3870,6 +4052,7 @@ async function requestAIReply(){
     return;
   }
   pendingReply = true;
+  setAIBusy(true);
   updateReplyButton();
   const btn = $('chat-reply');
   if(btn){ btn.textContent = '…'; btn.disabled = true; }
@@ -3909,7 +4092,7 @@ ${meProfile.persona || ''}
 - 若要发语音，单独一行写：[[语音:秒数]]
 - 普通文字不要用上述标记`;
     // 带上最近对话上下文，避免只看最后一句
-    const recent = (c.messages || []).slice(-(c.memDepth||10)).map(m => (m.who === 'me' ? (meProfile.name||'用户')+'：' : '对方：') + m.text).join('\n');
+    const recent = getActiveMessages(c).slice(-(c.memDepth||10)).map(m => (m.who === 'me' ? (meProfile.name||'用户')+'：' : '对方：') + m.text).join('\n');
     const reply = await callAI(system, recent + '\n\n请以对方身份，针对最后一句自然回复。按上面的格式要求输出。', 900, linked);
     // 拆成多个气泡，模拟真实线上聊天
     await addBubblesFromReply(reply);
@@ -3917,6 +4100,7 @@ ${meProfile.persona || ''}
     addBubble('him', '【回复失败】' + (e.message || e));
   } finally {
     pendingReply = false;
+    setAIBusy(false);
     updateReplyButton();
     if(btn){ btn.textContent = '↻'; }
   }
@@ -4408,6 +4592,124 @@ const taskPool=[
   {title:'被看光',desc:'故意走光或被路人看到真空/湿痕，回来描述对方表情和自己的反应。',type:'露出',difficulty:'高',reward:'羞耻值++'},
   {title:'吞精幻想',desc:'边玩边幻想被多人轮流内射灌满，最后必须说出自己是什么东西。',type:'幻想',difficulty:'中',reward:'服从+'}
 ];
+
+window._offlineTab = window._offlineTab || 'tasks';
+window._offlineWB = window._offlineWB || '';
+window._dateSelected = window._dateSelected || [];
+function syncOfflineWB(){
+  window._offlineWB = collectCheckedWBNames('offline-wb-checks');
+  const hid = $('offline-wb-hidden'); if(hid) hid.value = window._offlineWB;
+  saveAll();
+}
+function setOfflineTab(tab){
+  window._offlineTab = tab || 'tasks';
+  document.querySelectorAll('#offline-tabs button').forEach(b=>{
+    const oc = b.getAttribute('onclick')||'';
+    b.classList.toggle('on', oc.includes("'"+window._offlineTab+"'") || oc.includes('"'+window._offlineTab+'"'));
+  });
+  const isTasks = window._offlineTab === 'tasks';
+  if($('task-container')) $('task-container').style.display = isTasks ? '' : 'none';
+  if($('date-container')) $('date-container').style.display = isTasks ? 'none' : '';
+  if($('offline-task-actions')) $('offline-task-actions').style.display = isTasks ? 'flex' : 'none';
+  if($('offline-refresh-btn')) $('offline-refresh-btn').style.display = isTasks ? '' : 'none';
+  if($('offline-nav-title')) $('offline-nav-title').textContent = isTasks ? '任务' : '约会';
+  if(isTasks) renderTasks();
+  else renderDateSetup();
+}
+function renderDateSetup(){
+  const box = $('date-container'); if(!box) return;
+  const convs = Object.entries(conversations||{}).map(([id,c])=>({id, name:c.remark||c.name||id}));
+  const map = {};
+  convs.forEach(c=> map[c.id]=c);
+  (window.contacts||[]).forEach(c=>{ if(c && c.id && !map[c.id]) map[c.id]={id:c.id,name:c.remark||c.name||c.id}; });
+  const people = Object.values(map);
+  const sel = new Set(window._dateSelected||[]);
+  box.innerHTML = `
+    <div class="card" style="border-radius:16px;">
+      <h4 style="color:var(--pink);">选择联系人（可多选）</h4>
+      <div id="date-contact-list" style="margin-top:8px;max-height:180px;overflow-y:auto;">
+        ${people.length? people.map(p=>`
+          <span class="date-contact-chip ${sel.has(p.id)?'on':''}" data-id="${p.id}" onclick="toggleDateContact('${p.id}')">${escapeHtml(p.name)}</span>
+        `).join('') : '<div style="color:var(--muted);font-size:13px;">暂无联系人，先去消息里建角色</div>'}
+      </div>
+    </div>
+    <div class="card" style="border-radius:16px;">
+      <h4 style="color:var(--pink);">地点</h4>
+      <input type="text" id="date-place" placeholder="例如：酒店 / 车里 / 家  （可留空随机）" style="width:100%;background:var(--input);border:none;border-radius:10px;padding:10px;color:var(--text);font-size:15px;margin-top:6px;">
+      <button class="btn btn-secondary" style="width:100%;margin-top:8px;" onclick="randomDatePlace()">随机地点</button>
+    </div>
+    <div class="card" style="border-radius:16px;">
+      <h4 style="color:var(--pink);">大概事件</h4>
+      <textarea id="date-event" placeholder="想发生什么…（可留空随机）" style="width:100%;min-height:72px;background:var(--input);border:none;border-radius:10px;padding:10px;color:var(--text);font-size:15px;margin-top:6px;"></textarea>
+      <button class="btn btn-secondary" style="width:100%;margin-top:8px;" onclick="randomDateEvent()">随机事件</button>
+    </div>
+    <button class="action-btn blue" style="width:100%;" onclick="startDateStory()">进入线下约会</button>
+  `;
+}
+function toggleDateContact(id){
+  window._dateSelected = window._dateSelected || [];
+  const i = window._dateSelected.indexOf(id);
+  if(i>=0) window._dateSelected.splice(i,1);
+  else window._dateSelected.push(id);
+  renderDateSetup();
+}
+function randomDatePlace(){
+  const places = ['市中心酒店','你的出租屋','他车后座','大学附近快捷酒店','夜间公园长椅','KTV小包间','朋友空着的房子','情趣酒店主题房'];
+  if($('date-place')) $('date-place').value = places[Math.floor(Math.random()*places.length)];
+}
+function randomDateEvent(){
+  const events = ['第一次过夜','酒后乱性','外面玩到一半回家继续','被带到他朋友面前展示','车震后回酒店再来一轮','假装普通约会最后被拖去开房','穿着裙子在包厢里做','调教一夜'];
+  if($('date-event')) $('date-event').value = events[Math.floor(Math.random()*events.length)];
+}
+async function startDateStory(){
+  const ids = window._dateSelected || [];
+  if(!ids.length){ alert('请至少选择一个联系人'); return; }
+  let place = ($('date-place')?.value||'').trim();
+  let event = ($('date-event')?.value||'').trim();
+  if(!place){ randomDatePlace(); place = ($('date-place')?.value||'未知地点'); }
+  if(!event){ randomDateEvent(); event = ($('date-event')?.value||'线下约会'); }
+  const names = ids.map(id=>{
+    const c = conversations[id] || (window.contacts||[]).find(x=>x.id===id);
+    return (c && (c.remark||c.name)) || id;
+  }).join('、');
+  // 作为特殊任务启动故事
+  currentStoryTitle = `约会 · ${names}`;
+  currentStoryRounds = [];
+  currentStoryRound = 0;
+  currentStory = '';
+  window._storyWB = window._offlineWB || '';
+  window._dateMeta = { place, event, names, ids };
+  openApp('story');
+  if($('story-nav-title')) $('story-nav-title').textContent = currentStoryTitle;
+  if($('save-story-btn')) $('save-story-btn').style.display='';
+  if($('story-continue-bar')) $('story-continue-bar').style.display='flex';
+  setAIBusy(true);
+  try{
+    const mem = getMemoryContext('offline');
+    const linked = (window._offlineWB||'').split(/[,，]/).map(x=>x.trim()).filter(Boolean);
+    const raw = await callAI(
+      `你正在写线下约会剧情。地点「${place}」，事件方向「${event}」，参与者：${names}（及用户本人）。必须严格遵守世界书常驻。第一段从赴约/见面准备开始，细腻可执行，带羞耻感。不要给选项以外的旁白指令。最后用 OPTIONS: 列出3个短选项。`,
+      `${mem}开始第一轮线下约会。参与：${names}。地点：${place}。事件：${event}`,
+      offlineWordCount||800,
+      linked
+    );
+    // reuse story pipeline if exists
+    if(typeof applyStoryRound === 'function'){
+      applyStoryRound(raw);
+    } else {
+      currentStoryRound = 1;
+      currentStoryRounds = [{text: raw, options:[]}];
+      currentStory = raw;
+      if(typeof renderStoryView==='function') renderStoryView();
+      else {
+        const sc=$('story-content'); if(sc) sc.textContent = raw;
+      }
+    }
+  } finally {
+    setAIBusy(false);
+  }
+}
+
 function renderTasks(){
   if(!currentTasks.length) refreshTasks(true);
   const box = $('task-container'); if(!box) return;
@@ -4480,7 +4782,7 @@ async function refreshTasks(silent){
 必须具体可执行、重口、羞辱、物化。参考世界书常驻。
 禁止与以下标题重复：${avoid}
 只输出JSON数组，每项字段：title,desc,type,difficulty,reward。不要其它文字。`,
-      `${mem}请生成3个全新线下任务（与已有不同）。时间戳种子：${Date.now()}`,
+      `${mem}请生成3个全新线下任务（与已有不同）。这是第${(window._taskRefreshRound=(window._taskRefreshRound||0)+1)}轮刷新，必须与上一轮风格/场景拉开差异。时间戳种子：${Date.now()}`,
       2000
     );
     let arr=[];
@@ -4495,7 +4797,9 @@ async function refreshTasks(silent){
       })).filter(t=>t.title && t.desc);
       // prepend new unique ones
       const fresh = mapped.filter(t=>!existingTitles.includes(t.title));
-      currentTasks = (fresh.length?fresh:mapped).concat(prev).slice(0,12);
+      // 内轮刷新：本轮新任务置顶替换，不把旧任务原样顶在前面
+      const keep = prev.filter(t => !(fresh.length?fresh:mapped).some(n=>n.title===t.title));
+      currentTasks = (fresh.length?fresh:mapped).concat(keep).slice(0,12);
     } else {
       // fallback diversify local pool
       const pool=[...taskPool].sort(()=>Math.random()-0.5);
@@ -4829,11 +5133,40 @@ function saveCurrentStory(){
 }
 function showArchive(){
   openApp('archive');
-  $('archive-list').innerHTML=offlineArchives.map((a,i)=>`
-    <div class="card"><h4>${a.title}</h4><div style="font-size:11px;color:#666;">${new Date(a.time).toLocaleString()}</div>
-    <p>${a.content.slice(0,100)}…</p>
-    <div class="btn-row"><button class="btn btn-secondary" onclick="viewArch(${i})">查看</button>
-    <button class="btn btn-danger" onclick="delArch(${i})">删除</button></div></div>`).join('')||'<div style="text-align:center;color:#666;padding:40px;">暂无</div>';
+  const box = $('archive-list'); if(!box) return;
+  box.innerHTML=offlineArchives.map((a,i)=>`
+    <div class="card">
+      <h4>${escapeHtml(a.title||'存档')}</h4>
+      <div style="font-size:11px;color:#666;">${new Date(a.time).toLocaleString()}${a.rounds?(' · '+a.rounds+'轮'):''}</div>
+      <p style="font-size:13px;color:var(--muted);margin:8px 0;">${escapeHtml(String(a.content||'').slice(0,100))}…</p>
+      ${a.summary?`<div style="font-size:12.5px;line-height:1.5;background:var(--card2);border-radius:10px;padding:10px;margin:8px 0;white-space:pre-wrap;">📝 ${escapeHtml(a.summary)}</div>`:''}
+      <div class="btn-row">
+        <button class="btn btn-secondary" onclick="viewArch(${i})">查看</button>
+        <button class="btn btn-primary" onclick="summarizeArch(${i})">总结</button>
+        <button class="btn btn-danger" onclick="delArch(${i})">删除</button>
+      </div>
+    </div>`).join('')||'<div style="text-align:center;color:#666;padding:40px;">暂无存档</div>';
+}
+async function summarizeArch(i){
+  const a = offlineArchives[i]; if(!a) return;
+  const words = prompt('总结字数（大约）', a.summaryWords || '250');
+  if(words===null) return;
+  const n = Math.max(80, Math.min(800, parseInt(words,10)||250));
+  a.summaryWords = String(n);
+  setAIBusy(true);
+  try{
+    const raw = await callAI(
+      `你是总结助手。把线下任务/约会过程压缩成约${n}字的总结，保留关键人物、地点、羞耻点与结果。不要标题党，直接正文。参考世界书常驻。`,
+      `标题：${a.title||''}\n正文：\n${String(a.content||'').slice(0,6000)}`,
+      Math.min(2000, n*4)
+    );
+    a.summary = (raw||'').trim();
+    saveAll();
+    showArchive();
+    alert('总结已保存');
+  } finally {
+    setAIBusy(false);
+  }
 }
 function viewArch(i){ openApp('story'); const a=offlineArchives[i]; currentStoryRounds=[{text:a.content,options:[]}]; currentStoryRound=1; currentStory=a.content||''; renderStoryView(); if($('save-story-btn')) $('save-story-btn').style.display='none'; if($('story-continue-bar')) $('story-continue-bar').style.display='none'; if($('story-options')) $('story-options').style.display='none'; }
 function delArch(i){ if(confirm('删除？')){ offlineArchives.splice(i,1); saveAll(); showArchive(); } }
@@ -5012,7 +5345,7 @@ function applyAppIcons(){
 function renderBeautify(){
   refreshBeautifyPresetSel();
   const apps = [
-    {id:'messages',name:'消息'},{id:'contacts',name:'通讯录'},{id:'offline',name:'线下'},
+    {id:'messages',name:'消息'},{id:'contacts',name:'通讯录'},{id:'offline',name:'线下约会'},
     {id:'train',name:'汪'},{id:'worldbook',name:'世界书'},{id:'diary',name:'日记'},
     {id:'rules',name:'守则'},{id:'me',name:'母狗'},{id:'guide',name:'小狗乖乖'},
     {id:'forum',name:'今夜可约'},{id:'live',name:'直播'},{id:'auction',name:'身体拍卖'},
@@ -5406,8 +5739,7 @@ function editForumWB(){
   openWBPickerModal(forumWB, v=>{ forumWB=v||''; saveAll(); alert('已绑定：'+(forumWB||'无')); });
 }
 function saveForumWBChecks(){
-  const names = [...document.querySelectorAll('#forum-wb-checks input[type=checkbox]:checked')].map(el=>el.getAttribute('data-fwb')).filter(Boolean);
-  forumWB = names.join(',');
+  forumWB = collectCheckedWBNames('forum-wb-checks');
   saveAll();
 }
 
@@ -5430,11 +5762,7 @@ function renderForum(){
       </div>
       <div class="forum-card">
         <div style="font-size:13px;color:var(--muted);margin-bottom:8px;">绑定世界书（勾选）</div>
-        <div id="forum-wb-checks">${wbs.length? wbs.map(n=>`
-          <label class="wb-switch" style="padding:8px 0;"><span>${escapeHtml(n)}</span>
-            <input type="checkbox" data-fwb="${escapeHtml(n)}" ${selected.includes(n)?'checked':''} onchange="saveForumWBChecks()">
-          </label>`).join('') : '<div style="color:var(--muted);font-size:13px;">暂无世界书，请先在世界书应用添加</div>'}
-        </div>
+        <div id="forum-wb-checks"></div>
       </div>
       <div class="forum-card">
         <div style="font-size:13px;color:var(--muted);margin-bottom:8px;">论坛背景</div>
@@ -5450,6 +5778,7 @@ function renderForum(){
         <button class="btn btn-secondary" style="width:100%;margin-bottom:8px;" onclick="forumPartialRefresh('list')">刷新当前列表缓存</button>
         <button class="btn btn-danger" style="width:100%;" onclick="if(confirm('清空本论坛帖子？')){forumPosts=[];saveAll();setForumTab('city',document.querySelector('.forum-tab'));}">清空帖子</button>
       </div>`;
+    renderGroupedWBChecks('forum-wb-checks', forumWB||'', 'saveForumWBChecks()');
     return;
   }
   let list = forumPosts.filter(p => (p.board||'city') === forumTab);
@@ -5561,16 +5890,9 @@ function renderLiveSetup(){
   if($('live-back-btn')) $('live-back-btn').style.display='';
   const prev=$('live-bg-preview');
   if(prev) prev.style.backgroundImage = liveBg?`url(${liveBg})`:'';
-  // 世界书勾选
-  const wbBox = $('live-wb-checks');
-  if(wbBox){
-    const selected = (window._liveWB || ($('live-wb-setup')&&$('live-wb-setup').value) || '').split(/[,，]/).map(x=>x.trim()).filter(Boolean);
-    const wbs = (worldBooks||[]).map(w=>w.name).filter(Boolean);
-    wbBox.innerHTML = wbs.length ? wbs.map(n=>`
-      <label class="wb-switch" style="padding:6px 0;"><span>${escapeHtml(n)}</span>
-        <input type="checkbox" data-lwb="${escapeHtml(n)}" ${selected.includes(n)?'checked':''} onchange="saveLiveWBChecks()">
-      </label>`).join('') : '<div style="font-size:13px;color:var(--muted);">暂无世界书</div>';
-  }
+  // 世界书勾选（分组可折叠）
+  renderGroupedWBChecks('live-wb-checks', window._liveWB || '', 'saveLiveWBChecks()');
+
   const hist=$('live-history');
   if(hist){
     hist.innerHTML = liveHistory.length? '<div style="font-size:13px;color:var(--muted);margin-bottom:8px;">历史回放</div>'+liveHistory.map((h,i)=>`
@@ -5591,8 +5913,7 @@ function pickLiveBg(){
 function clearLiveBg(){ liveBg=''; saveAll(); renderLiveSetup(); }
 function toggleLiveSettings(){ alert('可在开播前设置：露脸 / 声音 / 路人模式 / 惩罚模式'); }
 function saveLiveWBChecks(){
-  const names = [...document.querySelectorAll('#live-wb-checks input[type=checkbox]:checked')].map(el=>el.getAttribute('data-lwb')).filter(Boolean);
-  window._liveWB = names.join(',');
+  window._liveWB = collectCheckedWBNames('live-wb-checks');
   saveAll();
 }
 async function startLiveSession(){
@@ -5624,8 +5945,9 @@ async function startLiveSession(){
     await pushLiveCommand(true);
     window._liveRounds = [{ cmd: window._lastLiveCmd || '', report:'', action:'', danmaku:[] }];
   } else {
-    window._lastLiveCmd = '自由直播中，按自己的节奏表演/发骚即可。';
-    window._liveRounds = [{ cmd: '【自由模式】无强制指令，自行发挥。', report:'', action:'', danmaku:[] }];
+    // 自由模式：不生成氛围提示，等用户先发起上报
+    window._lastLiveCmd = '';
+    window._liveRounds = [{ cmd: '', report:'', action:'', danmaku:[], free:true }];
   }
   window._liveRoundIdx = 0;
   renderLiveRoundView();
@@ -5706,32 +6028,65 @@ function appendLiveDm(text, kind){
 }
 async function sendLiveReport(){
   const v=($('live-input')?.value||'').trim(); if(!v) return;
+  if(window._aiBusy) return;
   window._liveLog.push({type:'me', text:v});
   window._liveRound = (window._liveRound||0)+1;
   $('live-input').value='';
   const place = window._livePlace||'未知';
-  const cmd = window._lastLiveCmd || '';
-  const prev = (window._liveLog||[]).slice(-6).map(x=>x.type+':'+x.text).join('\n');
-  const raw = await callAI(
-    `直播系统。地点：${place}。输出JSON：{"action":"详细完成描写","danmaku":["弹幕1","弹幕2","弹幕3","弹幕4","弹幕5"]}。弹幕全新贴合剧情。参考世界书常驻。只输出JSON。`,
-    `指令：${cmd}\n上报：${v}\n过程：\n${prev}`,
-    4000
-  );
-  let data=null; try{ const m=raw.match(/\{[\s\S]*\}/); data=m?JSON.parse(m[0]):null; }catch(_){}
-  const action = (data && data.action) ? data.action : (raw||'她照做了。');
-  const dms = (data && Array.isArray(data.danmaku)) ? data.danmaku : [];
-  // 错峰发射，避免同一帧叠在一起
-  dms.forEach((d, i) => setTimeout(()=>spawnLiveDanmaku(String(d)), i * 520));
-  // 写入当前轮
-  let cur = (window._liveRounds||[])[window._liveRoundIdx];
-  if(!cur){ cur={cmd, report:'', action:'', danmaku:[]}; window._liveRounds=[cur]; window._liveRoundIdx=0; }
-  cur.report = v;
-  cur.action = action;
-  cur.danmaku = dms;
-  window._liveLog.push({type:'action', text:action});
-  renderLiveRoundView();
-  await pushLiveCommand(false);
+  const mode = window._liveMode || 'train';
+  setAIBusy(true);
+  try{
+  if(mode==='free'){
+    // 用户先发起：根据上报生成完成描写 + 弹幕，不预先塞指令
+    const prev = (window._liveLog||[]).slice(-6).map(x=>x.type+':'+x.text).join('\n');
+    const raw = await callAI(
+      `自由直播系统。地点：${place}。主播完全自由。根据主播上报生成JSON：{"action":"观众视角的详细画面描写","danmaku":["弹幕1","弹幕2","弹幕3","弹幕4","弹幕5"]}。不要下指令。参考世界书常驻。只输出JSON。`,
+      `主播上报：${v}\n过程：\n${prev}`,
+      4000
+    );
+    let data=null; try{ const m=raw.match(/\{[\s\S]*\}/); data=m?JSON.parse(m[0]):null; }catch(_){}
+    const action = (data && data.action) ? data.action : (raw||'直播继续。');
+    const dms = (data && Array.isArray(data.danmaku)) ? data.danmaku : [];
+    dms.forEach((d, i) => setTimeout(()=>spawnLiveDanmaku(String(d)), i * 520));
+    let cur = (window._liveRounds||[])[window._liveRoundIdx];
+    if(!cur || cur.report){
+      cur={cmd:'', report:'', action:'', danmaku:[], free:true};
+      window._liveRounds = window._liveRounds||[];
+      window._liveRounds.push(cur);
+      window._liveRoundIdx = window._liveRounds.length-1;
+    }
+    cur.report = v;
+    cur.action = action;
+    cur.danmaku = dms;
+    window._liveLog.push({type:'action', text:action});
+    renderLiveRoundView();
+  } else {
+    const cmd = window._lastLiveCmd || '';
+    const prev = (window._liveLog||[]).slice(-6).map(x=>x.type+':'+x.text).join('\n');
+    const raw = await callAI(
+      `直播系统。地点：${place}。输出JSON：{"action":"详细完成描写","danmaku":["弹幕1","弹幕2","弹幕3","弹幕4","弹幕5"]}。弹幕全新贴合剧情。参考世界书常驻。只输出JSON。`,
+      `指令：${cmd}\n上报：${v}\n过程：\n${prev}`,
+      4000
+    );
+    let data=null; try{ const m=raw.match(/\{[\s\S]*\}/); data=m?JSON.parse(m[0]):null; }catch(_){}
+    const action = (data && data.action) ? data.action : (raw||'她照做了。');
+    const dms = (data && Array.isArray(data.danmaku)) ? data.danmaku : [];
+    dms.forEach((d, i) => setTimeout(()=>spawnLiveDanmaku(String(d)), i * 520));
+    let cur = (window._liveRounds||[])[window._liveRoundIdx];
+    if(!cur){ cur={cmd, report:'', action:'', danmaku:[]}; window._liveRounds=[cur]; window._liveRoundIdx=0; }
+    cur.report = v;
+    cur.action = action;
+    cur.danmaku = dms;
+    window._liveLog.push({type:'action', text:action});
+    renderLiveRoundView();
+    await pushLiveCommand(false);
+  }
+  } finally {
+    setAIBusy(false);
+  }
 }
+
+
 function spawnLiveDanmaku(text, fromLoop){
   const box = $('live-danmaku'); if(!box || !text) return;
   text = String(text).trim(); if(!text) return;
@@ -5807,10 +6162,13 @@ function renderLiveRoundView(){
   const r = rounds[i];
   if($('live-round-label')) $('live-round-label').textContent = `第 ${i+1} / ${Math.max(1,rounds.length)} 轮`;
   const box = $('live-round-content'); if(!box) return;
-  if(!r){ box.textContent='等待指令…'; return; }
+  if(!r){ box.textContent=(window._liveMode==='free'?'自由直播：先在下方输入你正在做的事…':'等待指令…'); return; }
   const mode = window._liveMode || 'train';
-  box.innerHTML = `<div class="live-edit-block" data-field="cmd" style="color:#ffb4c0;margin-bottom:8px;"><b>${mode==='free'?'氛围/提示':'主人指令'}</b>
-${escapeHtml(r.cmd||'')}</div>`
+  const cmdBlock = (mode==='free' && !r.cmd)
+    ? `<div style="color:rgba(255,255,255,.55);margin-bottom:8px;font-size:13px;">自由直播 · 还没有上报，先在下方告诉观众你在干什么</div>`
+    : `<div class="live-edit-block" data-field="cmd" style="color:#ffb4c0;margin-bottom:8px;"><b>${mode==='free'?'氛围/提示':'主人指令'}</b>
+${escapeHtml(r.cmd||'')}</div>`;
+  box.innerHTML = cmdBlock
     + (r.report?`<div class="live-edit-block" data-field="report" style="color:#9cf;margin-bottom:8px;"><b>我的上报</b>
 ${escapeHtml(r.report)}</div>`:'')
     + (r.action?`<div class="live-edit-block" data-field="action" style="color:#ffe0b0;"><b>完成描写</b>
@@ -6292,8 +6650,7 @@ function applyCampusTheme(){
   if($('campus-theme')) $('campus-theme').value = campusTheme||'pink';
 }
 function saveCampusSettings(){
-  const v = ($('campus-wb-input')?.value||'').trim();
-  campusWB = v;
+  campusWB = collectCheckedWBNames('campus-wb-checks') || ($('campus-wb-input')?.value||'').trim();
   if($('campus-theme')) campusTheme = $('campus-theme').value || campusTheme || 'pink';
   applyCampusTheme();
   saveAll();
@@ -6313,6 +6670,11 @@ function setCampusTab(tab, btn){
   closeCampusSubview();
   closeCampusPost();
   renderCampus();
+}
+function syncCampusWB(){
+  campusWB = collectCheckedWBNames('campus-wb-checks');
+  if($('campus-wb-input')) $('campus-wb-input').value = campusWB;
+  saveAll();
 }
 function editCampusWB(){
   openWBPickerModal(campusWB, v=>{ campusWB=v||''; saveAll(); alert('已绑定：'+(campusWB||'无')); });
@@ -6703,7 +7065,7 @@ function exportData(){
     // 消息 / 通讯录
     conversations, contacts, pendingRequests,
     // 线下
-    currentTasks, offlineArchives, doneTaskKeys, offlineWordCount,
+    currentTasks, offlineArchives, doneTaskKeys, offlineWordCount, offlineWB: window._offlineWB, offlineTab: window._offlineTab, dateSelected: window._dateSelected,
     // 世界书
     worldBooks,
     // 日记
@@ -6843,12 +7205,13 @@ function toggleStorySettings(){
   if(el.style.display==='block'){
     if($('story-edit-title')) $('story-edit-title').value = currentStoryTitle || '';
     if($('story-wb')) $('story-wb').value = window._storyWB || '';
+    renderGroupedWBChecks('story-wb-checks', window._storyWB||'', "(function(){ window._storyWB=collectCheckedWBNames('story-wb-checks'); if($('story-wb'))$('story-wb').value=window._storyWB; })()");
   }
 }
 function saveStorySettings(){
   const t=($('story-edit-title')?.value||'').trim();
   if(t){ currentStoryTitle=t; if($('story-nav-title')) $('story-nav-title').textContent = t + (currentStoryRound?(' · 第'+currentStoryRound+'轮'):''); }
-  window._storyWB = ($('story-wb')?.value||'').trim();
+  window._storyWB = collectCheckedWBNames('story-wb-checks') || ($('story-wb')?.value||'').trim();
   const col=$('story-theme-color')?.value;
   if(col && $('story-content')) $('story-content').style.borderColor = col;
   saveAll();
