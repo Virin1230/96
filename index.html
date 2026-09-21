@@ -1663,6 +1663,38 @@
     border-color: var(--blue); background: rgba(10,132,255,.15); color: var(--blue);
   }
 
+
+  #page-offline, #page-offline .scroll, #date-container {
+    overflow-x: hidden !important;
+    touch-action: pan-y;
+  }
+  .date-contact-row {
+    display: flex; align-items: center; gap: 10px;
+    padding: 12px 10px; border-radius: 12px; margin-bottom: 6px;
+    background: var(--input); font-size: 15px; color: var(--text);
+    cursor: pointer; user-select: none;
+  }
+  .date-contact-row.on {
+    background: rgba(10,132,255,.18); color: var(--blue);
+    outline: 1px solid rgba(10,132,255,.45);
+  }
+  .date-contact-check {
+    width: 22px; height: 22px; border-radius: 6px;
+    border: 1.5px solid var(--border); display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 700; flex-shrink: 0; color: transparent;
+  }
+  .date-contact-row.on .date-contact-check {
+    background: var(--blue); border-color: var(--blue); color: #fff;
+  }
+  .forum-night {
+    --forum-text: #f7eef2 !important;
+    --forum-muted: #d4c4cc !important;
+  }
+  .forum-night .forum-tab { color: #d8c8d0; }
+  .forum-night .btn, .forum-night .btn-secondary {
+    color: #f2e8ec !important;
+  }
+  #forum-toolbar .btn { color: #f2e8ec !important; }
 </style>
 </head>
 <body data-theme="dark">
@@ -1995,8 +2027,8 @@
         <button class="btn btn-secondary" style="flex:1;" onclick="showArchive()">存档</button>
       </div>
       <div class="offline-bottom" id="offline-tabs">
-        <button type="button" class="on" onclick="setOfflineTab('tasks')"><span class="ob-ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></span>任务</button>
-        <button type="button" onclick="setOfflineTab('dates')"><span class="ob-ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 21s7-5.5 7-11a7 7 0 1 0-14 0c0 5.5 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></svg></span>约会</button>
+        <button type="button" class="on" onclick="setOfflineTab('tasks')"><span class="ob-ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></span>任务</button>
+        <button type="button" onclick="setOfflineTab('dates')"><span class="ob-ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-5.5 7-11a7 7 0 1 0-14 0c0 5.5 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></svg></span>约会</button>
       </div>
     </div>
 
@@ -2466,7 +2498,6 @@
           <div class="live-title" id="live-title">欠操母狗正在发情自慰</div>
           <div style="display:flex;gap:6px;align-items:center;">
             <div class="live-badge">LIVE · <span id="live-viewers">128</span></div>
-            <button onclick="toggleLiveSettingsPanel()" style="border:0;background:rgba(0,0,0,.4);color:#fff;border-radius:8px;padding:4px 8px;font-size:12px;">设置</button>
           </div>
         </div>
         <div class="live-danmaku-float" id="live-danmaku"></div>
@@ -4654,9 +4685,12 @@ function renderDateSetup(){
   box.innerHTML = `
     <div class="card" style="border-radius:14px;padding:12px;">
       <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:8px;">联系人 · 可多选</div>
-      <div id="date-contact-list" style="max-height:140px;overflow-y:auto;overflow-x:hidden;">
+      <div id="date-contact-list" style="max-height:200px;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;">
         ${people.length? people.map(p=>`
-          <span class="date-contact-chip ${sel.has(p.id)?'on':''}" data-id="${p.id}" onclick="toggleDateContact('${p.id}')">${escapeHtml(p.name)}</span>
+          <div class="date-contact-row ${sel.has(p.id)?'on':''}" data-id="${p.id}" onclick="toggleDateContact('${p.id}')">
+            <span class="date-contact-check">${sel.has(p.id)?'✓':''}</span>
+            <span>${escapeHtml(p.name)}</span>
+          </div>
         `).join('') : '<div style="color:var(--muted);font-size:13px;">暂无联系人</div>'}
       </div>
     </div>
@@ -5798,7 +5832,7 @@ function renderForum(){
       <div style="font-size:18px;font-weight:700;margin-bottom:14px;color:var(--forum-text,#f2e8ec);">论坛设置</div>
       <div class="forum-card">
         <div style="font-size:13px;color:var(--forum-muted,#b9a8b0);margin-bottom:8px;">主题色（切换后分区标签/强调色会变）</div>
-        <select id="forum-theme" style="width:100%;background:#1c151c;border:1px solid var(--forum-soft,rgba(255,100,130,.25));border-radius:10px;padding:10px;color:var(--forum-text,#f2e8ec);">
+        <select id="forum-theme" onchange="setForumTheme(this.value)" style="width:100%;background:#1c151c;border:1px solid var(--forum-soft,rgba(255,100,130,.25));border-radius:10px;padding:10px;color:#f7eef2;font-size:15px;">
           <option value="pink" ${forumTheme==='pink'?'selected':''}>粉红</option>
           <option value="red" ${forumTheme==='red'?'selected':''}>暗红</option>
           <option value="purple" ${forumTheme==='purple'?'selected':''}>紫色</option>
@@ -5829,7 +5863,7 @@ function renderForum(){
         <button class="btn btn-secondary" style="width:100%;margin-bottom:8px;" onclick="forumPartialRefresh('list')">刷新当前列表缓存</button>
         <button class="btn btn-danger" style="width:100%;" onclick="if(confirm('清空本论坛帖子？')){forumPosts=[];saveAll();setForumTab('city',document.querySelector('.forum-tab'));}">清空帖子</button>
       </div>
-      <button class="btn btn-primary" style="width:100%;padding:12px 0;border-radius:12px;font-size:15px;margin-top:4px;" onclick="saveForumSettings()">保存设置</button>`;
+      <button class="btn btn-primary" style="width:100%;padding:14px 0;border-radius:12px;font-size:16px;font-weight:600;margin-top:12px;background:linear-gradient(135deg,var(--forum-accent,#ff2d55),var(--forum-accent2,#ff6482));color:#fff;border:none;" onclick="saveForumSettings()">保存设置</button>`;
     renderGroupedWBChecks('forum-wb-checks', forumWB||'', 'saveForumWBChecks()');
     return;
   }
@@ -5851,7 +5885,7 @@ function renderForum(){
         ${p.play?`<span class="wb-pill">${escapeHtml(p.play)}</span>`:''}
         <span class="wb-pill">🔥${p.hot||0}</span>
       </div>
-    </div>`).join('') || '<div style="text-align:center;color:#665;padding:40px;">本区暂无帖子</div>';
+    </div>`).join('') || '<div style="text-align:center;color:var(--forum-muted,#c9b8c0);padding:40px;">本区暂无帖子</div>';
 }
 async function forumPartialRefresh(part){
   if(part==='ticker'){
@@ -5893,7 +5927,7 @@ function openForumPost(id){
     <div class="forum-card">
       <div style="font-size:12px;color:#887;margin-bottom:6px;">${escapeHtml(p.user||'')} ${p.auth?'· 已认证':''} · ${p.online||''}</div>
       <div style="font-size:17px;font-weight:700;color:#f5e6ea;margin-bottom:10px;">${escapeHtml(p.title||'')}</div>
-      <div style="font-size:14px;line-height:1.65;color:#d8c8ce;white-space:pre-wrap;">${escapeHtml(p.body||'')}</div>
+      <div style="font-size:14px;line-height:1.65;color:var(--forum-muted,#d2c2ca);white-space:pre-wrap;">${escapeHtml(p.body||'')}</div>
       <div style="margin-top:10px;display:flex;gap:6px;flex-wrap:wrap;">
         ${p.type?`<span class="wb-pill">${escapeHtml(p.type)}</span>`:''}
         ${p.place?`<span class="wb-pill">${escapeHtml(p.place)}</span>`:''}
@@ -5901,7 +5935,7 @@ function openForumPost(id){
       </div>
     </div>
     <div style="color:#887;font-size:13px;margin:12px 0 8px;">回复</div>
-    ${(p.replies||[]).map(r=>`<div class="forum-card" style="padding:12px;"><b style="color:#ff8a9a;">${escapeHtml(r.user)}</b><div style="margin-top:4px;color:#d8c8ce;">${escapeHtml(r.text)}</div></div>`).join('')||'<div style="color:#665;padding:8px;">还没有回复</div>'}
+    ${(p.replies||[]).map(r=>`<div class="forum-card" style="padding:12px;"><b style="color:var(--forum-accent2,#ff8a9a);">${escapeHtml(r.user)}</b><div style="margin-top:4px;color:var(--forum-muted,#d2c2ca);">${escapeHtml(r.text)}</div></div>`).join('')||'<div style="color:var(--forum-muted,#c9b8c0);padding:8px;">还没有回复</div>'}
     <button class="action-btn red" style="width:100%;" onclick="forumPrivateChat('${escapeHtml(p.user||'楼主')}')">私信楼主</button>
   `;
 }
