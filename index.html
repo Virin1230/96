@@ -971,20 +971,58 @@
     padding: 6px 0; font-size: 12px; color: rgba(255,255,255,.7);
   }
   .live-danmaku-float {
-    position: absolute; left: 8px; right: 12px; top: 90px; bottom: 160px;
+    position: absolute; left: 0; right: 0; top: 72px; height: 46%;
     overflow: hidden; pointer-events: none; z-index: 3;
   }
   .live-dm-scroll {
-    position: absolute; left: 8px; max-width: 78%; color: #fff;
-    font-size: 13px; text-shadow: 0 1px 3px rgba(0,0,0,.85);
-    animation: dmMoveUp linear forwards;
-    background: rgba(0,0,0,.35); padding: 4px 10px; border-radius: 12px;
-    white-space: normal; line-height: 1.35;
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: inline-block;
+    max-width: none;
+    color: #fff;
+    font-size: 15px;
+    font-weight: 600;
+    text-shadow: 0 1px 2px rgba(0,0,0,.9), 0 0 6px rgba(0,0,0,.5);
+    white-space: nowrap;
+    line-height: 1.3;
+    padding: 0 4px;
+    background: transparent;
+    border-radius: 0;
+    will-change: transform;
+    transform: translateX(100vw);
+    animation-name: dmBiliScroll;
+    animation-timing-function: linear;
+    animation-fill-mode: forwards;
+    pointer-events: none;
   }
-  @keyframes dmMoveUp {
-    from { transform: translateY(100%); opacity: 0.95; }
-    to { transform: translateY(-420%); opacity: 0.15; }
+  .live-dm-scroll.dm-color-1 { color: #fff; }
+  .live-dm-scroll.dm-color-2 { color: #ffd1dc; }
+  .live-dm-scroll.dm-color-3 { color: #ffe9a8; }
+  .live-dm-scroll.dm-color-4 { color: #a8e6ff; }
+  .live-dm-scroll.dm-color-5 { color: #c8ffb0; }
+  @keyframes dmBiliScroll {
+    from { transform: translateX(100vw); }
+    to { transform: translateX(-100%); }
   }
+  /* 校园墙左滑删除 */
+  .cw-swipe-wrap {
+    position: relative; overflow: hidden;
+    border-bottom: .5px solid var(--border);
+  }
+  .cw-swipe-del {
+    position: absolute; right: 0; top: 0; bottom: 0; width: 72px;
+    background: var(--red); color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 600; z-index: 0;
+  }
+  .cw-swipe-inner {
+    position: relative; z-index: 1; background: var(--bg);
+    transition: transform .2s ease; touch-action: pan-y;
+  }
+  .cw-swipe-inner.open { transform: translateX(-72px); }
+  .cw-swipe-inner.msel { outline: 2px solid var(--blue); outline-offset: -2px; }
+  .cw-post { border-bottom: none; }
   /* 本轮内容固定在上方面板 */
   .live-panel { max-height: 38%; }
   .live-panel.collapsed { max-height: 44px; }
@@ -5468,6 +5506,8 @@ async function startForceLive(){
   window._livePhase = 'normal';
   window._liveRounds = [];
   window._liveRoundIdx = 0;
+  window._dmPool = [];
+  window._dmLaneFreeAt = Array(8).fill(0);
   if($('live-setup')) $('live-setup').style.display='none';
   if($('live-room')) $('live-room').style.display='flex';
   if($('live-back-btn')) $('live-back-btn').style.display='none';
@@ -5531,23 +5571,26 @@ function startLiveDanmakuLoop(){
   if(liveDanmakuTimer) clearInterval(liveDanmakuTimer);
   const box = $('live-danmaku'); if(!box) return;
   box.innerHTML='';
-  // 弹幕改由每轮上报后 AI 生成，这里只做轻微观众氛围
+  // B站式多轨道弹幕：不重叠 + 循环
+  window._dmPool = window._dmPool || [];
+  window._dmLaneCount = 10;
+  window._dmLaneFreeAt = Array(window._dmLaneCount).fill(0);
   liveDanmakuTimer = setInterval(()=>{
     if(!window._liveActive) return;
     if($('live-viewers')) $('live-viewers').textContent = 80+Math.floor(Math.random()*500);
-    
-  }, 4000);
+    const pool = window._dmPool || [];
+    if(!pool.length) return;
+    // 每次最多塞 1~2 条，走空闲轨道，形成循环滚动
+    const n = pool.length > 6 ? 2 : 1;
+    for(let k=0;k<n;k++){
+      const t = pool[Math.floor(Math.random()*pool.length)];
+      setTimeout(()=>spawnLiveDanmaku(t, true), k * 480);
+    }
+  }, 1800);
 }
 function appendLiveDm(text, kind){
-  const box = $('live-danmaku'); if(!box) return;
-  const el = document.createElement('div');
-  el.className = 'live-dm';
-  if(kind==='action'){ el.style.background='rgba(255,180,60,.25)'; el.style.color='#ffe0a0'; el.style.border='1px solid rgba(255,180,60,.35)'; }
-  else if(kind==='me'){ el.style.background='rgba(10,132,255,.35)'; }
-  else { el.style.background='rgba(0,0,0,.4)'; }
-  el.textContent = text;
-  box.appendChild(el);
-  box.scrollTop = box.scrollHeight;
+  // 兼容旧调用：统一走 B站横向弹幕
+  spawnLiveDanmaku(text);
   window._liveDanmaku = window._liveDanmaku || [];
   window._liveDanmaku.push({text, kind});
 }
@@ -5567,7 +5610,8 @@ async function sendLiveReport(){
   let data=null; try{ const m=raw.match(/\{[\s\S]*\}/); data=m?JSON.parse(m[0]):null; }catch(_){}
   const action = (data && data.action) ? data.action : (raw||'她照做了。');
   const dms = (data && Array.isArray(data.danmaku)) ? data.danmaku : [];
-  dms.forEach(d => spawnLiveDanmaku(String(d)));
+  // 错峰发射，避免同一帧叠在一起
+  dms.forEach((d, i) => setTimeout(()=>spawnLiveDanmaku(String(d)), i * 520));
   // 写入当前轮
   let cur = (window._liveRounds||[])[window._liveRoundIdx];
   if(!cur){ cur={cmd, report:'', action:'', danmaku:[]}; window._liveRounds=[cur]; window._liveRoundIdx=0; }
@@ -5578,20 +5622,61 @@ async function sendLiveReport(){
   renderLiveRoundView();
   await pushLiveCommand(false);
 }
-function spawnLiveDanmaku(text){
-  const box = $('live-danmaku'); if(!box) return;
+function spawnLiveDanmaku(text, fromLoop){
+  const box = $('live-danmaku'); if(!box || !text) return;
+  text = String(text).trim(); if(!text) return;
+  const now = performance.now();
+  const laneCount = window._dmLaneCount || 10;
+  const laneH = 26;
+  if(!window._dmLaneFreeAt || window._dmLaneFreeAt.length !== laneCount){
+    window._dmLaneFreeAt = Array(laneCount).fill(0);
+  }
+  // 严格选空闲轨道：优先已到空闲时间的轨；没有就选最早空闲的
+  let lane = -1;
+  let best = Infinity;
+  for(let i=0;i<laneCount;i++){
+    const freeAt = window._dmLaneFreeAt[i] || 0;
+    if(freeAt <= now && freeAt < best){ best = freeAt; lane = i; }
+  }
+  if(lane < 0){
+    // 全部占用：选最早空闲的，循环弹幕可稍紧，新弹幕错峰延后
+    lane = 0; best = window._dmLaneFreeAt[0];
+    for(let i=1;i<laneCount;i++){
+      if(window._dmLaneFreeAt[i] < best){ best = window._dmLaneFreeAt[i]; lane = i; }
+    }
+    if(!fromLoop && best > now + 80){
+      const delay = Math.min(1200, best - now + 40);
+      setTimeout(()=>spawnLiveDanmaku(text, fromLoop), delay);
+      return;
+    }
+  }
+
   const el = document.createElement('div');
-  el.className = 'live-dm-scroll';
+  el.className = 'live-dm-scroll dm-color-' + (1 + Math.floor(Math.random()*5));
   el.textContent = text;
-  // 抖音式从下往上，随机横向位置
-  el.style.left = (4 + Math.random()*55) + '%';
-  el.style.bottom = '0';
-  el.style.top = 'auto';
-  el.style.animationDuration = (7+Math.random()*5)+'s';
+  el.style.top = (4 + lane * laneH) + 'px';
+  const len = text.length;
+  // B站感：字多更慢，整体 8~14s 横穿
+  const dur = Math.max(8, Math.min(14, 9 + len * 0.12 + Math.random()*1.5));
+  el.style.animationDuration = dur + 's';
   box.appendChild(el);
-  setTimeout(()=>el.remove(), 14000);
-  window._liveDanmaku = window._liveDanmaku||[];
-  window._liveDanmaku.push({text});
+
+  // 轨道占用：弹幕头部滑过约半屏后同轨可再发，避免重叠
+  const screenW = box.clientWidth || 360;
+  const approxW = Math.min(420, 24 + len * 15);
+  const headClear = (approxW + 48) / (screenW + approxW); // 头部离开右侧的比例
+  const occupy = dur * 1000 * Math.min(0.5, Math.max(0.22, headClear));
+  window._dmLaneFreeAt[lane] = now + occupy + (fromLoop ? 200 : 360);
+
+  setTimeout(()=>{ if(el.parentNode) el.remove(); }, dur * 1000 + 100);
+
+  if(!fromLoop){
+    window._dmPool = window._dmPool || [];
+    if(!window._dmPool.includes(text)) window._dmPool.push(text);
+    if(window._dmPool.length > 48) window._dmPool.shift();
+    window._liveDanmaku = window._liveDanmaku || [];
+    window._liveDanmaku.push({text});
+  }
 }
 function toggleLiveSetupSettings(){
   const el=$('live-setup-settings'); if(!el) return;
@@ -6022,6 +6107,16 @@ function renderCampus(){
   applyCampusTheme();
   const box = $('campus-list'); if(!box) return;
   const list = campusData[campusTab] || [];
+  // 八卦 / NSFW：外层直接展示全部帖子（微博/贴吧式信息流）
+  if(campusTab==='gossip' || campusTab==='nsfw'){
+    const items = list.slice().sort((a,b)=>(b.time||0)-(a.time||0));
+    let html = `<div class="cw-section-title"><span>${campusTab==='nsfw'?'NSFW':'校园八卦'}</span><span style="font-size:12px;color:var(--muted);font-weight:500;">共 ${items.length} 条 · 左滑删除</span></div>`;
+    if(!items.length) html += `<div style="padding:24px 16px;color:var(--muted);font-size:14px;text-align:center;">暂无帖子<br>点上方搜索生成</div>`;
+    else html += items.map(p=>cwPostRow(p)).join('');
+    box.innerHTML = html;
+    bindCampusCards();
+    return;
+  }
   const sections = campusSectionsForTab(campusTab);
   let html = '';
   sections.forEach(sec=>{
@@ -6038,11 +6133,19 @@ function renderCampus(){
   bindCampusCards();
 }
 function cwPostRow(p){
-  return `<div class="cw-post campus-card" data-id="${p.id}">
-    <div class="u">${escapeHtml(p.user||'匿名')} ${p.tag?`<span class="wb-pill">${escapeHtml(p.tag)}</span>`:''}</div>
-    <div class="t">${escapeHtml(p.title||'')}</div>
-    <div class="b">${escapeHtml(p.body||'')}</div>
-    <div class="meta">${p.time?new Date(p.time).toLocaleString():''} · 评论 ${(p.replies||[]).length}</div>
+  const replyN = (p.replies||[]).length;
+  const preview = replyN ? `<div style="margin-top:8px;padding:8px 10px;background:var(--card2);border-radius:10px;font-size:12.5px;color:var(--muted);line-height:1.45;">💬 ${(p.replies||[]).slice(0,2).map(r=>`<div><b style="color:var(--text);">${escapeHtml(r.user||'匿名')}</b>：${escapeHtml((r.text||'').slice(0,60))}</div>`).join('')}${replyN>2?`<div style="margin-top:4px;color:var(--campus-accent,var(--pink));">查看全部 ${replyN} 条评论 ›</div>`:''}</div>` : '';
+  return `<div class="cw-swipe-wrap" data-id="${p.id}">
+    <div class="cw-swipe-del" onclick="deleteCampusOne('${p.id}')">删除</div>
+    <div class="cw-swipe-inner campus-card" data-id="${p.id}">
+      <div class="cw-post" style="padding:12px 16px;">
+        <div class="u">${escapeHtml(p.user||'匿名')} ${p.tag?`<span class="wb-pill">${escapeHtml(p.tag)}</span>`:''}</div>
+        <div class="t">${escapeHtml(p.title||'')}</div>
+        <div class="b">${escapeHtml(p.body||'')}</div>
+        <div class="meta">${p.time?new Date(p.time).toLocaleString():''} · 评论 ${replyN}</div>
+        ${preview}
+      </div>
+    </div>
   </div>`;
 }
 function openCampusSection(kind, title){
@@ -6055,10 +6158,7 @@ function openCampusSection(kind, title){
   items = items.slice().sort((a,b)=>(b.time||0)-(a.time||0));
   if(list){
     list.innerHTML = items.map(p=>cwPostRow(p)).join('') || '<div style="padding:24px;color:var(--muted);text-align:center;">空</div>';
-    list.querySelectorAll('.campus-card').forEach(el=>{
-      el.onclick = ()=>openCampusPost(el.dataset.id);
-      el.ondblclick = (ev)=>{ ev.preventDefault(); enterCampusEdit(el); };
-    });
+    bindCampusCards();
   }
 }
 function closeCampusSubview(){
@@ -6098,25 +6198,84 @@ function sendCampusPostReply(){
   saveAll(); openCampusPost(p.id);
 }
 function bindCampusCards(){
-  document.querySelectorAll('#campus-list .campus-card').forEach(el=>{
-    el.onclick = ()=>openCampusPost(el.dataset.id);
+  document.querySelectorAll('#campus-list .campus-card, #campus-sub-list .campus-card').forEach(el=>{
+    el.onclick = (ev)=>{
+      if(el.classList.contains('open')) return;
+      if(window._campusEdit){
+        el.classList.toggle('msel');
+        return;
+      }
+      openCampusPost(el.dataset.id);
+    };
     el.ondblclick = (ev)=>{ ev.preventDefault(); enterCampusEdit(el); };
+    // 左滑显示删除
+    let sx=0, sy=0, dx=0, tracking=false;
+    el.addEventListener('touchstart', e=>{
+      const t=e.touches[0]; sx=t.clientX; sy=t.clientY; dx=0; tracking=true;
+    }, {passive:true});
+    el.addEventListener('touchmove', e=>{
+      if(!tracking) return;
+      const t=e.touches[0];
+      const adx=t.clientX-sx, ady=t.clientY-sy;
+      if(Math.abs(ady)>Math.abs(adx) && Math.abs(ady)>8){ tracking=false; return; }
+      dx = adx;
+      if(dx < 0){
+        el.style.transition='none';
+        el.style.transform = 'translateX('+ Math.max(dx, -72) +'px)';
+      }
+    }, {passive:true});
+    el.addEventListener('touchend', ()=>{
+      if(!tracking) return;
+      tracking=false;
+      el.style.transition='';
+      if(dx < -40){
+        el.classList.add('open');
+        el.style.transform='translateX(-72px)';
+        // 左滑视为选中，便于批量删
+        el.classList.add('msel');
+        window._campusEdit = true;
+        $('campus-edit-bar')?.classList.add('show');
+      } else {
+        el.classList.remove('open');
+        el.style.transform='';
+      }
+      dx=0;
+    });
   });
+  // 点击其它处收起
+  document.querySelectorAll('#campus-list .cw-swipe-wrap, #campus-sub-list .cw-swipe-wrap').forEach(wrap=>{
+    wrap.addEventListener('click', e=>{
+      if(e.target.closest('.cw-swipe-del')) return;
+      document.querySelectorAll('.cw-swipe-inner.open').forEach(x=>{
+        if(x!==e.target.closest('.cw-swipe-inner')){
+          x.classList.remove('open'); x.style.transform='';
+        }
+      });
+    });
+  });
+}
+function deleteCampusOne(id){
+  if(!id) return;
+  if(!confirm('删除这条帖子？')) return;
+  campusData[campusTab] = (campusData[campusTab]||[]).filter(p=>p.id!==id);
+  saveAll(); closeCampusPost(); renderCampus();
+  if(window._campusSub) openCampusSection(window._campusSub, $('campus-sub-title')?.textContent||'');
 }
 function enterCampusEdit(el){
   window._campusEdit = true;
   $('campus-edit-bar')?.classList.add('show');
   el.classList.add('msel');
-  el.style.outline = '2px solid var(--blue)';
 }
 function exitCampusEdit(){
   window._campusEdit=false;
   $('campus-edit-bar')?.classList.remove('show');
-  document.querySelectorAll('.campus-card.msel').forEach(el=>{ el.classList.remove('msel'); el.style.outline=''; });
+  document.querySelectorAll('.campus-card.msel, .cw-swipe-inner.msel').forEach(el=>{
+    el.classList.remove('msel'); el.classList.remove('open'); el.style.transform=''; el.style.outline='';
+  });
 }
 function deleteCampusSelected(){
-  const ids = [...document.querySelectorAll('.campus-card.msel')].map(el=>el.dataset.id);
-  if(!ids.length){ alert('请先选择'); return; }
+  const ids = [...document.querySelectorAll('.campus-card.msel')].map(el=>el.dataset.id).filter(Boolean);
+  if(!ids.length){ alert('请先左滑或选中帖子'); return; }
   if(!confirm('删除选中的 '+ids.length+' 条？')) return;
   campusData[campusTab] = (campusData[campusTab]||[]).filter(p=>!ids.includes(p.id));
   saveAll(); exitCampusEdit(); closeCampusPost(); closeCampusSubview(); renderCampus();
@@ -6126,20 +6285,50 @@ async function refreshCampusSection(){
   if(btn){ btn.classList.add('busy'); btn.textContent='…'; }
   const hint = ($('campus-hint')?.value||'').trim();
   const linked = (campusWB||'').split(/[,，]/).map(x=>x.trim()).filter(Boolean);
+  const replyRule = `每条帖子必须带 replies 数组（2~5条评论），评论字段 user,text，语气像微博/贴吧楼中楼，可跟帖、吐槽、起哄、追问，不要空洞。`;
   const prompts = {
-    gossip: `生成4条校园八卦帖。JSON数组user,title,body,tag,kind(固定post)。真实姓名。${hint?'方向：'+hint:''}`,
-    nsfw: `生成4条同校NSFW帖。JSON：user,title,body,tag,kind(post)。${hint?'方向：'+hint:''}`,
-    boys: `男生论坛：2条排行(kind=rank,tag最骚/最想操/最母狗)，2条体验(kind=review)，2条讨论(kind=post)。JSON含user,title,body,tag,kind。${hint?'方向：'+hint:''}`,
-    girls: `女生论坛：2条排名(kind=rank)，2条匿名意淫(kind=fantasy)，2条讨论(kind=post)。JSON。${hint?'方向：'+hint:''}`
+    gossip: `生成4条校园八卦帖。JSON数组，每项：user,title,body,tag,kind(固定post),replies:[{user,text},...]。真实姓名。${replyRule}${hint?'方向：'+hint:''}`,
+    nsfw: `生成4条同校NSFW帖。JSON每项：user,title,body,tag,kind(post),replies:[{user,text}]。${replyRule}${hint?'方向：'+hint:''}`,
+    boys: `男生论坛：2条排行(kind=rank,tag最骚/最想操/最母狗)，2条体验(kind=review)，2条讨论(kind=post)。JSON含user,title,body,tag,kind,replies。${replyRule}${hint?'方向：'+hint:''}`,
+    girls: `女生论坛：2条排名(kind=rank)，2条匿名意淫(kind=fantasy)，2条讨论(kind=post)。JSON含replies。${replyRule}${hint?'方向：'+hint:''}`
   };
   try{
-    const raw = await callAI('校园墙生成器，参考世界书常驻，只输出JSON数组。', prompts[campusTab]||prompts.gossip, 3000, linked);
+    const raw = await callAI('校园墙生成器，参考世界书常驻，只输出JSON数组。风格参考微博热帖与贴吧楼层。', prompts[campusTab]||prompts.gossip, 4500, linked);
     let arr=[]; try{ const m=raw.match(/\[[\s\S]*\]/); arr=m?JSON.parse(m[0]):[]; }catch(_){}
     if(!arr.length){ alert('生成失败'); return; }
-    const mapped = arr.map((p,i)=>({
-      id:'cp'+Date.now()+i, user:p.user||'匿名', title:p.title||'无题', body:p.body||'',
-      tag:p.tag||'', kind:p.kind||'post', time:Date.now(), replies:[]
-    }));
+    const fakeNames = ['路过的学长','匿名猫','宿舍楼下','教务处隔壁','图书馆角落','夜跑选手','二食堂常客','小红书搬运','表白墙搬运','热心网友'];
+    const mapped = arr.map((p,i)=>{
+      let replies = Array.isArray(p.replies) ? p.replies : [];
+      replies = replies.filter(r=>r && (r.text||r.content)).map(r=>({
+        user: r.user || fakeNames[Math.floor(Math.random()*fakeNames.length)],
+        text: r.text || r.content || '',
+        time: Date.now() - Math.floor(Math.random()*3600000)
+      }));
+      // 若模型没给评论，补 2~4 条占位风格评论，避免空楼
+      if(replies.length < 2){
+        const extras = [
+          '楼主细说？',
+          '已截图',
+          '我也听说了…',
+          '真的假的啊',
+          '前排围观',
+          '求后续',
+          '这也能忍？',
+          '笑死，又是你们宿舍'
+        ];
+        while(replies.length < 2 + Math.floor(Math.random()*2)){
+          replies.push({
+            user: fakeNames[Math.floor(Math.random()*fakeNames.length)],
+            text: extras[Math.floor(Math.random()*extras.length)],
+            time: Date.now() - Math.floor(Math.random()*7200000)
+          });
+        }
+      }
+      return {
+        id:'cp'+Date.now()+i, user:p.user||'匿名', title:p.title||'无题', body:p.body||'',
+        tag:p.tag||'', kind:p.kind||'post', time:Date.now(), replies
+      };
+    });
     campusData[campusTab] = (campusData[campusTab]||[]).concat(mapped);
     saveAll(); renderCampus();
   } finally {
