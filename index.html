@@ -1395,6 +1395,70 @@
   }
   .bg-settings-block label { display:block; font-size:12px; color:var(--muted); margin-bottom:6px; }
 
+
+  /* 桌面网格选择交换 */
+  .home-wrap.edit-mode .apps > .app,
+  .home-wrap.edit-mode .apps > .widget {
+    outline: 1.5px dashed rgba(255,255,255,.35);
+    outline-offset: 2px;
+    border-radius: 16px;
+  }
+  .home-wrap.edit-mode .apps > .app.grid-selected,
+  .home-wrap.edit-mode .apps > .widget.grid-selected {
+    outline: 2.5px solid #0a84ff;
+    outline-offset: 2px;
+    box-shadow: 0 0 0 4px rgba(10,132,255,.25);
+    z-index: 5;
+  }
+  .home-wrap.edit-mode .apps {
+    position: relative;
+  }
+  .home-edit-hint {
+    display: none;
+    text-align: center;
+    font-size: 12px;
+    color: rgba(255,255,255,.85);
+    padding: 4px 8px 8px;
+    position: relative;
+    z-index: 3;
+    text-shadow: 0 1px 3px rgba(0,0,0,.4);
+  }
+  .home-wrap.edit-mode .home-edit-hint { display: block; }
+  .widget.w-lg { grid-column: span 4; min-height: 140px; }
+  .widget.w-lg .wc-time { font-size: 48px; }
+  .widget.w-md .wc-time { font-size: 36px; }
+  .widget.w-sm .wc-time { font-size: 28px; }
+
+  /* 辅助小圆点 AssistiveTouch */
+  #assistive-dot {
+    position: absolute;
+    width: 56px; height: 56px;
+    border-radius: 50%;
+    z-index: 9999;
+    left: auto; right: 12px; top: 42%;
+    background: rgba(80,80,80,.55);
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    box-shadow: 0 4px 16px rgba(0,0,0,.28), inset 0 0 0 1px rgba(255,255,255,.2);
+    display: flex; align-items: center; justify-content: center;
+    cursor: grab; touch-action: none;
+    overflow: hidden;
+    user-select: none;
+    transition: opacity .2s, transform .15s;
+  }
+  #assistive-dot:active { cursor: grabbing; transform: scale(1.06); }
+  #assistive-dot img {
+    width: 100%; height: 100%; object-fit: cover; border-radius: 50%;
+    pointer-events: none;
+  }
+  #assistive-dot .ad-inner {
+    width: 22px; height: 22px; border-radius: 50%;
+    background: rgba(255,255,255,.88);
+    box-shadow: 0 0 0 6px rgba(255,255,255,.25);
+    pointer-events: none;
+  }
+  #assistive-dot.faded { opacity: .35; }
+
 </style>
 </head>
 <body data-theme="dark">
@@ -1403,6 +1467,10 @@
   <div class="screen">
 
     <!-- 桌面 -->
+    <!-- 辅助小圆点 -->
+    <div id="assistive-dot" title="双击回桌面">
+      <div class="ad-inner" id="assistive-dot-inner"></div>
+    </div>
     <div class="home-wrap show" id="home">
       <div class="home-top" id="home-top-clock" style="display:none;">
         <div class="time" id="clock">22:16</div>
@@ -1438,9 +1506,11 @@
         </div>
       </div>
       <div class="home-dots" id="home-dots"><i class="on"></i><i></i></div>
+      <div class="home-edit-hint" id="home-edit-hint">点选两个图标/小组件可交换位置 · 完成后点保存</div>
       <div class="home-edit-bar" id="home-edit-bar">
         <button type="button" onclick="addHomeWidget()">＋ 小组件</button>
-        <button type="button" class="primary" onclick="exitHomeEdit()">完成</button>
+        <button type="button" class="primary" onclick="saveHomeAndExit()">保存</button>
+        <button type="button" onclick="exitHomeEdit()">取消</button>
       </div>
             <div class="dock">
         <div class="app" onclick="openApp('messages')"><div class="app-icon" id="dock-messages" style="background:linear-gradient(180deg,#5ac8fa,#007aff);"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z"/></svg></div></div>
@@ -1961,6 +2031,20 @@
         <button class="nav-right" onclick="saveMediaSkin();saveBeautifyPreset(true)">保存</button>
       </div>
       <div class="scroll" style="padding:12px;">
+        <div class="card" style="border-radius:16px;">
+          <h4 style="margin-bottom:8px;">辅助小圆点</h4>
+          <p style="font-size:12px;color:var(--muted);margin-bottom:10px;">可拖动位置，双击回到桌面。可自定义图标。</p>
+          <div class="seg" style="margin-bottom:10px;">
+            <button type="button" id="adot-on" class="active" onclick="setAssistiveEnabled(true)">开启</button>
+            <button type="button" id="adot-off" onclick="setAssistiveEnabled(false)">关闭</button>
+          </div>
+          <div style="display:flex;gap:8px;margin-bottom:8px;">
+            <button type="button" class="btn btn-secondary" style="flex:1;" onclick="uploadAssistiveIcon()">上传图标</button>
+            <button type="button" class="btn btn-secondary" style="flex:1;" onclick="clearAssistiveIcon()">恢复默认</button>
+          </div>
+          <div id="assistive-icon-preview" style="width:56px;height:56px;border-radius:50%;background:var(--card2);margin:8px auto;background-size:cover;background-position:center;border:.5px solid var(--border);"></div>
+        </div>
+
         <div class="card" style="border-radius:16px;">
           <h4>美化效果</h4>
           <div class="seg" style="margin:8px 0 10px;" id="fx-mode-seg">
@@ -2733,6 +2817,7 @@ function loadAll() {
       if(d.homeLayout) window._homeLayout = d.homeLayout;
       if(d.beautifyFx) window._beautifyFx = d.beautifyFx;
       if(d.appBgs) window._appBgs = d.appBgs;
+      if(d.assistive) window._assistive = d.assistive;
       if(typeof d.chatGlassOpacity === 'number') window._chatGlassOpacity = d.chatGlassOpacity;
       if(typeof d.globalGlassOpacity === 'number') window._globalGlassOpacity = d.globalGlassOpacity;
       if(Array.isArray(d.currentTasks)) currentTasks = d.currentTasks;
@@ -2793,6 +2878,13 @@ function loadAll() {
     if (!contacts.find(c => c.id === r.id)) contacts.push({id:r.id,name:r.name,remark:r.remark,gender:'male',relation:r.relation});
   });
   try {
+    const hl = localStorage.getItem('homeLayoutV1');
+    if(hl){
+      const pages = JSON.parse(hl);
+      if(Array.isArray(pages)) window._homeLayout = pages;
+    }
+  } catch(_e){}
+  try {
     const wb = localStorage.getItem('bitchPhoneWidgets');
     if(wb){
       const arr = JSON.parse(wb);
@@ -2839,6 +2931,7 @@ function saveAll() {
     homeWidgets: window._homeWidgets||[],
     homeLayout: window._homeLayout||null,
     appBgs: window._appBgs||{},
+    assistive: window._assistive||null,
     beautifyFx: window._beautifyFx||null,
     chatGlassOpacity: window._chatGlassOpacity ?? 0.72,
     globalGlassOpacity: window._globalGlassOpacity ?? 0.55,
@@ -6227,6 +6320,7 @@ function doImport(e){
       if(d.homeLayout) window._homeLayout = d.homeLayout;
       if(d.beautifyFx) window._beautifyFx = d.beautifyFx;
       if(d.appBgs) window._appBgs = d.appBgs;
+      if(d.assistive) window._assistive = d.assistive;
       if(typeof d.chatGlassOpacity === 'number') window._chatGlassOpacity = d.chatGlassOpacity;
       if(typeof d.globalGlassOpacity === 'number') window._globalGlassOpacity = d.globalGlassOpacity;
       if(Array.isArray(d.currentTasks)) currentTasks = d.currentTasks;
@@ -6242,6 +6336,7 @@ function doImport(e){
       if(d.homeLayout) window._homeLayout = d.homeLayout;
       if(d.beautifyFx) window._beautifyFx = d.beautifyFx;
       if(d.appBgs) window._appBgs = d.appBgs;
+      if(d.assistive) window._assistive = d.assistive;
       if(typeof d.chatGlassOpacity === 'number') window._chatGlassOpacity = d.chatGlassOpacity;
       if(typeof d.globalGlassOpacity === 'number') window._globalGlassOpacity = d.globalGlassOpacity;
       if(Array.isArray(d.currentTasks)) currentTasks = d.currentTasks;
@@ -6325,30 +6420,54 @@ window._editingWidgetId = null;
 
 function enterHomeEdit(){
   window._homeEdit = true;
+  window._gridSwapA = null;
   $('home')?.classList.add('edit-mode');
   document.querySelectorAll('#home .app').forEach(app=>{
-    if(app.querySelector('.app-del')) return;
-    const btn=document.createElement('button');
-    btn.className='app-del'; btn.type='button'; btn.textContent='−';
-    btn.onclick=(e)=>{ e.stopPropagation(); removeHomeApp(app); };
-    app.appendChild(btn);
+    if(app.dataset.hidden==='1') return;
+    if(!app.querySelector('.app-del')){
+      const btn=document.createElement('button');
+      btn.className='app-del'; btn.type='button'; btn.textContent='−';
+      btn.onclick=(e)=>{ e.stopPropagation(); removeHomeApp(app); };
+      app.appendChild(btn);
+    }
   });
   document.querySelectorAll('#home .widget').forEach(w=>{
-    if(w.querySelector('.app-del')) return;
-    const btn=document.createElement('button');
-    btn.className='app-del'; btn.type='button'; btn.textContent='−';
-    btn.onclick=(e)=>{ e.stopPropagation(); removeHomeWidget(w); };
-    w.appendChild(btn);
+    if(!w.querySelector('.app-del')){
+      const btn=document.createElement('button');
+      btn.className='app-del'; btn.type='button'; btn.textContent='−';
+      btn.onclick=(e)=>{ e.stopPropagation(); removeHomeWidget(w); };
+      w.appendChild(btn);
+    }
   });
+  // 捕获阶段拦截点击做网格交换，不覆盖原有 onclick
+  if(!window._gridSwapHandler){
+    window._gridSwapHandler = (e)=>{
+      if(!window._homeEdit) return;
+      if(e.target.closest('.app-del') || e.target.closest('.dock') || e.target.closest('.home-edit-bar')) return;
+      const cell = e.target.closest('#home .apps > .app, #home .apps > .widget');
+      if(!cell) return;
+      e.preventDefault();
+      e.stopPropagation();
+      onGridCellClick(cell);
+    };
+  }
+  $('home')?.addEventListener('click', window._gridSwapHandler, true);
   enableHomeDrag();
 }
-function exitHomeEdit(){
+function exitHomeEdit(skipSave){
   window._homeEdit = false;
+  window._gridSwapA = null;
+  document.querySelectorAll('.grid-selected').forEach(el=>el.classList.remove('grid-selected'));
   $('home')?.classList.remove('edit-mode');
   document.querySelectorAll('#home .app-del').forEach(el=>el.remove());
+  if(window._gridSwapHandler){
+    $('home')?.removeEventListener('click', window._gridSwapHandler, true);
+  }
   disableHomeDrag();
-  saveHomeLayout();
-  saveAll();
+  if(!skipSave){
+    saveHomeLayout();
+    saveAll();
+  }
 }
 function toggleHomeEdit(){
   if(window._homeEdit) exitHomeEdit(); else enterHomeEdit();
@@ -6363,20 +6482,111 @@ function removeHomeApp(appEl){
 }
 function saveHomeLayout(){
   const pages = [];
-  document.querySelectorAll('.home-page').forEach(page=>{
-    const apps = [...page.querySelectorAll('.apps > .app, .apps > .widget')].map(el=>{
+  document.querySelectorAll('.home-page').forEach((page, pi)=>{
+    const apps = [...page.querySelectorAll('.apps > .app, .apps > .widget')].map((el, idx)=>{
       if(el.classList.contains('widget')){
-        return {type:'widget', id: el.dataset.wid, kind: el.dataset.kind, size: el.dataset.size||'sm', style: el.dataset.style||''};
+        const id = el.dataset.wid;
+        const w = (window._homeWidgets||[]).find(x=>x.id===id);
+        if(w){ w.page = pi; w.order = idx; w.size = el.dataset.size || w.size || 'sm'; }
+        return {type:'widget', id: id, kind: el.dataset.kind, size: el.dataset.size||'sm', style: el.dataset.style||'', order: idx};
       }
       const onclick = el.getAttribute('onclick')||'';
       const mm = onclick.match(/openApp\('([^']+)'\)/);
-      return {type:'app', id: mm?mm[1]:'', hidden: el.dataset.hidden==='1'};
+      return {type:'app', id: mm?mm[1]:'', hidden: el.dataset.hidden==='1', order: idx};
     });
     pages.push(apps);
   });
   window._homeLayout = pages;
   try{ localStorage.setItem('homeLayoutV1', JSON.stringify(pages)); }catch(_){}
+  try{ localStorage.setItem('bitchPhoneWidgets', JSON.stringify(window._homeWidgets||[])); }catch(_){}
 }
+function saveHomeAndExit(){
+  saveHomeLayout();
+  saveAll();
+  exitHomeEdit(true);
+  alert('桌面布局已保存');
+}
+function applyHomeLayout(){
+  const pages = window._homeLayout;
+  if(!pages || !pages.length) return;
+  const pageEls = document.querySelectorAll('.home-page');
+  pages.forEach((list, pi)=>{
+    const grid = pageEls[pi]?.querySelector('.apps');
+    if(!grid || !list) return;
+    const appMap = {};
+    const widgetMap = {};
+    [...grid.querySelectorAll('.app')].forEach(el=>{
+      const onclick = el.getAttribute('onclick')||'';
+      const mm = onclick.match(/openApp\('([^']+)'\)/);
+      if(mm) appMap[mm[1]] = el;
+    });
+    [...grid.querySelectorAll('.widget')].forEach(el=>{
+      if(el.dataset.wid) widgetMap[el.dataset.wid] = el;
+    });
+    const frag = document.createDocumentFragment();
+    const used = new Set();
+    list.forEach(item=>{
+      if(!item) return;
+      if(item.type==='widget' && item.id && widgetMap[item.id]){
+        frag.appendChild(widgetMap[item.id]);
+        used.add('w:'+item.id);
+      } else if(item.type==='app' && item.id && appMap[item.id]){
+        const el = appMap[item.id];
+        if(item.hidden){ el.style.display='none'; el.dataset.hidden='1'; }
+        else { el.style.display=''; el.dataset.hidden=''; }
+        frag.appendChild(el);
+        used.add('a:'+item.id);
+      }
+    });
+    // append leftovers
+    Object.keys(appMap).forEach(id=>{
+      if(!used.has('a:'+id)) frag.appendChild(appMap[id]);
+    });
+    Object.keys(widgetMap).forEach(id=>{
+      if(!used.has('w:'+id)) frag.appendChild(widgetMap[id]);
+    });
+    grid.innerHTML = '';
+    grid.appendChild(frag);
+  });
+}
+window._gridSwapA = null;
+function onGridCellClick(el){
+  if(!window._homeEdit || !el) return;
+  if(window._gridSwapA === el){
+    el.classList.remove('grid-selected');
+    window._gridSwapA = null;
+    return;
+  }
+  if(!window._gridSwapA){
+    window._gridSwapA = el;
+    el.classList.add('grid-selected');
+    return;
+  }
+  // swap
+  const a = window._gridSwapA;
+  const b = el;
+  a.classList.remove('grid-selected');
+  window._gridSwapA = null;
+  if(a === b) return;
+  if(a.parentElement !== b.parentElement){
+    // cross-page: just move a before b's parent append
+    const parentB = b.parentElement;
+    const parentA = a.parentElement;
+    const nextB = b.nextSibling;
+    parentA.insertBefore(b, a);
+    if(nextB) parentB.insertBefore(a, nextB);
+    else parentB.appendChild(a);
+  } else {
+    const parent = a.parentElement;
+    const marker = document.createElement('span');
+    parent.insertBefore(marker, a);
+    parent.insertBefore(a, b);
+    parent.insertBefore(b, marker);
+    marker.remove();
+  }
+  saveHomeLayout();
+}
+
 
 function addHomeWidget(){
   const menu = `添加小组件：
@@ -6476,7 +6686,10 @@ function defaultWidgetFields(kind, style){
 function widgetHTML(w){
   const f = Object.assign(defaultWidgetFields(w.kind, w.style), w.fields||{});
   const style = w.style || (w.kind==='clock'?'clock': w.kind==='diary'?'diary':'glass');
-  const sizeCls = (w.size==='md' || style==='diary' || style==='tags' || style==='music') ? 'w-md' : 'w-sm';
+  let sizeCls = 'w-sm';
+  if(w.size==='lg') sizeCls = 'w-lg';
+  else if(w.size==='md' || (!w.size && (style==='diary' || style==='tags' || style==='music'))) sizeCls = 'w-md';
+  else sizeCls = 'w-sm';
   const editHint = '<div class="w-edit-hint">点按编辑</div>';
   const delReady = '';
   let inner = '';
@@ -6697,6 +6910,7 @@ function saveWidgetEdit(){
     const k = el.getAttribute('data-field');
     if(k==='__style'){ w.style = el.value; return; }
     if(k==='__size'){ w.size = el.value; return; }
+    if(k==='__size'){ w.size = el.value || 'sm'; return; }
     if(k==='__material'){ w.material = el.value; return; }
     if(k==='__bg'){ w.bg = el.value; fields.bg = el.value; return; }
     if(k==='__bgOpacity'){ w.bgOpacity = Math.max(0.1, Math.min(1, (parseInt(el.value,10)||85)/100)); return; }
@@ -6718,14 +6932,14 @@ function saveWidgetEdit(){
 }
 function renderHomeWidgets(){
   document.querySelectorAll('.home-page .widget').forEach(el=>el.remove());
-  const list = window._homeWidgets || [];
+  const list = (window._homeWidgets || []).slice().sort((a,b)=>(a.order||0)-(b.order||0));
   list.forEach(w=>{
     const page = document.querySelectorAll('.home-page')[w.page||0];
     const grid = page?.querySelector('.apps');
     if(!grid) return;
-    grid.insertAdjacentHTML('afterbegin', widgetHTML(w));
+    grid.insertAdjacentHTML('beforeend', widgetHTML(w));
   });
-  // hide native clock if a clock widget exists? keep both - user can hide by editing home
+  try{ applyHomeLayout(); }catch(_e){}
   applyDeskFx();
 }
 function removeHomeWidget(el){
@@ -6942,8 +7156,123 @@ function applyAllAppBgs(){
 }
 
 
+
+// ========== 辅助小圆点 ==========
+window._assistive = window._assistive || { enabled: true, icon: '', x: null, y: null };
+function initAssistiveDot(){
+  const el = $('assistive-dot');
+  if(!el) return;
+  const cfg = window._assistive || {};
+  el.style.display = cfg.enabled === false ? 'none' : 'flex';
+  applyAssistiveIcon();
+  if(typeof cfg.x === 'number' && typeof cfg.y === 'number'){
+    el.style.left = cfg.x + 'px';
+    el.style.top = cfg.y + 'px';
+    el.style.right = 'auto';
+  }
+  let sx=0, sy=0, ox=0, oy=0, dragging=false, moved=false, lastTap=0;
+  const down = (e)=>{
+    const pt = e.touches ? e.touches[0] : e;
+    dragging = true; moved = false;
+    sx = pt.clientX; sy = pt.clientY;
+    const rect = el.getBoundingClientRect();
+    const phone = el.closest('.phone') || el.parentElement;
+    const pr = phone.getBoundingClientRect();
+    ox = rect.left - pr.left;
+    oy = rect.top - pr.top;
+    el.classList.remove('faded');
+    e.preventDefault();
+  };
+  const move = (e)=>{
+    if(!dragging) return;
+    const pt = e.touches ? e.touches[0] : e;
+    const dx = pt.clientX - sx, dy = pt.clientY - sy;
+    if(Math.abs(dx)>4 || Math.abs(dy)>4) moved = true;
+    const phone = el.closest('.phone') || el.parentElement;
+    const pr = phone.getBoundingClientRect();
+    let nx = ox + dx, ny = oy + dy;
+    nx = Math.max(4, Math.min(pr.width - 60, nx));
+    ny = Math.max(24, Math.min(pr.height - 60, ny));
+    el.style.left = nx + 'px';
+    el.style.top = ny + 'px';
+    el.style.right = 'auto';
+  };
+  const up = ()=>{
+    if(!dragging) return;
+    dragging = false;
+    if(!moved){
+      const now = Date.now();
+      if(now - lastTap < 320){
+        goHome();
+        lastTap = 0;
+      } else lastTap = now;
+    } else {
+      window._assistive = window._assistive || {};
+      window._assistive.x = parseFloat(el.style.left)||0;
+      window._assistive.y = parseFloat(el.style.top)||0;
+      saveAll();
+      setTimeout(()=>el.classList.add('faded'), 1800);
+    }
+  };
+  el.onmousedown = down;
+  el.ontouchstart = down;
+  window.addEventListener('mousemove', move, {passive:false});
+  window.addEventListener('touchmove', move, {passive:false});
+  window.addEventListener('mouseup', up);
+  window.addEventListener('touchend', up);
+  setTimeout(()=>el.classList.add('faded'), 2500);
+}
+function applyAssistiveIcon(){
+  const el = $('assistive-dot');
+  if(!el) return;
+  const icon = (window._assistive||{}).icon || '';
+  const inner = $('assistive-dot-inner');
+  if(icon){
+    el.innerHTML = '<img src="'+icon+'" alt="">';
+  } else {
+    el.innerHTML = '<div class="ad-inner" id="assistive-dot-inner"></div>';
+  }
+  const prev = $('assistive-icon-preview');
+  if(prev) prev.style.backgroundImage = icon ? ('url('+icon+')') : '';
+  const on = $('adot-on'), off = $('adot-off');
+  const en = (window._assistive||{}).enabled !== false;
+  if(on&&off){ on.classList.toggle('active', en); off.classList.toggle('active', !en); }
+}
+function setAssistiveEnabled(v){
+  window._assistive = window._assistive || {};
+  window._assistive.enabled = !!v;
+  const el = $('assistive-dot');
+  if(el) el.style.display = v ? 'flex' : 'none';
+  applyAssistiveIcon();
+  saveAll();
+}
+function uploadAssistiveIcon(){
+  const input=document.createElement('input'); input.type='file'; input.accept='image/*';
+  input.onchange=async e=>{
+    const file=e.target.files?.[0]; if(!file) return;
+    try{
+      const data = await compressImage(file, 256, 0.8);
+      window._assistive = window._assistive || {};
+      window._assistive.icon = data;
+      applyAssistiveIcon();
+      saveAll();
+      alert('小圆点图标已更新');
+    }catch(err){ alert('上传失败'); }
+  };
+  input.click();
+}
+function clearAssistiveIcon(){
+  window._assistive = window._assistive || {};
+  window._assistive.icon = '';
+  applyAssistiveIcon();
+  saveAll();
+}
+
+
 loadAll();
 try{ applyAppIcons(); }catch(_e){}
+try{ initAssistiveDot(); }catch(_e){}
+try{ applyHomeLayout(); }catch(_e){}
 try{
   if(!window._homeWidgets) window._homeWidgets=[];
   if(!(window._homeWidgets||[]).some(w=>w.kind==='clock'||w.style==='clock')){
