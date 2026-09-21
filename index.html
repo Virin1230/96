@@ -112,7 +112,7 @@
   .home.show { display: flex; }
   .time { text-align: center; font-size: 56px; font-weight: 200; letter-spacing: -1.5px; margin-bottom: 2px; color: #fff; text-shadow: 0 2px 12px rgba(0,0,0,.35); }
   .date { text-align: center; font-size: 15px; color: rgba(255,255,255,.78); margin-bottom: 28px; font-weight: 500; }
-  .apps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px 6px; flex: 1; align-content: start; }
+  .apps { display: grid; grid-template-columns: repeat(4, 1fr); grid-auto-rows: 82px; gap: 12px 6px; flex: 1; align-content: start; }
   .app { display: flex; flex-direction: column; align-items: center; gap: 6px; cursor: pointer; user-select: none; }
   .app:active { transform: scale(.92); transition: transform .12s; }
   .app-icon {
@@ -547,7 +547,7 @@
     display: flex; flex-direction: column;
     box-sizing: border-box;
   }
-  .apps { gap: 12px 4px; }
+  .apps { gap: 12px 6px; grid-auto-rows: 82px; }
   .home-dots {
     position: relative; z-index: 2;
     display: flex; justify-content: center; gap: 7px; padding: 6px 0 10px;
@@ -1035,7 +1035,7 @@
   }
   .home-edit-bar button.primary { background: var(--blue); }
   .widget {
-    grid-column: span 2; border-radius: 22px; padding: 14px 16px; min-height: 88px;
+    grid-column: span 2; grid-row: span 2; border-radius: 22px; padding: 10px 12px; min-height: 0; height: 100%; box-sizing: border-box;
     background: rgba(255,255,255,.14); backdrop-filter: blur(28px) saturate(160%);
     -webkit-backdrop-filter: blur(28px) saturate(160%);
     border: 1px solid rgba(255,255,255,.18); color: #fff;
@@ -1045,14 +1045,16 @@
   [data-theme="light"] .widget {
     background: rgba(255,255,255,.55); color: #1c1c1e; border-color: rgba(0,0,0,.08);
   }
-  .widget.w-sm { grid-column: span 2; min-height: 72px; max-height: 96px; }
-  .widget.w-md { grid-column: span 2; min-height: 88px; }
-  .widget.w-lg { grid-column: span 4; min-height: 120px; }
+  .widget.w-sm { grid-column: span 2; grid-row: span 2; min-height: 0; max-height: none; height: 100%; }
+  .widget.w-md { grid-column: span 4; grid-row: span 2; min-height: 0; height: 100%; }
+  .widget.w-lg { grid-column: span 4; grid-row: span 4; min-height: 0; height: 100%; }
   .widget .w-title { font-size: 12px; opacity: .75; font-weight: 600; margin-bottom: 6px; }
   .widget .w-body { font-size: 15px; font-weight: 600; line-height: 1.35; }
   .widget .w-sub { font-size: 12px; opacity: .7; margin-top: 6px; }
   .widget .app-del { top: 6px; right: 6px; left: auto; }
-  .apps { align-content: start; }
+  .apps { align-content: start; align-items: stretch; }
+  .apps > .app { grid-column: span 1; grid-row: span 1; min-height: 0; }
+  .apps > .widget { align-self: stretch; }
   .page, .home-wrap { transition: opacity .18s ease; }
   .app:active { transform: scale(.92); }
   .home-wrap.edit-mode .app:active { transform: scale(1.05); }
@@ -1122,7 +1124,7 @@
   /* widget style variants */
   .widget { overflow: hidden; }
   .widget[data-style="diary"] {
-    grid-column: span 2; min-height: 110px; border-radius: 28px;
+    grid-column: span 2; grid-row: span 2; min-height: 0; height: 100%; border-radius: 22px; overflow: hidden;
     background: rgba(255,255,255,.92); color: #1c1c1e;
     padding: 0; display: flex; flex-direction: column;
   }
@@ -1147,23 +1149,23 @@
   }
 
   .widget[data-style="tags"] {
-    grid-column: span 2; min-height: 100px; background: rgba(255,255,255,.85); color:#333;
+    grid-column: span 2; grid-row: span 2; min-height: 0; height: 100%; background: rgba(255,255,255,.85); color:#333; overflow: hidden;
     display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px;
   }
   [data-theme="dark"] .widget[data-style="tags"] { background: rgba(30,30,32,.88); color:#eee; }
   .widget[data-style="tags"] .wt-av {
-    width: 64px; height: 64px; border-radius: 50%; background:#eee; overflow:hidden;
-    display:flex; align-items:center; justify-content:center; font-size:28px;
+    width: 40px; height: 40px; border-radius: 50%; margin: 2px auto; overflow:hidden;
+    display:flex; align-items:center; justify-content:center; font-size:22px; background:rgba(0,0,0,.06); flex-shrink:0;
   }
   .widget[data-style="tags"] .wt-av img { width:100%; height:100%; object-fit:cover; }
   .widget[data-style="tags"] .wt-row { display:flex; gap:8px; flex-wrap:wrap; justify-content:center; max-width:100%; }
   .widget[data-style="tags"] .wt-pill {
-    background: rgba(0,0,0,.06); border-radius: 20px; padding: 6px 12px; font-size:12px;
+    background: rgba(0,0,0,.06); border-radius: 16px; padding: 3px 8px; font-size:10px;
   }
   [data-theme="dark"] .widget[data-style="tags"] .wt-pill { background: rgba(255,255,255,.1); }
 
   .widget[data-style="music"] {
-    grid-column: span 2; min-height: 88px; border-radius: 28px;
+    grid-column: span 2; grid-row: span 2; min-height: 0; height: 100%; border-radius: 22px; overflow: hidden;
     background: rgba(120,120,125,.55); color:#fff; display:flex; align-items:center; gap:10px;
     padding: 10px 14px;
   }
@@ -1178,7 +1180,7 @@
   .widget[data-style="music"] .wm-ctrl { font-size:14px; opacity:.85; letter-spacing:6px; }
 
   .widget[data-style="cute"] {
-    grid-column: span 2; min-height: 78px; background: rgba(255,255,255,.9); color:#333;
+    grid-column: span 2; grid-row: span 2; min-height: 0; height: 100%; background: rgba(255,255,255,.9); color:#333; overflow: hidden;
     display:flex; flex-direction:row; align-items:center; justify-content:flex-start; gap:8px;
     position:relative; padding: 8px 10px;
   }
@@ -1189,18 +1191,18 @@
   }
   .widget[data-style="cute"] .wc-name { font-size:11px; opacity:.7; order:3; }
   .widget[data-style="cute"] .wc-av {
-    width: 48px; height: 48px; border-radius: 50%; background: radial-gradient(circle at 30% 30%, #fff, #f5d0d0);
-    display:flex; align-items:center; justify-content:center; font-size:24px; overflow:hidden; flex-shrink:0; order:1;
+    width: 40px; height: 40px; border-radius: 50%; overflow:hidden; order:2; flex-shrink:0;
+    display:flex; align-items:center; justify-content:center; font-size:22px; background:rgba(0,0,0,.05);
   }
   .widget[data-style="cute"] .wc-av img { width:100%; height:100%; object-fit:cover; }
   .widget[data-style="cute"] .wc-name { font-size:11px; opacity:.65; }
 
   .widget[data-style="clock"] {
-    grid-column: span 2; min-height: 88px; display:flex; flex-direction:column; justify-content:center;
+    grid-column: span 2; grid-row: span 2; min-height: 0; height: 100%; display:flex; flex-direction:column; justify-content:center; overflow: hidden;
   }
   .widget[data-style="clock"] .wc-time { font-size:32px; font-weight:200; letter-spacing:-1px; line-height:1.1; }
   .widget[data-style="clock"] .wc-date { font-size:12px; opacity:.75; margin-top:4px; }
-  .widget[data-style="clock"].big { grid-column: span 4; min-height: 110px; }
+  .widget[data-style="clock"].big, .widget[data-style="clock"].w-lg { grid-column: span 4; grid-row: span 2; min-height: 0; }
   .widget[data-style="clock"].big .wc-time { font-size:48px; }
 
   .widget .w-edit-hint { display:none; }
@@ -6706,9 +6708,9 @@ function addHomeWidget(){
   if(pick===null) return;
   const n = parseInt(pick,10)||1;
   const map = {
-    1:{kind:'diary', style:'diary', size:'md'},
-    2:{kind:'tags', style:'tags', size:'md'},
-    3:{kind:'music', style:'music', size:'md'},
+    1:{kind:'diary', style:'diary', size:'sm'},
+    2:{kind:'tags', style:'tags', size:'sm'},
+    3:{kind:'music', style:'music', size:'sm'},
     4:{kind:'cute', style:'cute', size:'sm'},
     5:{kind:'clock', style:'clock', size:'sm'},
     6:{kind:'status', style:'glass', size:'sm'},
@@ -7347,20 +7349,20 @@ function initAssistiveDot(){
       const now = Date.now();
       window._adotTaps = window._adotTaps || [];
       window._adotTaps.push(now);
-      window._adotTaps = window._adotTaps.filter(t => now - t < 500);
+      window._adotTaps = window._adotTaps.filter(t => now - t < 700);
       if(window._adotTaps.length >= 3){
+        clearTimeout(window._adotTimer);
         window._adotTaps = [];
         goHome();
-        setTimeout(()=>enterHomeEdit(), 80);
+        setTimeout(()=>{ if(!window._homeEdit) enterHomeEdit(); }, 100);
       } else if(window._adotTaps.length === 2){
-        // wait briefly for possible third
         clearTimeout(window._adotTimer);
         window._adotTimer = setTimeout(()=>{
           if((window._adotTaps||[]).length === 2){
             goHome();
             window._adotTaps = [];
           }
-        }, 280);
+        }, 380);
       }
     } else {
       window._assistive = window._assistive || {};
