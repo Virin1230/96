@@ -536,18 +536,18 @@
   .home-top { position: relative; z-index: 2; padding: 52px 18px 0; }
   .home-pages {
     position: relative; z-index: 1; flex: 1; display: flex;
-    width: 200%; height: 100%;
+    height: 100%;
     transition: transform .35s cubic-bezier(.22,.61,.36,1);
     will-change: transform;
   }
-  .home-pages.page1 { transform: translateX(0); }
-  .home-pages.page2 { transform: translateX(-50%); }
   .home-page {
-    width: 50%; height: 100%;
-    padding: 12px 18px 10px;
+    flex: 0 0 auto;
+    height: 100%;
+    padding: 8px 14px 6px;
     display: flex; flex-direction: column;
     box-sizing: border-box;
   }
+  .apps { gap: 12px 4px; }
   .home-dots {
     position: relative; z-index: 2;
     display: flex; justify-content: center; gap: 7px; padding: 6px 0 10px;
@@ -1045,8 +1045,9 @@
   [data-theme="light"] .widget {
     background: rgba(255,255,255,.55); color: #1c1c1e; border-color: rgba(0,0,0,.08);
   }
-  .widget.w-sm { grid-column: span 2; min-height: 88px; }
-  .widget.w-md { grid-column: span 4; min-height: 100px; }
+  .widget.w-sm { grid-column: span 2; min-height: 72px; max-height: 96px; }
+  .widget.w-md { grid-column: span 2; min-height: 88px; }
+  .widget.w-lg { grid-column: span 4; min-height: 120px; }
   .widget .w-title { font-size: 12px; opacity: .75; font-weight: 600; margin-bottom: 6px; }
   .widget .w-body { font-size: 15px; font-weight: 600; line-height: 1.35; }
   .widget .w-sub { font-size: 12px; opacity: .7; margin-top: 6px; }
@@ -1121,7 +1122,7 @@
   /* widget style variants */
   .widget { overflow: hidden; }
   .widget[data-style="diary"] {
-    grid-column: span 4; min-height: 140px; border-radius: 28px;
+    grid-column: span 2; min-height: 110px; border-radius: 28px;
     background: rgba(255,255,255,.92); color: #1c1c1e;
     padding: 0; display: flex; flex-direction: column;
   }
@@ -1146,7 +1147,7 @@
   }
 
   .widget[data-style="tags"] {
-    grid-column: span 4; min-height: 150px; background: rgba(255,255,255,.85); color:#333;
+    grid-column: span 2; min-height: 100px; background: rgba(255,255,255,.85); color:#333;
     display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px;
   }
   [data-theme="dark"] .widget[data-style="tags"] { background: rgba(30,30,32,.88); color:#eee; }
@@ -1162,7 +1163,7 @@
   [data-theme="dark"] .widget[data-style="tags"] .wt-pill { background: rgba(255,255,255,.1); }
 
   .widget[data-style="music"] {
-    grid-column: span 4; min-height: 88px; border-radius: 28px;
+    grid-column: span 2; min-height: 88px; border-radius: 28px;
     background: rgba(120,120,125,.55); color:#fff; display:flex; align-items:center; gap:10px;
     padding: 10px 14px;
   }
@@ -1177,17 +1178,19 @@
   .widget[data-style="music"] .wm-ctrl { font-size:14px; opacity:.85; letter-spacing:6px; }
 
   .widget[data-style="cute"] {
-    grid-column: span 2; min-height: 130px; background: rgba(255,255,255,.9); color:#333;
-    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px;
-    position:relative;
+    grid-column: span 2; min-height: 78px; background: rgba(255,255,255,.9); color:#333;
+    display:flex; flex-direction:row; align-items:center; justify-content:flex-start; gap:8px;
+    position:relative; padding: 8px 10px;
   }
   [data-theme="dark"] .widget[data-style="cute"] { background: rgba(30,30,32,.9); color:#eee; }
   .widget[data-style="cute"] .wc-bubble {
-    background: rgba(0,0,0,.05); border-radius: 16px; padding: 6px 12px; font-size:12px; max-width:90%;
+    background: rgba(0,0,0,.05); border-radius: 12px; padding: 4px 8px; font-size:11px; max-width:100%;
+    order: 2; flex:1; min-width:0;
   }
+  .widget[data-style="cute"] .wc-name { font-size:11px; opacity:.7; order:3; }
   .widget[data-style="cute"] .wc-av {
-    width: 72px; height: 72px; border-radius: 50%; background: radial-gradient(circle at 30% 30%, #fff, #f5d0d0);
-    display:flex; align-items:center; justify-content:center; font-size:36px; overflow:hidden;
+    width: 48px; height: 48px; border-radius: 50%; background: radial-gradient(circle at 30% 30%, #fff, #f5d0d0);
+    display:flex; align-items:center; justify-content:center; font-size:24px; overflow:hidden; flex-shrink:0; order:1;
   }
   .widget[data-style="cute"] .wc-av img { width:100%; height:100%; object-fit:cover; }
   .widget[data-style="cute"] .wc-name { font-size:11px; opacity:.65; }
@@ -1424,10 +1427,12 @@
     text-shadow: 0 1px 3px rgba(0,0,0,.4);
   }
   .home-wrap.edit-mode .home-edit-hint { display: block; }
-  .widget.w-lg { grid-column: span 4; min-height: 140px; }
-  .widget.w-lg .wc-time { font-size: 48px; }
-  .widget.w-md .wc-time { font-size: 36px; }
-  .widget.w-sm .wc-time { font-size: 28px; }
+  .widget.w-lg .wc-time { font-size: 44px; line-height: 1.05; }
+  .widget.w-md .wc-time { font-size: 32px; line-height: 1.05; }
+  .widget.w-sm .wc-time { font-size: 24px; line-height: 1.05; }
+  .widget.w-sm .wc-date { font-size: 11px; }
+  .widget.w-md .wc-date { font-size: 12px; }
+  .widget.w-lg .wc-date { font-size: 14px; }
 
   /* 辅助小圆点 AssistiveTouch */
   #assistive-dot {
@@ -1477,7 +1482,7 @@
         <div class="date" id="date">9月17日 周四</div>
       </div>
       <div class="home-top" style="padding:54px 18px 0;min-height:12px;"></div>
-      <div class="home-pages page1" id="home-pages">
+      <div class="home-pages" id="home-pages">
         <div class="home-page" id="home-page-1">
           <div class="apps">
             <div class="app" onclick="openApp('messages')"><div class="app-icon" id="icon-messages" style="background:linear-gradient(180deg,#5ac8fa,#007aff);"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z"/></svg></div><div class="app-name">消息</div></div>
@@ -1508,7 +1513,9 @@
       <div class="home-dots" id="home-dots"><i class="on"></i><i></i></div>
       <div class="home-edit-hint" id="home-edit-hint">点选两个图标/小组件可交换位置 · 完成后点保存</div>
       <div class="home-edit-bar" id="home-edit-bar">
-        <button type="button" onclick="addHomeWidget()">＋ 小组件</button>
+        <button type="button" onclick="addHomePage()">＋页</button>
+        <button type="button" onclick="removeHomePage()">−页</button>
+        <button type="button" onclick="addHomeWidget()">＋件</button>
         <button type="button" class="primary" onclick="saveHomeAndExit()">保存</button>
         <button type="button" onclick="exitHomeEdit()">取消</button>
       </div>
@@ -2818,6 +2825,7 @@ function loadAll() {
       if(d.beautifyFx) window._beautifyFx = d.beautifyFx;
       if(d.appBgs) window._appBgs = d.appBgs;
       if(d.assistive) window._assistive = d.assistive;
+      if(d.homePageCount) window._homePageCount = d.homePageCount;
       if(typeof d.chatGlassOpacity === 'number') window._chatGlassOpacity = d.chatGlassOpacity;
       if(typeof d.globalGlassOpacity === 'number') window._globalGlassOpacity = d.globalGlassOpacity;
       if(Array.isArray(d.currentTasks)) currentTasks = d.currentTasks;
@@ -2880,8 +2888,12 @@ function loadAll() {
   try {
     const hl = localStorage.getItem('homeLayoutV1');
     if(hl){
-      const pages = JSON.parse(hl);
-      if(Array.isArray(pages)) window._homeLayout = pages;
+      const data = JSON.parse(hl);
+      if(Array.isArray(data)) window._homeLayout = data;
+      else if(data && Array.isArray(data.pages)){
+        window._homeLayout = data.pages;
+        if(data.pageCount) window._homePageCount = data.pageCount;
+      }
     }
   } catch(_e){}
   try {
@@ -2932,6 +2944,7 @@ function saveAll() {
     homeLayout: window._homeLayout||null,
     appBgs: window._appBgs||{},
     assistive: window._assistive||null,
+    homePageCount: getHomePageCount(),
     beautifyFx: window._beautifyFx||null,
     chatGlassOpacity: window._chatGlassOpacity ?? 0.72,
     globalGlassOpacity: window._globalGlassOpacity ?? 0.55,
@@ -5234,25 +5247,14 @@ function renderFavs(){
 }
 
 
-// ========== 桌面左右滑 ==========
-function setHomePage(i){
-  homePageIndex = i ? 1 : 0;
-  const pages = $('home-pages');
-  if(!pages) return;
-  pages.classList.toggle('page1', homePageIndex===0);
-  pages.classList.toggle('page2', homePageIndex===1);
-  const dots = $('home-dots');
-  if(dots){
-    const is = dots.querySelectorAll('i');
-    is.forEach((el,idx)=>el.classList.toggle('on', idx===homePageIndex));
-  }
-}
+// ========== 桌面左右滑（多页） ==========
 (function initHomeSwipe(){
   const el = () => $('home-pages');
   let startX=0, dx=0, tracking=false;
   document.addEventListener('touchstart', e=>{
     const p = el(); if(!p || !$('home')?.classList.contains('show')) return;
     if(!e.target.closest('#home')) return;
+    if(window._homeEdit) return;
     startX = e.touches[0].clientX; dx=0; tracking=true;
   }, {passive:true});
   document.addEventListener('touchmove', e=>{
@@ -5261,8 +5263,8 @@ function setHomePage(i){
   }, {passive:true});
   document.addEventListener('touchend', ()=>{
     if(!tracking) return; tracking=false;
-    if(dx < -50) setHomePage(1);
-    else if(dx > 50) setHomePage(0);
+    if(dx < -50) setHomePage((homePageIndex||0)+1);
+    else if(dx > 50) setHomePage((homePageIndex||0)-1);
     dx=0;
   });
 })();
@@ -6321,6 +6323,7 @@ function doImport(e){
       if(d.beautifyFx) window._beautifyFx = d.beautifyFx;
       if(d.appBgs) window._appBgs = d.appBgs;
       if(d.assistive) window._assistive = d.assistive;
+      if(d.homePageCount) window._homePageCount = d.homePageCount;
       if(typeof d.chatGlassOpacity === 'number') window._chatGlassOpacity = d.chatGlassOpacity;
       if(typeof d.globalGlassOpacity === 'number') window._globalGlassOpacity = d.globalGlassOpacity;
       if(Array.isArray(d.currentTasks)) currentTasks = d.currentTasks;
@@ -6337,6 +6340,7 @@ function doImport(e){
       if(d.beautifyFx) window._beautifyFx = d.beautifyFx;
       if(d.appBgs) window._appBgs = d.appBgs;
       if(d.assistive) window._assistive = d.assistive;
+      if(d.homePageCount) window._homePageCount = d.homePageCount;
       if(typeof d.chatGlassOpacity === 'number') window._chatGlassOpacity = d.chatGlassOpacity;
       if(typeof d.globalGlassOpacity === 'number') window._globalGlassOpacity = d.globalGlassOpacity;
       if(Array.isArray(d.currentTasks)) currentTasks = d.currentTasks;
@@ -6480,6 +6484,105 @@ function removeHomeApp(appEl){
   appEl.dataset.hidden='1';
   saveHomeLayout();
 }
+
+// ========== 多页桌面 ==========
+window._homePageCount = window._homePageCount || 2;
+function getHomePageCount(){
+  return Math.max(1, window._homePageCount || document.querySelectorAll('.home-page').length || 2);
+}
+
+function ensureHomePageCount(n){
+  n = Math.max(1, Math.min(6, n|0));
+  const wrap = $('home-pages');
+  if(!wrap) return;
+  let pages = [...wrap.querySelectorAll('.home-page')];
+  while(pages.length < n){
+    const div = document.createElement('div');
+    div.className = 'home-page';
+    div.innerHTML = '<div class="apps"></div>';
+    wrap.appendChild(div);
+    pages = [...wrap.querySelectorAll('.home-page')];
+  }
+  while(pages.length > n){
+    const last = pages.pop();
+    // move widgets data page index clamp
+    last.remove();
+  }
+  window._homePageCount = n;
+  syncHomePagesUI();
+}
+
+function syncHomePagesUI(){
+  const wrap = $('home-pages');
+  if(!wrap) return;
+  const pages = [...wrap.querySelectorAll('.home-page')];
+  const n = pages.length;
+  window._homePageCount = n;
+  wrap.style.width = (n * 100) + '%';
+  pages.forEach(p=>{ p.style.width = (100 / n) + '%'; });
+  // dots
+  const dots = $('home-dots') || document.querySelector('.home-dots');
+  if(dots){
+    dots.innerHTML = pages.map((_,i)=>`<i class="${i===(homePageIndex||0)?'on':''}"></i>`).join('');
+  }
+  setHomePage(homePageIndex||0, true);
+}
+function setHomePage(i, instant){
+  const wrap = $('home-pages');
+  if(!wrap) return;
+  const n = getHomePageCount();
+  i = Math.max(0, Math.min(n-1, i|0));
+  homePageIndex = i;
+  if(instant) wrap.style.transition = 'none';
+  wrap.style.transform = `translateX(${-i * (100/n)}%)`;
+  if(instant){ requestAnimationFrame(()=>{ wrap.style.transition = ''; }); }
+  const dots = document.querySelectorAll('.home-dots i');
+  dots.forEach((d,di)=>d.classList.toggle('on', di===i));
+}
+function addHomePage(){
+  const wrap = $('home-pages');
+  if(!wrap) return;
+  if(getHomePageCount() >= 6){ alert('最多 6 页'); return; }
+  const div = document.createElement('div');
+  div.className = 'home-page';
+  div.innerHTML = '<div class="apps"></div>';
+  wrap.appendChild(div);
+  syncHomePagesUI();
+  setHomePage(getHomePageCount()-1);
+  if(window._homeEdit) enterHomeEdit();
+  saveHomeLayout();
+}
+function removeHomePage(){
+  const wrap = $('home-pages');
+  if(!wrap) return;
+  const pages = [...wrap.querySelectorAll('.home-page')];
+  if(pages.length <= 1){ alert('至少保留 1 页'); return; }
+  const idx = homePageIndex||0;
+  const page = pages[idx];
+  const items = page.querySelectorAll('.apps > .app, .apps > .widget');
+  if(items.length && !confirm('本页还有图标/小组件，删除后会移到上一页，继续？')) return;
+  // move content to previous or next page
+  const target = pages[idx-1] || pages[idx+1];
+  const grid = target?.querySelector('.apps');
+  if(grid){
+    items.forEach(el=>{
+      if(el.classList.contains('widget')){
+        const id = el.dataset.wid;
+        const w = (window._homeWidgets||[]).find(x=>x.id===id);
+        if(w) w.page = Math.max(0, idx-1);
+      }
+      grid.appendChild(el);
+    });
+  }
+  page.remove();
+  syncHomePagesUI();
+  setHomePage(Math.min(idx, getHomePageCount()-1));
+  if(window._homeEdit) enterHomeEdit();
+  saveHomeLayout();
+  saveAll();
+}
+
+
 function saveHomeLayout(){
   const pages = [];
   document.querySelectorAll('.home-page').forEach((page, pi)=>{
@@ -6497,7 +6600,8 @@ function saveHomeLayout(){
     pages.push(apps);
   });
   window._homeLayout = pages;
-  try{ localStorage.setItem('homeLayoutV1', JSON.stringify(pages)); }catch(_){}
+  window._homePageCount = pages.length;
+  try{ localStorage.setItem('homeLayoutV1', JSON.stringify({pages, pageCount: pages.length})); }catch(_){}
   try{ localStorage.setItem('bitchPhoneWidgets', JSON.stringify(window._homeWidgets||[])); }catch(_){}
 }
 function saveHomeAndExit(){
@@ -6688,8 +6792,13 @@ function widgetHTML(w){
   const style = w.style || (w.kind==='clock'?'clock': w.kind==='diary'?'diary':'glass');
   let sizeCls = 'w-sm';
   if(w.size==='lg') sizeCls = 'w-lg';
-  else if(w.size==='md' || (!w.size && (style==='diary' || style==='tags' || style==='music'))) sizeCls = 'w-md';
-  else sizeCls = 'w-sm';
+  else if(w.size==='md') sizeCls = 'w-md';
+  else if(w.size==='sm') sizeCls = 'w-sm';
+  else {
+    // 默认：日记/音乐/标签用中，头像可爱用小
+    if(style==='diary' || style==='music') sizeCls = 'w-md';
+    else sizeCls = 'w-sm';
+  }
   const editHint = '<div class="w-edit-hint">点按编辑</div>';
   const delReady = '';
   let inner = '';
@@ -6939,7 +7048,15 @@ function renderHomeWidgets(){
     if(!grid) return;
     grid.insertAdjacentHTML('beforeend', widgetHTML(w));
   });
-  try{ applyHomeLayout(); }catch(_e){}
+  try{
+  const need = Math.max(
+    window._homePageCount||2,
+    (window._homeLayout||[]).length,
+    ((window._homeWidgets||[]).reduce((m,w)=>Math.max(m,(w.page||0)+1),1))
+  );
+  ensureHomePageCount(need);
+  applyHomeLayout();
+}catch(_e){}
   applyDeskFx();
 }
 function removeHomeWidget(el){
@@ -6990,13 +7107,39 @@ function onHomeDragStart(e){
     const pt = (ev.changedTouches&&ev.changedTouches[0]) || ev;
     const target = document.elementFromPoint(pt.clientX, pt.clientY);
     const other = target?.closest('.apps .app, .apps .widget');
-    if(other && other!==el && other.parentElement===el.parentElement){
-      const parent = el.parentElement;
-      const all = [...parent.children];
-      const i = all.indexOf(el), j = all.indexOf(other);
-      if(i>=0 && j>=0){
-        if(i<j) parent.insertBefore(el, other.nextSibling);
-        else parent.insertBefore(el, other);
+    const phone = document.querySelector('.phone') || document.body;
+    const pr = phone.getBoundingClientRect();
+    // 拖到左右边缘：移到相邻页
+    if(pt.clientX < pr.left + 40 && homePageIndex > 0){
+      setHomePage(homePageIndex - 1);
+      const grid = document.querySelectorAll('.home-page')[homePageIndex]?.querySelector('.apps');
+      if(grid){ grid.appendChild(el); if(el.classList.contains('widget')){ const w=(window._homeWidgets||[]).find(x=>x.id===el.dataset.wid); if(w) w.page=homePageIndex; } }
+      saveHomeLayout(); saveAll();
+      _dragApp=null; return;
+    }
+    if(pt.clientX > pr.right - 40 && homePageIndex < getHomePageCount()-1){
+      setHomePage(homePageIndex + 1);
+      const grid = document.querySelectorAll('.home-page')[homePageIndex]?.querySelector('.apps');
+      if(grid){ grid.appendChild(el); if(el.classList.contains('widget')){ const w=(window._homeWidgets||[]).find(x=>x.id===el.dataset.wid); if(w) w.page=homePageIndex; } }
+      saveHomeLayout(); saveAll();
+      _dragApp=null; return;
+    }
+    if(other && other!==el){
+      if(other.parentElement===el.parentElement){
+        const parent = el.parentElement;
+        const all = [...parent.children];
+        const i = all.indexOf(el), j = all.indexOf(other);
+        if(i>=0 && j>=0){
+          if(i<j) parent.insertBefore(el, other.nextSibling);
+          else parent.insertBefore(el, other);
+        }
+      } else if(other.parentElement){
+        other.parentElement.insertBefore(el, other);
+        if(el.classList.contains('widget')){
+          const pi = [...document.querySelectorAll('.home-page')].indexOf(other.closest('.home-page'));
+          const w=(window._homeWidgets||[]).find(x=>x.id===el.dataset.wid);
+          if(w && pi>=0) w.page = pi;
+        }
       }
       saveHomeLayout();
       saveAll();
@@ -7202,10 +7345,23 @@ function initAssistiveDot(){
     dragging = false;
     if(!moved){
       const now = Date.now();
-      if(now - lastTap < 320){
+      window._adotTaps = window._adotTaps || [];
+      window._adotTaps.push(now);
+      window._adotTaps = window._adotTaps.filter(t => now - t < 500);
+      if(window._adotTaps.length >= 3){
+        window._adotTaps = [];
         goHome();
-        lastTap = 0;
-      } else lastTap = now;
+        setTimeout(()=>enterHomeEdit(), 80);
+      } else if(window._adotTaps.length === 2){
+        // wait briefly for possible third
+        clearTimeout(window._adotTimer);
+        window._adotTimer = setTimeout(()=>{
+          if((window._adotTaps||[]).length === 2){
+            goHome();
+            window._adotTaps = [];
+          }
+        }, 280);
+      }
     } else {
       window._assistive = window._assistive || {};
       window._assistive.x = parseFloat(el.style.left)||0;
@@ -7272,7 +7428,16 @@ function clearAssistiveIcon(){
 loadAll();
 try{ applyAppIcons(); }catch(_e){}
 try{ initAssistiveDot(); }catch(_e){}
-try{ applyHomeLayout(); }catch(_e){}
+try{ ensureHomePageCount(window._homePageCount||2); syncHomePagesUI(); }catch(_e){}
+try{
+  const need = Math.max(
+    window._homePageCount||2,
+    (window._homeLayout||[]).length,
+    ((window._homeWidgets||[]).reduce((m,w)=>Math.max(m,(w.page||0)+1),1))
+  );
+  ensureHomePageCount(need);
+  applyHomeLayout();
+}catch(_e){}
 try{
   if(!window._homeWidgets) window._homeWidgets=[];
   if(!(window._homeWidgets||[]).some(w=>w.kind==='clock'||w.style==='clock')){
