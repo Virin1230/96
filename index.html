@@ -112,7 +112,15 @@
   .home.show { display: flex; }
   .time { text-align: center; font-size: 56px; font-weight: 200; letter-spacing: -1.5px; margin-bottom: 2px; color: #fff; text-shadow: 0 2px 12px rgba(0,0,0,.35); }
   .date { text-align: center; font-size: 15px; color: rgba(255,255,255,.78); margin-bottom: 28px; font-weight: 500; }
-  .apps { display: grid; grid-template-columns: repeat(4, 1fr); grid-auto-rows: 82px; gap: 12px 6px; flex: 1; align-content: start; }
+  .apps {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-auto-rows: 88px;
+    grid-auto-flow: dense;
+    gap: 12px 6px;
+    flex: 1;
+    align-content: start;
+  }
   .app { display: flex; flex-direction: column; align-items: center; gap: 6px; cursor: pointer; user-select: none; }
   .app:active { transform: scale(.92); transition: transform .12s; }
   .app-icon {
@@ -547,7 +555,7 @@
     display: flex; flex-direction: column;
     box-sizing: border-box;
   }
-  .apps { gap: 12px 6px; grid-auto-rows: 82px; }
+  .apps { gap: 12px 6px; grid-auto-rows: 88px; grid-auto-flow: dense; }
   .home-dots {
     position: relative; z-index: 2;
     display: flex; justify-content: center; gap: 7px; padding: 6px 0 10px;
@@ -1052,8 +1060,14 @@
   .widget .w-body { font-size: 15px; font-weight: 600; line-height: 1.35; }
   .widget .w-sub { font-size: 12px; opacity: .7; margin-top: 6px; }
   .widget .app-del { top: 6px; right: 6px; left: auto; }
-  .apps { align-content: start; align-items: stretch; }
-  .apps > .app { grid-column: span 1; grid-row: span 1; min-height: 0; }
+  .apps { align-content: start; align-items: stretch; grid-auto-flow: dense; }
+  .apps > .app {
+    grid-column: span 1;
+    grid-row: span 1;
+    min-height: 0;
+    height: 100%;
+    align-self: stretch;
+  }
   .apps > .widget { align-self: stretch; }
   .page, .home-wrap { transition: opacity .18s ease; }
   .app:active { transform: scale(.92); }
@@ -1180,11 +1194,29 @@
   .widget[data-style="music"] .wm-ctrl { font-size:14px; opacity:.85; letter-spacing:6px; }
 
   .widget[data-style="cute"] {
-    grid-column: span 2; grid-row: span 2; min-height: 0; height: 100%; background: rgba(255,255,255,.9); color:#333; overflow: hidden;
-    display:flex; flex-direction:row; align-items:center; justify-content:flex-start; gap:8px;
-    position:relative; padding: 8px 10px;
+    grid-column: span 2 !important;
+    grid-row: span 2 !important;
+    width: auto !important;
+    max-width: none;
+    min-height: 0;
+    height: auto;
+    align-self: stretch;
+    background: rgba(255,255,255,.9); color:#333; overflow: hidden;
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px;
+    position:relative; padding: 8px 10px; box-sizing: border-box;
   }
-  [data-theme="dark"] .widget[data-style="cute"] { background: rgba(30,30,32,.9); color:#eee; }
+  [data-theme="dark"] .widget[data-style="cute"] {
+    grid-column: span 2 !important;
+    grid-row: span 2 !important;
+    width: auto !important;
+    max-width: none;
+    min-height: 0;
+    height: auto;
+    align-self: stretch;
+    background: rgba(255,255,255,.9); color:#333; overflow: hidden;
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px;
+    position:relative; padding: 8px 10px; box-sizing: border-box;
+  }
   .widget[data-style="cute"] .wc-bubble {
     background: rgba(0,0,0,.05); border-radius: 12px; padding: 4px 8px; font-size:11px; max-width:100%;
     order: 2; flex:1; min-width:0;
@@ -7349,12 +7381,15 @@ function initAssistiveDot(){
       const now = Date.now();
       window._adotTaps = window._adotTaps || [];
       window._adotTaps.push(now);
-      window._adotTaps = window._adotTaps.filter(t => now - t < 700);
+      window._adotTaps = window._adotTaps.filter(t => now - t < 650);
       if(window._adotTaps.length >= 3){
         clearTimeout(window._adotTimer);
         window._adotTaps = [];
-        goHome();
-        setTimeout(()=>{ if(!window._homeEdit) enterHomeEdit(); }, 100);
+        if(window._homeEdit) exitHomeEdit(true);
+        else {
+          goHome();
+          setTimeout(()=>{ try{ enterHomeEdit(); }catch(_e){} }, 60);
+        }
       } else if(window._adotTaps.length === 2){
         clearTimeout(window._adotTimer);
         window._adotTimer = setTimeout(()=>{
@@ -7362,7 +7397,7 @@ function initAssistiveDot(){
             goHome();
             window._adotTaps = [];
           }
-        }, 380);
+        }, 360);
       }
     } else {
       window._assistive = window._assistive || {};
