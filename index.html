@@ -621,52 +621,65 @@
     border: .5px solid var(--border);
   }
 
-  /* forum night — theme via CSS vars */
-  .forum-night {
+
+  /* 今夜可约主题色（真的生效） */
+  #page-forum, #page-forum-detail {
     --forum-accent: #ff2d55;
-    --forum-accent2: #ff6482;
-    --forum-bg: #0c0a0e;
-    --forum-panel: #120e14;
-    --forum-card: #161218;
-    --forum-text: #f2e8ec;
-    --forum-muted: #b9a8b0;
-    --forum-soft: rgba(255,45,85,.18);
-    background: var(--forum-bg);
+    --forum-accent-soft: rgba(255,45,85,.18);
+    --forum-text: #f5e8ec;
+    --forum-muted: #c9a8b0;
+  }
+  #page-forum.forum-theme-pink, #page-forum-detail.forum-theme-pink {
+    --forum-accent: #ff2d55; --forum-accent-soft: rgba(255,45,85,.2);
+  }
+  #page-forum.forum-theme-red, #page-forum-detail.forum-theme-red {
+    --forum-accent: #ff453a; --forum-accent-soft: rgba(255,69,58,.22);
+  }
+  #page-forum.forum-theme-purple, #page-forum-detail.forum-theme-purple {
+    --forum-accent: #bf5af2; --forum-accent-soft: rgba(191,90,242,.22);
+  }
+  #page-forum.forum-theme-blue, #page-forum-detail.forum-theme-blue {
+    --forum-accent: #0a84ff; --forum-accent-soft: rgba(10,132,255,.22);
+  }
+  #page-forum .forum-tab.on {
+    background: linear-gradient(135deg, var(--forum-accent), color-mix(in srgb, var(--forum-accent) 70%, #fff)) !important;
+    color: #fff !important;
+  }
+  #page-forum .forum-ticker {
+    color: var(--forum-accent);
+    background: color-mix(in srgb, var(--forum-accent) 12%, #1a1016);
+  }
+  #page-forum .forum-card {
+    border-left: 3px solid var(--forum-accent);
+  }
+  #page-forum .forum-card,
+  #page-forum-detail .forum-card {
     color: var(--forum-text);
   }
-  .forum-night.theme-pink { --forum-accent:#ff2d55; --forum-accent2:#ff6482; --forum-soft:rgba(255,45,85,.18); }
-  .forum-night.theme-red { --forum-accent:#ff453a; --forum-accent2:#ff6961; --forum-soft:rgba(255,69,58,.2); }
-  .forum-night.theme-purple { --forum-accent:#bf5af2; --forum-accent2:#da8fff; --forum-soft:rgba(191,90,242,.2); }
-  .forum-night.theme-blue { --forum-accent:#0a84ff; --forum-accent2:#64d2ff; --forum-soft:rgba(10,132,255,.2); }
+  #page-forum .nav-title, #page-forum-detail .nav-title {
+    color: var(--forum-text) !important;
+  }
+
+  /* forum night */
+  .forum-night { background: #0c0a0e; }
   .forum-tabs {
     display: flex; gap: 6px; padding: 8px 10px; overflow-x: auto;
-    background: var(--forum-panel); border-bottom: .5px solid var(--forum-soft);
+    background: #120e14; border-bottom: .5px solid rgba(255,80,120,.15);
   }
   .forum-tab {
-    flex: 0 0 auto; border: 0; background: #1c151c; color: var(--forum-muted);
+    flex: 0 0 auto; border: 0; background: #1c151c; color: #c9b;
     padding: 7px 12px; border-radius: 16px; font-size: 12px; cursor: pointer; white-space: nowrap;
   }
-  .forum-tab.on {
-    background: linear-gradient(135deg, var(--forum-accent), var(--forum-accent2));
-    color: #fff; font-weight: 600;
-  }
+  .forum-tab.on { background: linear-gradient(135deg,#ff2d55,#ff6482); color: #fff; }
   .forum-ticker {
-    background: var(--forum-panel); color: var(--forum-accent2); font-size: 11px; padding: 6px 12px;
+    background: #1a1016; color: #ff8a9a; font-size: 11px; padding: 6px 12px;
     white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-    border-bottom: .5px solid var(--forum-soft);
+    border-bottom: .5px solid rgba(255,80,120,.12);
   }
   .forum-card {
-    background: var(--forum-card); border-radius: 16px; padding: 14px; margin-bottom: 10px;
-    border: .5px solid var(--forum-soft); color: var(--forum-text);
+    background: #161218; border-radius: 16px; padding: 14px; margin-bottom: 10px;
+    border: .5px solid rgba(255,100,130,.12);
   }
-  .forum-card .fc-user { color: var(--forum-accent2); font-weight: 600; }
-  .forum-card .fc-title { color: var(--forum-text); font-weight: 700; }
-  .forum-card .fc-body { color: var(--forum-muted); }
-  .forum-card .fc-meta { color: var(--forum-muted); }
-  #page-forum .nav-title, #page-forum-detail .nav-title { color: var(--forum-text, #f2e8ec); }
-  #page-forum .nav-back, #page-forum .nav-right,
-  #page-forum-detail .nav-back, #page-forum-detail .nav-right { color: var(--forum-accent2, #ff8a9a); }
-  #forum-list { color: var(--forum-text); }
 
 
   .msg-list.edit-mode .bubble-row { cursor: pointer; }
@@ -1647,8 +1660,8 @@
     display: flex; flex-direction: column; align-items: center; gap: 2px;
   }
   .offline-bottom button.on { color: var(--blue); font-weight: 600; }
-  .offline-bottom button span.ob-ico { display:flex; align-items:center; justify-content:center; height:24px; }
-  .offline-bottom button span.ob-ico svg { display:block; }
+  .offline-bottom button span { font-size: 18px; display:flex; align-items:center; justify-content:center; line-height:1; }
+  .offline-bottom button span svg { display:block; }
   #chat-send.icon-btn:disabled, #chat-send:disabled,
   button.live-send-btn:disabled {
     opacity: .35; background: #555 !important; pointer-events: none;
@@ -1663,38 +1676,6 @@
     border-color: var(--blue); background: rgba(10,132,255,.15); color: var(--blue);
   }
 
-
-  #page-offline, #page-offline .scroll, #date-container {
-    overflow-x: hidden !important;
-    touch-action: pan-y;
-  }
-  .date-contact-row {
-    display: flex; align-items: center; gap: 10px;
-    padding: 12px 10px; border-radius: 12px; margin-bottom: 6px;
-    background: var(--input); font-size: 15px; color: var(--text);
-    cursor: pointer; user-select: none;
-  }
-  .date-contact-row.on {
-    background: rgba(10,132,255,.18); color: var(--blue);
-    outline: 1px solid rgba(10,132,255,.45);
-  }
-  .date-contact-check {
-    width: 22px; height: 22px; border-radius: 6px;
-    border: 1.5px solid var(--border); display: flex; align-items: center; justify-content: center;
-    font-size: 13px; font-weight: 700; flex-shrink: 0; color: transparent;
-  }
-  .date-contact-row.on .date-contact-check {
-    background: var(--blue); border-color: var(--blue); color: #fff;
-  }
-  .forum-night {
-    --forum-text: #f7eef2 !important;
-    --forum-muted: #d4c4cc !important;
-  }
-  .forum-night .forum-tab { color: #d8c8d0; }
-  .forum-night .btn, .forum-night .btn-secondary {
-    color: #f2e8ec !important;
-  }
-  #forum-toolbar .btn { color: #f2e8ec !important; }
 </style>
 </head>
 <body data-theme="dark">
@@ -2021,14 +2002,14 @@
         <div style="font-size:11px;color:#666;margin-top:6px;">设置对任务与约会均生效</div>
       </div>
       <div class="scroll" style="padding:12px;" id="task-container"></div>
-      <div class="scroll" style="padding:12px;display:none;" id="date-container" style="overflow-x:hidden;"></div>
+      <div class="scroll" style="padding:12px;display:none;" id="date-container"></div>
       <div style="padding:10px 12px; border-top:.5px solid var(--border); display:flex; gap:8px;" id="offline-task-actions">
         <button class="btn btn-secondary" style="flex:1;" onclick="wishTask()">许愿</button>
         <button class="btn btn-secondary" style="flex:1;" onclick="showArchive()">存档</button>
       </div>
       <div class="offline-bottom" id="offline-tabs">
-        <button type="button" class="on" onclick="setOfflineTab('tasks')"><span class="ob-ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></span>任务</button>
-        <button type="button" onclick="setOfflineTab('dates')"><span class="ob-ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-5.5 7-11a7 7 0 1 0-14 0c0 5.5 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></svg></span>约会</button>
+        <button type="button" class="on" onclick="setOfflineTab('tasks')"><span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></span>任务</button>
+        <button type="button" onclick="setOfflineTab('dates')"><span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-5.5 7-11a7 7 0 1 0-14 0c0 5.5 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></svg></span>约会</button>
       </div>
     </div>
 
@@ -3219,7 +3200,7 @@ function openApp(name) {
   if(name==='beautify'){ loadMediaSkinUI(); renderBeautify(); }
   if(name==='guide'){ renderGuideSetup(); $('guide-setup').style.display='block'; const gc=$('page-guide-chat'); if(gc) gc.style.display='none'; }
   if(name==='favs') renderFavs();
-  if(name==='forum'){ applyForumTheme(); renderForum(); }
+  if(name==='forum') renderForum();
   if(name==='live') renderLiveSetup();
   if(name==='auction') renderAuction();
   if(name==='album'){ albumView='years'; window._albumTab='albums'; setAlbumTab('albums'); }
@@ -4683,32 +4664,25 @@ function renderDateSetup(){
   const people = Object.values(map);
   const sel = new Set(window._dateSelected||[]);
   box.innerHTML = `
-    <div class="card" style="border-radius:14px;padding:12px;">
-      <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:8px;">联系人 · 可多选</div>
-      <div id="date-contact-list" style="max-height:200px;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;">
+    <div class="card" style="border-radius:16px;">
+      <h4 style="color:var(--pink);">选择联系人（可多选）</h4>
+      <div id="date-contact-list" style="margin-top:8px;max-height:180px;overflow-y:auto;">
         ${people.length? people.map(p=>`
-          <div class="date-contact-row ${sel.has(p.id)?'on':''}" data-id="${p.id}" onclick="toggleDateContact('${p.id}')">
-            <span class="date-contact-check">${sel.has(p.id)?'✓':''}</span>
-            <span>${escapeHtml(p.name)}</span>
-          </div>
-        `).join('') : '<div style="color:var(--muted);font-size:13px;">暂无联系人</div>'}
+          <span class="date-contact-chip ${sel.has(p.id)?'on':''}" data-id="${p.id}" onclick="toggleDateContact('${p.id}')">${escapeHtml(p.name)}</span>
+        `).join('') : '<div style="color:var(--muted);font-size:13px;">暂无联系人，先去消息里建角色</div>'}
       </div>
     </div>
-    <div class="card" style="border-radius:14px;padding:12px;">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
-        <div style="font-size:13px;font-weight:600;color:var(--text);">地点</div>
-        <button type="button" class="btn btn-secondary" style="flex:0;padding:4px 10px;font-size:12px;" onclick="randomDatePlace()">随机</button>
-      </div>
-      <input type="text" id="date-place" placeholder="酒店 / 车里 / 家，可空" style="width:100%;background:var(--input);border:none;border-radius:10px;padding:10px;color:var(--text);font-size:15px;">
+    <div class="card" style="border-radius:16px;">
+      <h4 style="color:var(--pink);">地点</h4>
+      <input type="text" id="date-place" placeholder="例如：酒店 / 车里 / 家  （可留空随机）" style="width:100%;background:var(--input);border:none;border-radius:10px;padding:10px;color:var(--text);font-size:15px;margin-top:6px;">
+      <button class="btn btn-secondary" style="width:100%;margin-top:8px;" onclick="randomDatePlace()">随机地点</button>
     </div>
-    <div class="card" style="border-radius:14px;padding:12px;">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
-        <div style="font-size:13px;font-weight:600;color:var(--text);">事件</div>
-        <button type="button" class="btn btn-secondary" style="flex:0;padding:4px 10px;font-size:12px;" onclick="randomDateEvent()">随机</button>
-      </div>
-      <input type="text" id="date-event" placeholder="大概想发生什么，可空" style="width:100%;background:var(--input);border:none;border-radius:10px;padding:10px;color:var(--text);font-size:15px;">
+    <div class="card" style="border-radius:16px;">
+      <h4 style="color:var(--pink);">大概事件</h4>
+      <textarea id="date-event" placeholder="想发生什么…（可留空随机）" style="width:100%;min-height:72px;background:var(--input);border:none;border-radius:10px;padding:10px;color:var(--text);font-size:15px;margin-top:6px;"></textarea>
+      <button class="btn btn-secondary" style="width:100%;margin-top:8px;" onclick="randomDateEvent()">随机事件</button>
     </div>
-    <button class="btn btn-primary" style="width:100%;padding:12px 0;border-radius:12px;font-size:15px;" onclick="startDateStory()">开始约会</button>
+    <button class="action-btn blue" style="width:100%;" onclick="startDateStory()">进入线下约会</button>
   `;
 }
 function toggleDateContact(id){
@@ -5791,22 +5765,27 @@ function setForumTab(tab, btn){
 
 let forumTheme = 'pink';
 let forumWB = '';
+// theme applied after DOM ready via loadAll / openApp
 function toggleForumSettings(){
   $('forum-settings')?.classList.toggle('show');
 }
-function setForumTheme(t){
-  forumTheme=t||'pink';
-  applyForumTheme();
-  saveAll();
-}
 function applyForumTheme(){
   const t = forumTheme || 'pink';
+  const map = {pink:'#ff2d55', red:'#ff453a', purple:'#bf5af2', blue:'#0a84ff'};
+  const accent = map[t] || '#ff2d55';
   ['page-forum','page-forum-detail'].forEach(id=>{
-    const pg = $(id); if(!pg) return;
-    pg.classList.remove('theme-pink','theme-red','theme-purple','theme-blue');
-    pg.classList.add('theme-'+t);
-    pg.classList.add('forum-night');
+    const pg = $(id);
+    if(!pg) return;
+    pg.classList.remove('forum-theme-pink','forum-theme-red','forum-theme-purple','forum-theme-blue');
+    pg.classList.add('forum-theme-'+t);
+    pg.style.setProperty('--forum-accent', accent);
+    pg.style.setProperty('--campus-accent', accent);
   });
+  // 同步 tab 高亮色（已由 CSS 变量驱动）
+}
+function setForumTheme(t){
+  forumTheme = t || 'pink';
+  applyForumTheme();
 }
 function saveForumSettings(){
   const sel = $('forum-theme');
@@ -5814,7 +5793,7 @@ function saveForumSettings(){
   forumWB = collectCheckedWBNames('forum-wb-checks') || forumWB || '';
   applyForumTheme();
   saveAll();
-  alert('设置已保存');
+  alert('今夜可约设置已保存');
 }
 function editForumWB(){
   openWBPickerModal(forumWB, v=>{ forumWB=v||''; saveAll(); alert('已绑定：'+(forumWB||'无')); });
@@ -5826,66 +5805,68 @@ function saveForumWBChecks(){
 
 function renderForum(){
   ensureForumData();
+  applyForumTheme();
   const box = $('forum-list'); if(!box) return;
-  if(forumTab==='settings'){
+    if(forumTab==='settings'){
+    applyForumTheme();
     box.innerHTML = `
-      <div style="font-size:18px;font-weight:700;margin-bottom:14px;color:var(--forum-text,#f2e8ec);">论坛设置</div>
+      <div style="font-size:18px;font-weight:700;margin-bottom:14px;color:var(--forum-accent,#ff8a9a);">论坛设置</div>
       <div class="forum-card">
-        <div style="font-size:13px;color:var(--forum-muted,#b9a8b0);margin-bottom:8px;">主题色（切换后分区标签/强调色会变）</div>
-        <select id="forum-theme" onchange="setForumTheme(this.value)" style="width:100%;background:#1c151c;border:1px solid var(--forum-soft,rgba(255,100,130,.25));border-radius:10px;padding:10px;color:#f7eef2;font-size:15px;">
-          <option value="pink" ${forumTheme==='pink'?'selected':''}>粉红</option>
-          <option value="red" ${forumTheme==='red'?'selected':''}>暗红</option>
-          <option value="purple" ${forumTheme==='purple'?'selected':''}>紫色</option>
-          <option value="blue" ${forumTheme==='blue'?'selected':''}>蓝色</option>
+        <div style="font-size:13px;color:#c9a8b0;margin-bottom:8px;">主题色（影响标签高亮、滚动条、卡片左边线）</div>
+        <select id="forum-theme" style="width:100%;background:#2c2c2e;border:none;border-radius:10px;padding:10px;color:#f5e8ec;font-size:15px;">
+          <option value="pink" ${forumTheme==='pink'?'selected':''}>粉红 · 暧昧夜场</option>
+          <option value="red" ${forumTheme==='red'?'selected':''}>暗红 · 更刺激</option>
+          <option value="purple" ${forumTheme==='purple'?'selected':''}>紫色 · 调教向</option>
+          <option value="blue" ${forumTheme==='blue'?'selected':''}>蓝色 · 清冷约炮</option>
         </select>
         <div style="display:flex;gap:8px;margin-top:10px;">
-          <span style="flex:1;height:28px;border-radius:8px;background:linear-gradient(135deg,#ff2d55,#ff6482);"></span>
-          <span style="flex:1;height:28px;border-radius:8px;background:linear-gradient(135deg,#ff453a,#ff6961);"></span>
-          <span style="flex:1;height:28px;border-radius:8px;background:linear-gradient(135deg,#bf5af2,#da8fff);"></span>
-          <span style="flex:1;height:28px;border-radius:8px;background:linear-gradient(135deg,#0a84ff,#64d2ff);"></span>
+          <div style="flex:1;height:28px;border-radius:8px;background:linear-gradient(135deg,#ff2d55,#ff6482);" title="粉红"></div>
+          <div style="flex:1;height:28px;border-radius:8px;background:linear-gradient(135deg,#ff453a,#ff6b6b);" title="暗红"></div>
+          <div style="flex:1;height:28px;border-radius:8px;background:linear-gradient(135deg,#bf5af2,#da8fff);" title="紫色"></div>
+          <div style="flex:1;height:28px;border-radius:8px;background:linear-gradient(135deg,#0a84ff,#64d2ff);" title="蓝色"></div>
         </div>
       </div>
       <div class="forum-card">
-        <div style="font-size:13px;color:var(--forum-muted,#b9a8b0);margin-bottom:8px;">绑定世界书（分组勾选）</div>
+        <div style="font-size:13px;color:#c9a8b0;margin-bottom:8px;">绑定世界书（勾选后点保存生效）</div>
         <div id="forum-wb-checks"></div>
       </div>
       <div class="forum-card">
-        <div style="font-size:13px;color:var(--forum-muted,#b9a8b0);margin-bottom:8px;">论坛背景</div>
+        <div style="font-size:13px;color:#c9a8b0;margin-bottom:8px;">论坛背景</div>
         <div style="display:flex;gap:8px;margin-bottom:8px;">
-          <button type="button" class="btn btn-secondary" style="flex:1;" onclick="uploadAppBg('forum')">上传背景</button>
-          <button type="button" class="btn btn-secondary" style="flex:1;" onclick="clearAppBg('forum')">清除</button>
+          <button type="button" class="btn btn-secondary" style="flex:1;color:#eee;" onclick="uploadAppBg('forum')">上传背景</button>
+          <button type="button" class="btn btn-secondary" style="flex:1;color:#eee;" onclick="clearAppBg('forum')">清除</button>
         </div>
-        <input type="text" id="appbg-url-forum" placeholder="或粘贴图片链接" style="width:100%;background:#1c151c;border:1px solid var(--forum-soft,rgba(255,100,130,.25));border-radius:10px;padding:10px;color:var(--forum-text,#f2e8ec);font-size:14px;margin-bottom:8px;">
-        <button type="button" class="btn btn-secondary" style="width:100%;" onclick="setAppBgUrl('forum')">使用链接背景</button>
+        <input type="text" id="appbg-url-forum" placeholder="或粘贴图片链接" style="width:100%;background:#2c2c2e;border:none;border-radius:10px;padding:10px;color:#f5e8ec;font-size:14px;margin-bottom:8px;">
+        <button type="button" class="btn btn-secondary" style="width:100%;margin-bottom:6px;color:#eee;" onclick="setAppBgUrl('forum')">使用链接背景</button>
+        <div id="appbg-preview-forum" style="height:48px;border-radius:10px;background:#1c1c1e;background-size:cover;background-position:center;border:.5px solid rgba(255,255,255,.12);"></div>
       </div>
       <div class="forum-card">
-        <div style="font-size:13px;color:var(--forum-muted,#b9a8b0);margin-bottom:8px;">数据</div>
-        <button class="btn btn-secondary" style="width:100%;margin-bottom:8px;" onclick="forumPartialRefresh('list')">刷新当前列表缓存</button>
+        <button class="btn btn-primary" style="width:100%;margin-bottom:8px;background:var(--forum-accent,#ff2d55);color:#fff;border:none;" onclick="saveForumSettings()">保存设置</button>
+        <button class="btn btn-secondary" style="width:100%;margin-bottom:8px;color:#eee;" onclick="forumPartialRefresh('list')">刷新当前列表缓存</button>
         <button class="btn btn-danger" style="width:100%;" onclick="if(confirm('清空本论坛帖子？')){forumPosts=[];saveAll();setForumTab('city',document.querySelector('.forum-tab'));}">清空帖子</button>
-      </div>
-      <button class="btn btn-primary" style="width:100%;padding:14px 0;border-radius:12px;font-size:16px;font-weight:600;margin-top:12px;background:linear-gradient(135deg,var(--forum-accent,#ff2d55),var(--forum-accent2,#ff6482));color:#fff;border:none;" onclick="saveForumSettings()">保存设置</button>`;
-    renderGroupedWBChecks('forum-wb-checks', forumWB||'', 'saveForumWBChecks()');
+      </div>`;
+    renderGroupedWBChecks('forum-wb-checks', forumWB||'', "forumWB=collectCheckedWBNames('forum-wb-checks')");
+    try{ refreshAppBgPreview('forum'); }catch(_e){}
     return;
-  }
   }
   let list = forumPosts.filter(p => (p.board||'city') === forumTab);
   if(!list.length) list = (FORUM_SEED[forumTab]||[]).slice();
   box.innerHTML = list.map(p=>`
     <div class="forum-card" onclick="openForumPost('${p.id}')">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
-        <span class="fc-user">${escapeHtml(p.user||'')}${p.auth?' <span class="wb-pill">已认证</span>':''}</span>
-        <span class="fc-meta" style="font-size:11px;">${p.online||''}</span>
+        <span style="color:var(--forum-accent,#ff8a9a);font-weight:600;">${escapeHtml(p.user||'')}${p.auth?' <span class="wb-pill">已认证</span>':''}</span>
+        <span style="font-size:11px;color:#c9a8b0;">${p.online||''}</span>
       </div>
-      <div class="fc-title" style="font-size:15px;margin-bottom:6px;">${escapeHtml(p.title||'')}</div>
-      <div class="fc-body" style="font-size:12.5px;line-height:1.45;max-height:38px;overflow:hidden;">${escapeHtml(p.body||'')}</div>
-      <div class="fc-meta" style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap;font-size:11px;">
+      <div style="font-size:15px;font-weight:700;color:#f5e8ec;margin-bottom:6px;">${escapeHtml(p.title||'')}</div>
+      <div style="font-size:12.5px;color:#d4c0c6;line-height:1.45;max-height:38px;overflow:hidden;">${escapeHtml(p.body||'')}</div>
+      <div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap;font-size:11px;color:#c9a8b0;">
         ${p.type?`<span class="wb-pill">${escapeHtml(p.type)}</span>`:''}
         ${p.place?`<span class="wb-pill">${escapeHtml(p.place)}</span>`:''}
         ${p.age?`<span class="wb-pill">${p.age}岁</span>`:''}
         ${p.play?`<span class="wb-pill">${escapeHtml(p.play)}</span>`:''}
         <span class="wb-pill">🔥${p.hot||0}</span>
       </div>
-    </div>`).join('') || '<div style="text-align:center;color:var(--forum-muted,#c9b8c0);padding:40px;">本区暂无帖子</div>';
+    </div>`).join('') || '<div style="text-align:center;color:#665;padding:40px;">本区暂无帖子</div>';
 }
 async function forumPartialRefresh(part){
   if(part==='ticker'){
@@ -5927,7 +5908,7 @@ function openForumPost(id){
     <div class="forum-card">
       <div style="font-size:12px;color:#887;margin-bottom:6px;">${escapeHtml(p.user||'')} ${p.auth?'· 已认证':''} · ${p.online||''}</div>
       <div style="font-size:17px;font-weight:700;color:#f5e6ea;margin-bottom:10px;">${escapeHtml(p.title||'')}</div>
-      <div style="font-size:14px;line-height:1.65;color:var(--forum-muted,#d2c2ca);white-space:pre-wrap;">${escapeHtml(p.body||'')}</div>
+      <div style="font-size:14px;line-height:1.65;color:#d8c8ce;white-space:pre-wrap;">${escapeHtml(p.body||'')}</div>
       <div style="margin-top:10px;display:flex;gap:6px;flex-wrap:wrap;">
         ${p.type?`<span class="wb-pill">${escapeHtml(p.type)}</span>`:''}
         ${p.place?`<span class="wb-pill">${escapeHtml(p.place)}</span>`:''}
@@ -5935,7 +5916,7 @@ function openForumPost(id){
       </div>
     </div>
     <div style="color:#887;font-size:13px;margin:12px 0 8px;">回复</div>
-    ${(p.replies||[]).map(r=>`<div class="forum-card" style="padding:12px;"><b style="color:var(--forum-accent2,#ff8a9a);">${escapeHtml(r.user)}</b><div style="margin-top:4px;color:var(--forum-muted,#d2c2ca);">${escapeHtml(r.text)}</div></div>`).join('')||'<div style="color:var(--forum-muted,#c9b8c0);padding:8px;">还没有回复</div>'}
+    ${(p.replies||[]).map(r=>`<div class="forum-card" style="padding:12px;"><b style="color:#ff8a9a;">${escapeHtml(r.user)}</b><div style="margin-top:4px;color:#d8c8ce;">${escapeHtml(r.text)}</div></div>`).join('')||'<div style="color:#665;padding:8px;">还没有回复</div>'}
     <button class="action-btn red" style="width:100%;" onclick="forumPrivateChat('${escapeHtml(p.user||'楼主')}')">私信楼主</button>
   `;
 }
@@ -8206,6 +8187,7 @@ try{
 }catch(_e){}
 try{ syncBeautifyFxUI(); applyDeskFx(); applyGlobalFx(); }catch(_e){}
 try{ applyAllAppBgs(); }catch(_e){}
+try{ applyForumTheme(); }catch(_e){}
 </script>
 </body>
 </html>
