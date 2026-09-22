@@ -158,6 +158,36 @@
   .nav-title button, .nav-title .nav-right { pointer-events: auto; }
   .nav { position: relative; }
 
+
+  /* 前情提要气泡（非角色发言） */
+  .bubble-row.recap {
+    align-self: center !important;
+    flex-direction: column !important;
+    max-width: 92% !important;
+    margin: 6px auto;
+  }
+  .bubble-row.recap .b-av { display: none !important; }
+  .bubble-row.recap .b-text {
+    background: rgba(255,149,0,.12) !important;
+    border: .5px solid rgba(255,149,0,.35) !important;
+    color: #ffd8a8 !important;
+    border-radius: 14px !important;
+    font-size: 13.5px !important;
+    line-height: 1.55 !important;
+    padding: 12px 14px !important;
+    box-shadow: none !important;
+  }
+  [data-theme="light"] .bubble-row.recap .b-text {
+    background: rgba(255,149,0,.1) !important;
+    color: #8a4b00 !important;
+    border-color: rgba(255,149,0,.3) !important;
+  }
+  .b-recap-label {
+    font-size: 11px; font-weight: 700; letter-spacing: .5px;
+    color: #ff9f0a; margin-bottom: 6px; opacity: .95;
+  }
+  [data-theme="light"] .b-recap-label { color: #c65d00; }
+
   /* media message bubbles */
   .b-media { max-width: 200px; border-radius: 12px; overflow: hidden; display: block; }
   .b-media img { width: 100%; display: block; border-radius: 12px; }
@@ -619,45 +649,6 @@
   .auction-part {
     background: var(--card); border-radius: 16px; padding: 14px; margin-bottom: 10px;
     border: .5px solid var(--border);
-  }
-
-
-  /* 今夜可约主题色（真的生效） */
-  #page-forum, #page-forum-detail {
-    --forum-accent: #ff2d55;
-    --forum-accent-soft: rgba(255,45,85,.18);
-    --forum-text: #f5e8ec;
-    --forum-muted: #c9a8b0;
-  }
-  #page-forum.forum-theme-pink, #page-forum-detail.forum-theme-pink {
-    --forum-accent: #ff2d55; --forum-accent-soft: rgba(255,45,85,.2);
-  }
-  #page-forum.forum-theme-red, #page-forum-detail.forum-theme-red {
-    --forum-accent: #ff453a; --forum-accent-soft: rgba(255,69,58,.22);
-  }
-  #page-forum.forum-theme-purple, #page-forum-detail.forum-theme-purple {
-    --forum-accent: #bf5af2; --forum-accent-soft: rgba(191,90,242,.22);
-  }
-  #page-forum.forum-theme-blue, #page-forum-detail.forum-theme-blue {
-    --forum-accent: #0a84ff; --forum-accent-soft: rgba(10,132,255,.22);
-  }
-  #page-forum .forum-tab.on {
-    background: linear-gradient(135deg, var(--forum-accent), color-mix(in srgb, var(--forum-accent) 70%, #fff)) !important;
-    color: #fff !important;
-  }
-  #page-forum .forum-ticker {
-    color: var(--forum-accent);
-    background: color-mix(in srgb, var(--forum-accent) 12%, #1a1016);
-  }
-  #page-forum .forum-card {
-    border-left: 3px solid var(--forum-accent);
-  }
-  #page-forum .forum-card,
-  #page-forum-detail .forum-card {
-    color: var(--forum-text);
-  }
-  #page-forum .nav-title, #page-forum-detail .nav-title {
-    color: var(--forum-text) !important;
   }
 
   /* forum night */
@@ -1660,8 +1651,7 @@
     display: flex; flex-direction: column; align-items: center; gap: 2px;
   }
   .offline-bottom button.on { color: var(--blue); font-weight: 600; }
-  .offline-bottom button span { font-size: 18px; display:flex; align-items:center; justify-content:center; line-height:1; }
-  .offline-bottom button span svg { display:block; }
+  .offline-bottom button span { font-size: 18px; }
   #chat-send.icon-btn:disabled, #chat-send:disabled,
   button.live-send-btn:disabled {
     opacity: .35; background: #555 !important; pointer-events: none;
@@ -1778,6 +1768,7 @@
         <button class="chat-tool-btn" onclick="sendMediaMsg('image')"><span>🖼️</span>图片</button>
         <button class="chat-tool-btn" onclick="sendMediaMsg('voice')"><span>🎤</span>语音</button>
         <button class="chat-tool-btn" onclick="sendMediaMsg('redpack')"><span>🧧</span>红包</button>
+        <button class="chat-tool-btn" onclick="generateChatRecap()"><span>📑</span>前情提要</button>
         <button class="chat-tool-btn" onclick="sendMediaMsg('transfer')"><span>💸</span>转账</button>
       </div>
       <div class="msg-edit-bar" id="msg-edit-bar">
@@ -2008,8 +1999,8 @@
         <button class="btn btn-secondary" style="flex:1;" onclick="showArchive()">存档</button>
       </div>
       <div class="offline-bottom" id="offline-tabs">
-        <button type="button" class="on" onclick="setOfflineTab('tasks')"><span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></span>任务</button>
-        <button type="button" onclick="setOfflineTab('dates')"><span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-5.5 7-11a7 7 0 1 0-14 0c0 5.5 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></svg></span>约会</button>
+        <button type="button" class="on" onclick="setOfflineTab('tasks')"><span>📋</span>任务</button>
+        <button type="button" onclick="setOfflineTab('dates')"><span>📍</span>约会</button>
       </div>
     </div>
 
@@ -2061,6 +2052,7 @@
           <button class="btn btn-secondary" style="flex:1;" onclick="refreshStoryOptions()">换一批选项</button>
           <button class="btn btn-secondary" style="flex:1;" onclick="continueStory()">直接续写</button>
         </div>
+        <button class="btn btn-danger" id="story-end-btn" style="width:100%;" onclick="endOfflineStory()">结束并返回</button>
       </div>
     </div>
 
@@ -2479,6 +2471,7 @@
           <div class="live-title" id="live-title">欠操母狗正在发情自慰</div>
           <div style="display:flex;gap:6px;align-items:center;">
             <div class="live-badge">LIVE · <span id="live-viewers">128</span></div>
+            <button onclick="toggleLiveSettingsPanel()" style="border:0;background:rgba(0,0,0,.4);color:#fff;border-radius:8px;padding:4px 8px;font-size:12px;">设置</button>
           </div>
         </div>
         <div class="live-danmaku-float" id="live-danmaku"></div>
@@ -2795,7 +2788,7 @@
     <div class="page" id="page-archive">
       <div class="nav">
         <button class="nav-back" onclick="openApp('offline')">‹ 返回</button>
-        <div class="nav-title">任务存档</div>
+        <div class="nav-title">任务 / 约会存档</div>
         <div></div>
       </div>
       <div class="scroll" style="padding:12px;" id="archive-list"></div>
@@ -3877,11 +3870,18 @@ function renderMessages(){
       let d={amount:'0.00',note:'转账给你'}; try{d=JSON.parse(m.text);}catch(_){}
       const bg = mediaSkin.transferImg ? `background-image:url(${mediaSkin.transferImg});background-size:cover;` : `background:linear-gradient(135deg,${mediaSkin.transferColor||'#f5a623'},${mediaSkin.transferColor2||'#f7c948'});`;
       body = `${quote}<div class="b-transfer"><div class="b-transfer-top" style="${bg}">💸 ${escapeHtml(d.note||'转账')}<div style="font-size:18px;margin-top:6px;">¥${escapeHtml(String(d.amount))}</div></div><div class="b-transfer-bot">微信转账</div></div>`;
+    } else if(m.type==='recap'){
+      body = `<div class="b-recap-label">📑 前情提要</div>${escapeHtml(m.text||'')}`;
     } else {
       body = `${quote}${escapeHtml(m.text)}`;
     }
-    const av = m.who==='him'?avatarMarkup(c):meAvatarMarkup();
-    row.innerHTML=`<div class="b-av">${av}</div><div class="b-text">${body}</div><div class="bubble-actions"><button class="reply-btn" onclick="event.stopPropagation();replyToMessage(${i})">回复</button><button class="del-btn" onclick="event.stopPropagation();delMessage(${i})">删除</button></div>`;
+    if(m.type==='recap'){
+      row.className = 'bubble-row recap';
+      row.innerHTML = `<div class="b-text">${body}</div><div class="bubble-actions"><button class="del-btn" onclick="event.stopPropagation();delMessage(${i})">删除</button></div>`;
+    } else {
+      const av = m.who==='him'?avatarMarkup(c):meAvatarMarkup();
+      row.innerHTML=`<div class="b-av">${av}</div><div class="b-text">${body}</div><div class="bubble-actions"><button class="reply-btn" onclick="event.stopPropagation();replyToMessage(${i})">回复</button><button class="del-btn" onclick="event.stopPropagation();delMessage(${i})">删除</button></div>`;
+    }
     row.addEventListener('click',(ev)=>{
       if(window._msgEditMode){
         row.classList.toggle('msel');
@@ -4711,39 +4711,56 @@ async function startDateStory(){
     const c = conversations[id] || (window.contacts||[]).find(x=>x.id===id);
     return (c && (c.remark||c.name)) || id;
   }).join('、');
-  // 作为特殊任务启动故事
-  currentStoryTitle = `约会 · ${names}`;
+  const girlName = meProfile.name || '凌幼薇';
+  // 真正的线下约会模式
+  window._storyMode = 'date';
+  currentStoryTitle = `线下约会 · ${names}`;
   currentStoryRounds = [];
   currentStoryRound = 0;
   currentStory = '';
   window._storyWB = window._offlineWB || '';
-  window._dateMeta = { place, event, names, ids };
+  window._dateMeta = { place, event, names, ids, mode: 'date' };
+  window._pendingStoryAction = '';
+  window._storyOptions = [];
   openApp('story');
-  if($('story-nav-title')) $('story-nav-title').textContent = currentStoryTitle;
-  if($('save-story-btn')) $('save-story-btn').style.display='';
-  if($('story-continue-bar')) $('story-continue-bar').style.display='flex';
+  if($('story-nav-title')) $('story-nav-title').textContent = currentStoryTitle + ' · 第1轮';
+  if($('save-story-btn')) $('save-story-btn').style.display='none';
+  if($('story-continue-bar')) $('story-continue-bar').style.display='none';
+  if($('story-options')) { $('story-options').style.display='none'; $('story-options').innerHTML=''; }
+  if($('story-end-btn')) $('story-end-btn').textContent = '结束约会';
+  if($('story-content')) $('story-content').innerHTML = '<div class="story-loading" id="story-loading">线下约会开始中…（见面与赴约准备）</div>';
   setAIBusy(true);
   try{
     const mem = getMemoryContext('offline');
     const linked = (window._offlineWB||'').split(/[,，]/).map(x=>x.trim()).filter(Boolean);
+    const system = `你正在写【线下约会】剧情，不是线上聊天，也不是单纯任务清单。
+模式：真实线下约会现场。地点「${place}」，事件方向「${event}」，约会对象：${names}，用户角色：${girlName}。
+必须严格遵守世界书常驻。第一轮从赴约/见面准备与见面瞬间开始，细腻可执行，带羞耻感与身体感。
+用第三人称或第一人称均可。不要写成短信对话体，要写成线下场景叙事。
+不要写「第一轮结束」等元叙述。
+
+【选项格式】
+正文写完后，必须在文末输出：
+<details><summary>选项</summary>
+1. 行动一
+2. 行动二
+3. 行动三
+</details>`;
     const raw = await callAI(
-      `你正在写线下约会剧情。地点「${place}」，事件方向「${event}」，参与者：${names}（及用户本人）。必须严格遵守世界书常驻。第一段从赴约/见面准备开始，细腻可执行，带羞耻感。不要给选项以外的旁白指令。最后用 OPTIONS: 列出3个短选项。`,
-      `${mem}开始第一轮线下约会。参与：${names}。地点：${place}。事件：${event}`,
+      system,
+      `${mem}开始第一轮线下约会。参与：${names}。地点：${place}。事件：${event}。角色：${girlName}`,
       offlineWordCount||800,
       linked
     );
-    // reuse story pipeline if exists
-    if(typeof applyStoryRound === 'function'){
-      applyStoryRound(raw);
-    } else {
-      currentStoryRound = 1;
-      currentStoryRounds = [{text: raw, options:[]}];
-      currentStory = raw;
-      if(typeof renderStoryView==='function') renderStoryView();
-      else {
-        const sc=$('story-content'); if(sc) sc.textContent = raw;
-      }
-    }
+    const { text: st, options } = parseStoryWithOptions(raw);
+    currentStoryRounds = [{ text: st, options }];
+    currentStoryRound = 1;
+    currentStory = st;
+    renderStoryView();
+    if($('save-story-btn')) $('save-story-btn').style.display='block';
+    if($('story-continue-bar')) $('story-continue-bar').style.display='flex';
+    if($('story-nav-title')) $('story-nav-title').textContent = currentStoryTitle + ' · 第1轮';
+    showStoryOptions(options, true);
   } finally {
     setAIBusy(false);
   }
@@ -4897,9 +4914,12 @@ async function acceptTask(i){
   currentStoryRound = 0;
   currentStory = '';
   window._currentOfflineTask = t;
+  window._storyMode = 'task';
+  window._dateMeta = null;
   window._pendingStoryAction = '';
   window._storyOptions = [];
   openApp('story');
+  if($('story-end-btn')) $('story-end-btn').textContent = '结束任务';
   if($('story-nav-title')) $('story-nav-title').textContent = t.title + ' · 第1轮';
   if($('story-continue-bar')) $('story-continue-bar').style.display = 'none';
   if($('story-options')) { $('story-options').style.display = 'none'; $('story-options').innerHTML=''; }
@@ -5045,18 +5065,25 @@ function selectStoryOption(idx){
 
 
 async function refreshStoryOptions(){
+  const mode = window._storyMode || (window._dateMeta && window._dateMeta.mode === 'date' ? 'date' : 'task');
   const t = window._currentOfflineTask;
-  if(!t){ alert('没有进行中的任务'); return; }
+  if(mode !== 'date' && !t){ alert('没有进行中的任务'); return; }
+  if(mode === 'date' && !window._dateMeta){ alert('没有进行中的约会'); return; }
   const prev = currentStoryRounds.map(r => typeof r==='string'?r:(r.text||'')).slice(-2).join('\n');
   const girlName = meProfile.name || '凌幼薇';
+  const ctx = mode === 'date'
+    ? `线下约会 · 对象：${(window._dateMeta||{}).names||''} · 地点：${(window._dateMeta||{}).place||''}`
+    : `任务：${t.title}`;
   const raw = await callAI(
-    `根据当前剧情，为母狗「${girlName}」生成3个下一步可执行的行动选项。只要选项，不要正文。格式：\n1. xxx\n2. xxx\n3. xxx`,
-    `任务：${t.title}\n近况：\n${prev}\n请给出3个新选项。`,
+    `根据当前剧情，为「${girlName}」生成3个下一步可执行的行动选项。只要选项，不要正文。格式：\n1. xxx\n2. xxx\n3. xxx`,
+    `${ctx}\n近况：\n${prev}\n请给出3个新选项。`,
     400
   );
   let options = (raw||'').split('\n').map(l=>l.replace(/^\s*\d+[\.\)、]\s*/,'').trim()).filter(Boolean).slice(0,3);
   if(options.length < 3){
-    options = ['继续把任务做完，再下贱一点','先停下来汇报身体反应','故意制造可能被发现的风险'];
+    options = mode === 'date'
+      ? ['主动凑近一点，试探对方反应','找借口去更私密的地方','故意说出让人耳热的话']
+      : ['继续把任务做完，再下贱一点','先停下来汇报身体反应','故意制造可能被发现的风险'];
   }
   // 写入最新一轮
   if(currentStoryRounds.length){
@@ -5105,12 +5132,14 @@ async function submitStoryAction(){
 }
 
 async function continueStory(forcedAction){
+  const mode = window._storyMode || (window._dateMeta && window._dateMeta.mode === 'date' ? 'date' : 'task');
   const t = window._currentOfflineTask;
-  if(!t){ alert('没有进行中的任务'); return; }
+  if(mode !== 'date' && !t){ alert('没有进行中的任务'); return; }
+  if(mode === 'date' && !window._dateMeta){ alert('没有进行中的约会'); return; }
   const action = forcedAction || window._pendingStoryAction || ($('story-action-input')?.value || '').trim();
   const nextRound = currentStoryRound + 1;
-  if($('story-nav-title')) $('story-nav-title').textContent = t.title + ' · 第' + nextRound + '轮生成中…';
-  // 不隐藏前文：只在底部加 loading
+  const titleBase = mode === 'date' ? (currentStoryTitle || '线下约会') : (t.title || '任务');
+  if($('story-nav-title')) $('story-nav-title').textContent = titleBase + ' · 第' + nextRound + '轮生成中…';
   if($('story-continue-bar')) $('story-continue-bar').style.display = 'none';
   if($('story-options')) $('story-options').style.display = 'none';
   const box = $('story-content');
@@ -5130,7 +5159,34 @@ async function continueStory(forcedAction){
   const girlName = meProfile.name || '凌幼薇';
   const prev = currentStoryRounds.map(r => typeof r==='string'?r:(r.text||'')).join('\n\n————\n\n');
   const actionLine = action ? `\n本轮玩家选择的行动：${action}\n请围绕这个行动继续推进。` : '';
-  const system = `你正在续写线下任务剧情。必须严格遵守世界书常驻条目。
+  let system, userPrompt;
+  if(mode === 'date'){
+    const meta = window._dateMeta || {};
+    system = `你正在续写【线下约会】剧情，不是线上聊天。必须严格遵守世界书常驻条目。
+角色名：${girlName}
+约会对象：${meta.names||''}，地点：${meta.place||''}，事件方向：${meta.event||''}
+这是第 ${nextRound} 轮。紧接上一轮继续写线下现场，不要重复已写情节，推进约会互动。
+语言可暧昧、恶俗、带羞耻与身体感，写成场景叙事而非短信。
+不要写「第x轮结束」等元叙述。
+
+【选项格式】
+<details><summary>选项</summary>
+1. 行动一
+2. 行动二
+3. 行动三
+</details>`;
+    userPrompt = `${mem}线下约会续写
+对象：${meta.names||''}
+地点：${meta.place||''}
+事件：${meta.event||''}
+${actionLine}
+
+【已写内容】
+${prev}
+
+请继续第 ${nextRound} 轮线下约会……`;
+  } else {
+    system = `你正在续写线下任务剧情。必须严格遵守世界书常驻条目。
 角色名：${girlName}
 这是第 ${nextRound} 轮续写。请紧接上一轮内容继续往下写，不要重复已写过的情节，推进任务执行过程。
 语言恶俗、物化、重口，重点刻画羞耻、身体反应、被发现风险、下流想法。
@@ -5144,71 +5200,175 @@ async function continueStory(forcedAction){
 2. 行动二
 3. 行动三
 </details>`;
-  const userPrompt = `${mem}任务：${t.title}
-说明：${t.desc}
+    userPrompt = `${mem}任务：${t.title}
+说明：${t.desc||''}
 ${actionLine}
 
 【已写内容】
 ${prev}
 
 请继续第 ${nextRound} 轮……`;
+  }
 
   const raw = await callAI(system, userPrompt, 4000);
   const { text, options } = parseStoryWithOptions(raw);
   currentStoryRounds.push({ text, options });
   currentStoryRound = nextRound;
+  currentStory = (currentStory ? currentStory + '\n\n' : '') + text;
   renderStoryView();
-  if($('story-nav-title')) $('story-nav-title').textContent = t.title + ' · 第' + nextRound + '轮';
+  if($('story-nav-title')) $('story-nav-title').textContent = titleBase + ' · 第' + nextRound + '轮';
   if($('save-story-btn')) $('save-story-btn').style.display = 'block';
   if($('story-continue-bar')) $('story-continue-bar').style.display = 'flex';
   showStoryOptions(options, true);
   window._pendingStoryAction = '';
 }
 
-function saveCurrentStory(){
-  offlineArchives.unshift({title:currentStoryTitle, content:currentStory, time:Date.now(), rounds: currentStoryRounds.length});
+function saveCurrentStory(silent){
+  const mode = window._storyMode || (window._dateMeta && window._dateMeta.mode === 'date' ? 'date' : 'task');
+  // 合并全部轮次正文
+  let content = '';
+  if(Array.isArray(currentStoryRounds) && currentStoryRounds.length){
+    content = currentStoryRounds.map((r,i)=>`【第${i+1}轮】\n${r.text||''}`).join('\n\n');
+  } else {
+    content = currentStory || '';
+  }
+  offlineArchives.unshift({
+    title: currentStoryTitle || (mode==='date'?'线下约会':'任务'),
+    content,
+    time: Date.now(),
+    rounds: (currentStoryRounds||[]).length,
+    kind: mode,
+    meta: window._dateMeta || null
+  });
   saveAll();
-  alert('已存档（共 ' + currentStoryRounds.length + ' 轮）');
+  if(!silent) alert('已存档（共 ' + (currentStoryRounds||[]).length + ' 轮）');
+}
+function endOfflineStory(){
+  const mode = window._storyMode || (window._dateMeta && window._dateMeta.mode === 'date' ? 'date' : 'task');
+  const label = mode === 'date' ? '约会' : '任务';
+  if(!confirm('确定结束这场' + label + '？')) return;
+  // 结束后询问是否存档
+  const save = confirm('要存档吗？\n确定 = 存档\n取消 = 不存档直接返回');
+  if(save){
+    saveCurrentStory(true);
+    alert(label + '已结束，并已存档。可在「存档」里查看，或生成 AI 总结。');
+  } else {
+    alert(label + '已结束，未存档。');
+  }
+  // 清理进行中状态
+  window._storyMode = '';
+  window._dateMeta = null;
+  window._currentOfflineTask = null;
+  currentStoryRounds = [];
+  currentStoryRound = 0;
+  currentStory = '';
+  currentStoryTitle = '';
+  openApp('offline');
+  try{
+    if(mode==='date') setOfflineTab('dates');
+    else setOfflineTab('tasks');
+  }catch(_e){}
 }
 function showArchive(){
   openApp('archive');
   const box = $('archive-list'); if(!box) return;
-  box.innerHTML=offlineArchives.map((a,i)=>`
+  const titleEl = document.querySelector('#page-archive .nav-title');
+  if(titleEl) titleEl.textContent = '任务 / 约会存档';
+  box.innerHTML=offlineArchives.map((a,i)=>{
+    const isDate = a.kind==='date' || String(a.title||'').includes('约会');
+    const kindTag = isDate ? '线下约会' : '任务';
+    const sumBtn = isDate ? 'AI约会总结' : 'AI总结';
+    return `
     <div class="card">
-      <h4>${escapeHtml(a.title||'存档')}</h4>
+      <h4>${escapeHtml(a.title||'存档')} <span class="wb-pill">${kindTag}</span></h4>
       <div style="font-size:11px;color:#666;">${new Date(a.time).toLocaleString()}${a.rounds?(' · '+a.rounds+'轮'):''}</div>
       <p style="font-size:13px;color:var(--muted);margin:8px 0;">${escapeHtml(String(a.content||'').slice(0,100))}…</p>
-      ${a.summary?`<div style="font-size:12.5px;line-height:1.5;background:var(--card2);border-radius:10px;padding:10px;margin:8px 0;white-space:pre-wrap;">📝 ${escapeHtml(a.summary)}</div>`:''}
+      ${a.summary?`<div style="font-size:12.5px;line-height:1.5;background:var(--card2);border-radius:10px;padding:10px;margin:8px 0;white-space:pre-wrap;"><b style="color:var(--pink);">${isDate?'约会总结':'总结'}</b>\n${escapeHtml(a.summary)}</div>`:''}
       <div class="btn-row">
         <button class="btn btn-secondary" onclick="viewArch(${i})">查看</button>
-        <button class="btn btn-primary" onclick="summarizeArch(${i})">总结</button>
+        <button class="btn btn-primary" onclick="summarizeArch(${i})">${sumBtn}</button>
         <button class="btn btn-danger" onclick="delArch(${i})">删除</button>
       </div>
-    </div>`).join('')||'<div style="text-align:center;color:#666;padding:40px;">暂无存档</div>';
+    </div>`;
+  }).join('')||'<div style="text-align:center;color:#666;padding:40px;">暂无存档</div>';
 }
 async function summarizeArch(i){
   const a = offlineArchives[i]; if(!a) return;
-  const words = prompt('总结字数（大约）', a.summaryWords || '250');
+  const isDate = a.kind==='date' || String(a.title||'').includes('约会');
+  const words = prompt((isDate?'约会总结':'总结')+'字数（大约）', a.summaryWords || '250');
   if(words===null) return;
   const n = Math.max(80, Math.min(800, parseInt(words,10)||250));
   a.summaryWords = String(n);
   setAIBusy(true);
   try{
+    const system = isDate
+      ? `你是约会总结助手。把【线下约会】过程压缩成约${n}字总结：人物、地点、关键互动、羞耻/身体细节、结果与余韵。口语自然，可带一点点调戏感，不要标题党，直接正文。参考世界书常驻。`
+      : `你是总结助手。把线下任务过程压缩成约${n}字的总结，保留关键人物、地点、羞耻点与结果。不要标题党，直接正文。参考世界书常驻。`;
     const raw = await callAI(
-      `你是总结助手。把线下任务/约会过程压缩成约${n}字的总结，保留关键人物、地点、羞耻点与结果。不要标题党，直接正文。参考世界书常驻。`,
+      system,
       `标题：${a.title||''}\n正文：\n${String(a.content||'').slice(0,6000)}`,
       Math.min(2000, n*4)
     );
     a.summary = (raw||'').trim();
     saveAll();
     showArchive();
-    alert('总结已保存');
+    alert((isDate?'约会总结':'总结') + '已保存');
   } finally {
     setAIBusy(false);
   }
 }
-function viewArch(i){ openApp('story'); const a=offlineArchives[i]; currentStoryRounds=[{text:a.content,options:[]}]; currentStoryRound=1; currentStory=a.content||''; renderStoryView(); if($('save-story-btn')) $('save-story-btn').style.display='none'; if($('story-continue-bar')) $('story-continue-bar').style.display='none'; if($('story-options')) $('story-options').style.display='none'; }
+function viewArch(i){
+  openApp('story');
+  const a=offlineArchives[i];
+  currentStoryRounds=[{text:a.content,options:[]}];
+  currentStoryRound=1;
+  currentStory=a.content||'';
+  currentStoryTitle=a.title||'存档';
+  renderStoryView();
+  if($('story-nav-title')) $('story-nav-title').textContent = currentStoryTitle;
+  if($('save-story-btn')) $('save-story-btn').style.display='none';
+  if($('story-continue-bar')) $('story-continue-bar').style.display='none';
+  if($('story-options')) $('story-options').style.display='none';
+}
 function delArch(i){ if(confirm('删除？')){ offlineArchives.splice(i,1); saveAll(); showArchive(); } }
+
+async function generateChatRecap(){
+  const c = conversations[currentChatId];
+  if(!c){ alert('请先打开一个私聊'); return; }
+  const msgs = (c.messages||[]).filter(m=>m && m.type!=='recap');
+  if(msgs.length < 2){ alert('聊天内容太少，先多聊几句再生成前情提要'); return; }
+  const whoName = c.remark || c.name || '对方';
+  const meName = meProfile.name || '我';
+  const lines = msgs.slice(-40).map(m=>{
+    const who = m.who==='me' ? meName : whoName;
+    let t = m.text||'';
+    if(m.type==='image') t = '[图片]';
+    else if(m.type==='voice'){ try{ const d=JSON.parse(m.text); t='[语音] '+(d.transcript||''); }catch(_){ t='[语音]'; } }
+    else if(m.type==='redpack') t = '[红包]';
+    else if(m.type==='transfer') t = '[转账]';
+    return who + '：' + String(t).slice(0,200);
+  }).join('\n');
+  setAIBusy(true);
+  try{
+    const raw = await callAI(
+      '你是剧情前情提要助手。根据私聊记录，用第三人称写一段「前情提要」：概括关系、已发生的关键事件、当前状态与未解决的张力。不要写成任何一方发出的聊天消息，不要用引号对话体堆砌，写成旁白提要。200~400字为宜。参考世界书常驻。',
+      `对象：${whoName}\n我：${meName}\n最近聊天：\n${lines}`,
+      1200
+    );
+    const text = (raw||'').trim();
+    if(!text || text.startsWith('【')){ alert(text || '生成失败'); return; }
+    // 单独气泡，不属于任何人
+    if(!c.messages) c.messages=[];
+    c.messages.push({ who: 'system', text, type: 'recap' });
+    c.last = '【前情提要】';
+    c.time = Date.now();
+    saveAll();
+    renderMessages();
+    const tools = $('chat-tools'); if(tools) tools.classList.remove('show');
+  } finally {
+    setAIBusy(false);
+  }
+}
 
 function renderDiaries(){
   const box=$('diary-list'); if(!box) return;
@@ -5765,35 +5925,14 @@ function setForumTab(tab, btn){
 
 let forumTheme = 'pink';
 let forumWB = '';
-// theme applied after DOM ready via loadAll / openApp
 function toggleForumSettings(){
   $('forum-settings')?.classList.toggle('show');
 }
-function applyForumTheme(){
-  const t = forumTheme || 'pink';
-  const map = {pink:'#ff2d55', red:'#ff453a', purple:'#bf5af2', blue:'#0a84ff'};
-  const accent = map[t] || '#ff2d55';
-  ['page-forum','page-forum-detail'].forEach(id=>{
-    const pg = $(id);
-    if(!pg) return;
-    pg.classList.remove('forum-theme-pink','forum-theme-red','forum-theme-purple','forum-theme-blue');
-    pg.classList.add('forum-theme-'+t);
-    pg.style.setProperty('--forum-accent', accent);
-    pg.style.setProperty('--campus-accent', accent);
-  });
-  // 同步 tab 高亮色（已由 CSS 变量驱动）
-}
 function setForumTheme(t){
-  forumTheme = t || 'pink';
-  applyForumTheme();
-}
-function saveForumSettings(){
-  const sel = $('forum-theme');
-  if(sel) forumTheme = sel.value || forumTheme || 'pink';
-  forumWB = collectCheckedWBNames('forum-wb-checks') || forumWB || '';
-  applyForumTheme();
+  forumTheme=t||'pink';
+  const pg=$('page-forum');
+  if(pg){ pg.style.setProperty('--campus-accent', {pink:'#ff2d55',red:'#ff453a',purple:'#bf5af2',blue:'#0a84ff'}[forumTheme]||'#ff2d55'); }
   saveAll();
-  alert('今夜可约设置已保存');
 }
 function editForumWB(){
   openWBPickerModal(forumWB, v=>{ forumWB=v||''; saveAll(); alert('已绑定：'+(forumWB||'无')); });
@@ -5805,48 +5944,40 @@ function saveForumWBChecks(){
 
 function renderForum(){
   ensureForumData();
-  applyForumTheme();
   const box = $('forum-list'); if(!box) return;
-    if(forumTab==='settings'){
-    applyForumTheme();
+  if(forumTab==='settings'){
+    const wbs = (worldBooks||[]).map(w=>w.name).filter(Boolean);
+    const selected = (forumWB||'').split(/[,，]/).map(x=>x.trim()).filter(Boolean);
     box.innerHTML = `
-      <div style="font-size:18px;font-weight:700;margin-bottom:14px;color:var(--forum-accent,#ff8a9a);">论坛设置</div>
+      <div style="font-size:18px;font-weight:700;margin-bottom:14px;color:#ff8a9a;">论坛设置</div>
       <div class="forum-card">
-        <div style="font-size:13px;color:#c9a8b0;margin-bottom:8px;">主题色（影响标签高亮、滚动条、卡片左边线）</div>
-        <select id="forum-theme" style="width:100%;background:#2c2c2e;border:none;border-radius:10px;padding:10px;color:#f5e8ec;font-size:15px;">
-          <option value="pink" ${forumTheme==='pink'?'selected':''}>粉红 · 暧昧夜场</option>
-          <option value="red" ${forumTheme==='red'?'selected':''}>暗红 · 更刺激</option>
-          <option value="purple" ${forumTheme==='purple'?'selected':''}>紫色 · 调教向</option>
-          <option value="blue" ${forumTheme==='blue'?'selected':''}>蓝色 · 清冷约炮</option>
+        <div style="font-size:13px;color:var(--muted);margin-bottom:8px;">主题色</div>
+        <select id="forum-theme" onchange="setForumTheme(this.value)" style="width:100%;background:var(--input);border:none;border-radius:10px;padding:10px;color:var(--text);">
+          <option value="pink" ${forumTheme==='pink'?'selected':''}>粉红</option>
+          <option value="red" ${forumTheme==='red'?'selected':''}>暗红</option>
+          <option value="purple" ${forumTheme==='purple'?'selected':''}>紫色</option>
+          <option value="blue" ${forumTheme==='blue'?'selected':''}>蓝色</option>
         </select>
-        <div style="display:flex;gap:8px;margin-top:10px;">
-          <div style="flex:1;height:28px;border-radius:8px;background:linear-gradient(135deg,#ff2d55,#ff6482);" title="粉红"></div>
-          <div style="flex:1;height:28px;border-radius:8px;background:linear-gradient(135deg,#ff453a,#ff6b6b);" title="暗红"></div>
-          <div style="flex:1;height:28px;border-radius:8px;background:linear-gradient(135deg,#bf5af2,#da8fff);" title="紫色"></div>
-          <div style="flex:1;height:28px;border-radius:8px;background:linear-gradient(135deg,#0a84ff,#64d2ff);" title="蓝色"></div>
-        </div>
       </div>
       <div class="forum-card">
-        <div style="font-size:13px;color:#c9a8b0;margin-bottom:8px;">绑定世界书（勾选后点保存生效）</div>
+        <div style="font-size:13px;color:var(--muted);margin-bottom:8px;">绑定世界书（勾选）</div>
         <div id="forum-wb-checks"></div>
       </div>
       <div class="forum-card">
-        <div style="font-size:13px;color:#c9a8b0;margin-bottom:8px;">论坛背景</div>
+        <div style="font-size:13px;color:var(--muted);margin-bottom:8px;">论坛背景</div>
         <div style="display:flex;gap:8px;margin-bottom:8px;">
-          <button type="button" class="btn btn-secondary" style="flex:1;color:#eee;" onclick="uploadAppBg('forum')">上传背景</button>
-          <button type="button" class="btn btn-secondary" style="flex:1;color:#eee;" onclick="clearAppBg('forum')">清除</button>
+          <button type="button" class="btn btn-secondary" style="flex:1;" onclick="uploadAppBg('forum')">上传背景</button>
+          <button type="button" class="btn btn-secondary" style="flex:1;" onclick="clearAppBg('forum')">清除</button>
         </div>
-        <input type="text" id="appbg-url-forum" placeholder="或粘贴图片链接" style="width:100%;background:#2c2c2e;border:none;border-radius:10px;padding:10px;color:#f5e8ec;font-size:14px;margin-bottom:8px;">
-        <button type="button" class="btn btn-secondary" style="width:100%;margin-bottom:6px;color:#eee;" onclick="setAppBgUrl('forum')">使用链接背景</button>
-        <div id="appbg-preview-forum" style="height:48px;border-radius:10px;background:#1c1c1e;background-size:cover;background-position:center;border:.5px solid rgba(255,255,255,.12);"></div>
+        <input type="text" id="appbg-url-forum" placeholder="或粘贴图片链接" style="width:100%;background:var(--input);border:none;border-radius:10px;padding:10px;color:var(--text);font-size:14px;margin-bottom:8px;">
+        <button type="button" class="btn btn-secondary" style="width:100%;" onclick="setAppBgUrl('forum')">使用链接背景</button>
       </div>
       <div class="forum-card">
-        <button class="btn btn-primary" style="width:100%;margin-bottom:8px;background:var(--forum-accent,#ff2d55);color:#fff;border:none;" onclick="saveForumSettings()">保存设置</button>
-        <button class="btn btn-secondary" style="width:100%;margin-bottom:8px;color:#eee;" onclick="forumPartialRefresh('list')">刷新当前列表缓存</button>
+        <div style="font-size:13px;color:var(--muted);margin-bottom:6px;">数据</div>
+        <button class="btn btn-secondary" style="width:100%;margin-bottom:8px;" onclick="forumPartialRefresh('list')">刷新当前列表缓存</button>
         <button class="btn btn-danger" style="width:100%;" onclick="if(confirm('清空本论坛帖子？')){forumPosts=[];saveAll();setForumTab('city',document.querySelector('.forum-tab'));}">清空帖子</button>
       </div>`;
-    renderGroupedWBChecks('forum-wb-checks', forumWB||'', "forumWB=collectCheckedWBNames('forum-wb-checks')");
-    try{ refreshAppBgPreview('forum'); }catch(_e){}
+    renderGroupedWBChecks('forum-wb-checks', forumWB||'', 'saveForumWBChecks()');
     return;
   }
   let list = forumPosts.filter(p => (p.board||'city') === forumTab);
@@ -5854,12 +5985,12 @@ function renderForum(){
   box.innerHTML = list.map(p=>`
     <div class="forum-card" onclick="openForumPost('${p.id}')">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
-        <span style="color:var(--forum-accent,#ff8a9a);font-weight:600;">${escapeHtml(p.user||'')}${p.auth?' <span class="wb-pill">已认证</span>':''}</span>
-        <span style="font-size:11px;color:#c9a8b0;">${p.online||''}</span>
+        <span style="color:#ff8a9a;font-weight:600;">${escapeHtml(p.user||'')}${p.auth?' <span class="wb-pill">已认证</span>':''}</span>
+        <span style="font-size:11px;color:#887;">${p.online||''}</span>
       </div>
-      <div style="font-size:15px;font-weight:700;color:#f5e8ec;margin-bottom:6px;">${escapeHtml(p.title||'')}</div>
-      <div style="font-size:12.5px;color:#d4c0c6;line-height:1.45;max-height:38px;overflow:hidden;">${escapeHtml(p.body||'')}</div>
-      <div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap;font-size:11px;color:#c9a8b0;">
+      <div style="font-size:15px;font-weight:700;color:#f5e6ea;margin-bottom:6px;">${escapeHtml(p.title||'')}</div>
+      <div style="font-size:12.5px;color:#a89;line-height:1.45;max-height:38px;overflow:hidden;">${escapeHtml(p.body||'')}</div>
+      <div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap;font-size:11px;color:#978;">
         ${p.type?`<span class="wb-pill">${escapeHtml(p.type)}</span>`:''}
         ${p.place?`<span class="wb-pill">${escapeHtml(p.place)}</span>`:''}
         ${p.age?`<span class="wb-pill">${p.age}岁</span>`:''}
@@ -8187,7 +8318,6 @@ try{
 }catch(_e){}
 try{ syncBeautifyFxUI(); applyDeskFx(); applyGlobalFx(); }catch(_e){}
 try{ applyAllAppBgs(); }catch(_e){}
-try{ applyForumTheme(); }catch(_e){}
 </script>
 </body>
 </html>
