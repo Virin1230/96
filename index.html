@@ -5285,14 +5285,30 @@ function showArchive(){
     const isDate = a.kind==='date' || String(a.title||'').includes('约会');
     const kindTag = isDate ? '线下约会' : '任务';
     const sumBtn = isDate ? 'AI约会总结' : 'AI总结';
+    const sumLabel = isDate ? '约会总结' : '总结';
+    const preview = String(a.content||'').slice(0,100);
+    const sumPreview = a.summary ? String(a.summary).slice(0, 120) : '';
+    const sumFull = a.summary ? escapeHtml(a.summary) : '';
     return `
-    <div class="card">
+    <div class="card" data-arch="${i}">
       <h4>${escapeHtml(a.title||'存档')} <span class="wb-pill">${kindTag}</span></h4>
       <div style="font-size:11px;color:#666;">${new Date(a.time).toLocaleString()}${a.rounds?(' · '+a.rounds+'轮'):''}</div>
-      <p style="font-size:13px;color:var(--muted);margin:8px 0;">${escapeHtml(String(a.content||'').slice(0,100))}…</p>
-      ${a.summary?`<div style="font-size:12.5px;line-height:1.5;background:var(--card2);border-radius:10px;padding:10px;margin:8px 0;white-space:pre-wrap;"><b style="color:var(--pink);">${isDate?'约会总结':'总结'}</b>\n${escapeHtml(a.summary)}</div>`:''}
+      <p style="font-size:13px;color:var(--muted);margin:8px 0;cursor:pointer;" onclick="viewArch(${i})">${escapeHtml(preview)}${String(a.content||'').length>100?'…':''}</p>
+      ${a.summary?`
+      <div class="arch-summary-block" data-arch="${i}" style="font-size:12.5px;line-height:1.55;background:var(--card2);border-radius:12px;padding:10px 12px;margin:8px 0;user-select:text;-webkit-user-select:text;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+          <b style="color:var(--pink);">${sumLabel}</b>
+          <span style="display:flex;gap:6px;">
+            <button type="button" class="btn btn-secondary" style="flex:0;padding:3px 8px;font-size:11px;" onclick="event.stopPropagation();copyArchSummary(${i})">复制</button>
+            <button type="button" class="btn btn-secondary" style="flex:0;padding:3px 8px;font-size:11px;" onclick="event.stopPropagation();openArchSummaryFull(${i})">全文</button>
+          </span>
+        </div>
+        <div class="arch-summary-text" data-arch="${i}" style="white-space:pre-wrap;cursor:text;user-select:text;-webkit-user-select:text;"
+          ondblclick="event.stopPropagation();editArchSummary(${i})">${sumFull}</div>
+        <div style="font-size:10px;color:var(--muted);margin-top:6px;">可直接选中复制 · 双击原文编辑 · 点「全文」看完整</div>
+      </div>`:''}
       <div class="btn-row">
-        <button class="btn btn-secondary" onclick="viewArch(${i})">查看</button>
+        <button class="btn btn-secondary" onclick="viewArch(${i})">查看正文</button>
         <button class="btn btn-primary" onclick="summarizeArch(${i})">${sumBtn}</button>
         <button class="btn btn-danger" onclick="delArch(${i})">删除</button>
       </div>
@@ -5322,6 +5338,159 @@ async function summarizeArch(i){
     alert((isDate?'约会总结':'总结') + '已保存');
   } finally {
     setAIBusy(false);
+  }
+}
+function copyArchSummary(i){
+  const a = offlineArchives[i]; if(!a || !a.summary){ alert('暂无总结'); return; }
+  const t = String(a.summary);
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(t).then(()=>alert('总结已复制')).catch(()=>fallbackCopyText(t));
+  } else {
+    fallbackCopyText(t);
+  }
+}
+function fallbackCopyText(t){
+  const ta = document.createElement('textarea');
+  ta.value = t;
+  ta.style.position = 'fixed'; ta.style.left = '-9999px';
+  document.body.appendChild(ta);
+  ta.select();
+  try{ document.execCommand('copy'); alert('总结已复制'); }catch(_e){ prompt('请手动复制：', t); }
+  ta.remove();
+}
+function openArchSummaryFull(i){
+  const a = offlineArchives[i]; if(!a || !a.summary) return;
+  // 若正在编辑，不抢
+  if(window._archSumEditIdx === i) return;
+  document.querySelectorAll('.arch-sum-sheet').forEach(x=>x.remove());
+  const isDate = a.kind==='date' || String(a.title||'').includes('约会');
+  const page = $('page-archive') || document.querySelector('.phone') || document.body;
+  const sheet = document.createElement('div');
+  sheet.className = 'arch-sum-sheet';
+  sheet.style.cssText = 'position:absolute;inset:0;z-index:80;background:rgba(0,0,0,.55);display:flex;align-items:flex-end;justify-content:center;';
+  sheet.innerHTML = `<div style="width:100%;max-height:78%;background:var(--card);border-radius:18px 18px 0 0;padding:16px;overflow-y:auto;border:.5px solid var(--border);">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+      <div style="font-weight:700;font-size:16px;color:var(--pink);">${isDate?'约会总结 · 全文':'总结 · 全文'}</div>
+      <button type="button" class="btn btn-secondary" style="flex:0;padding:6px 12px;" onclick="this.closest('.arch-sum-sheet').remove()">关闭</button>
+    </div>
+    <div style="font-size:12px;color:var(--muted);margin-bottom:10px;">${escapeHtml(a.title||'')} · 可复制 · 双击正文可编辑</div>
+    <div id="arch-sum-full-body" data-arch="${i}" style="font-size:14.5px;line-height:1.65;white-space:pre-wrap;user-select:text;-webkit-user-select:text;padding:4px 0;"
+      ondblclick="editArchSummary(${i}, true)">${escapeHtml(a.summary)}</div>
+    <div style="display:flex;gap:8px;margin-top:14px;">
+      <button type="button" class="btn btn-secondary" style="flex:1;" onclick="copyArchSummary(${i})">复制全文</button>
+      <button type="button" class="btn btn-primary" style="flex:1;" onclick="editArchSummary(${i}, true)">编辑</button>
+    </div>
+  </div>`;
+  page.appendChild(sheet);
+  sheet.addEventListener('click', (e)=>{ if(e.target===sheet) sheet.remove(); });
+}
+let _archSumEditIdx = null;
+let _archSumEditOrig = '';
+let _archSumEditPending = false;
+function editArchSummary(i, fromFull){
+  const a = offlineArchives[i]; if(!a || a.summary==null) return;
+  if(_archSumEditIdx !== null && _archSumEditIdx !== i){
+    finishArchSumEdit(false);
+  }
+  // 优先编辑全文层里的节点；否则列表里的摘要
+  let el = null;
+  if(fromFull){
+    el = document.getElementById('arch-sum-full-body');
+  }
+  if(!el) el = document.querySelector('.arch-summary-text[data-arch="'+i+'"]');
+  if(!el){
+    // 没有可见节点时打开全文再编
+    openArchSummaryFull(i);
+    setTimeout(()=>editArchSummary(i, true), 50);
+    return;
+  }
+  _archSumEditIdx = i;
+  _archSumEditOrig = String(a.summary||'');
+  _archSumEditPending = false;
+  el.contentEditable = 'true';
+  el.style.outline = '2px solid var(--blue)';
+  el.style.outlineOffset = '2px';
+  el.style.borderRadius = '8px';
+  el.focus();
+  try{
+    const range = document.createRange();
+    range.selectNodeContents(el);
+    range.collapse(false);
+    const sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(range);
+  }catch(_e){}
+  el.onblur = function(){
+    setTimeout(()=>{
+      if(_archSumEditIdx !== i) return;
+      if(_archSumEditPending) return;
+      const now = (el.innerText || '').replace(/\r/g,'');
+      if(now === _archSumEditOrig){
+        finishArchSumEdit(false, true);
+        return;
+      }
+      showArchSumConfirm(i, now, el);
+    }, 180);
+  };
+}
+function showArchSumConfirm(i, newText, el){
+  if(_archSumEditPending) return;
+  _archSumEditPending = true;
+  document.querySelectorAll('.story-edit-confirm').forEach(x=>x.remove());
+  const page = $('page-archive') || document.querySelector('.phone') || document.body;
+  const layer = document.createElement('div');
+  layer.className = 'story-edit-confirm';
+  layer.innerHTML = `<div class="story-edit-confirm-box">
+    <p>总结已修改，是否保存？</p>
+    <div class="btn-row">
+      <button type="button" class="btn btn-cancel" id="arch-sum-cancel">取消</button>
+      <button type="button" class="btn btn-save" id="arch-sum-save">确定保存</button>
+    </div>
+  </div>`;
+  page.appendChild(layer);
+  const cleanup = ()=>{ layer.remove(); _archSumEditPending = false; };
+  layer.querySelector('#arch-sum-cancel').onclick = ()=>{
+    cleanup();
+    finishArchSumEdit(false);
+  };
+  layer.querySelector('#arch-sum-save').onclick = ()=>{
+    const a = offlineArchives[i];
+    if(a){ a.summary = newText; saveAll(); }
+    cleanup();
+    finishArchSumEdit(true);
+  };
+  layer.addEventListener('click', (e)=>{
+    if(e.target === layer){ cleanup(); finishArchSumEdit(false); }
+  });
+}
+function finishArchSumEdit(saved, silent){
+  const idx = _archSumEditIdx;
+  _archSumEditIdx = null;
+  _archSumEditOrig = '';
+  _archSumEditPending = false;
+  document.querySelectorAll('.story-edit-confirm').forEach(x=>x.remove());
+  // 清 contentEditable 样式
+  document.querySelectorAll('[contenteditable="true"]').forEach(el=>{
+    if(el.classList.contains('arch-summary-text') || el.id==='arch-sum-full-body'){
+      el.contentEditable = 'false';
+      el.style.outline = '';
+    }
+  });
+  if(idx === null) return;
+  // 刷新列表；若全文层还在则同步全文
+  const a = offlineArchives[idx];
+  const full = document.getElementById('arch-sum-full-body');
+  if(full && a) full.textContent = a.summary || '';
+  if(saved || silent){
+    // 保留全文层时只更新列表摘要区
+    const listEl = document.querySelector('.arch-summary-text[data-arch="'+idx+'"]');
+    if(listEl && a) listEl.textContent = a.summary || '';
+    if(saved){
+      // 轻微反馈
+      try{ /* no alert spam */ }catch(_e){}
+    }
+  } else {
+    showArchive();
   }
 }
 function viewArch(i){
