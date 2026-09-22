@@ -4069,12 +4069,19 @@ function ending(){
 }
 function enableFreeChat(){
   $('input-bar').classList.add('show');
+  window._recapMode = false;
   $('chat-input').placeholder='输入消息…';
   pendingReply=false; updateReplyButton();
 }
 
 $('chat-send').onclick = ()=>{
   const v=$('chat-input').value.trim(); if(!v)return;
+  if(window._recapMode){
+    sendRecapBubble(v);
+    pendingReply = false;
+    updateReplyButton();
+    return;
+  }
   addBubble('me',v); $('chat-input').value='';
   // 发送后不自动回复，只把「响应」按钮点亮，等用户主动点
   pendingReply = false;
@@ -5332,42 +5339,41 @@ function viewArch(i){
 }
 function delArch(i){ if(confirm('删除？')){ offlineArchives.splice(i,1); saveAll(); showArchive(); } }
 
-async function generateChatRecap(){
+function generateChatRecap(){
+  // 前情提要：用户自己在输入框写，发送后变成独立旁白气泡（不是 AI、也不是某一方发言）
   const c = conversations[currentChatId];
   if(!c){ alert('请先打开一个私聊'); return; }
-  const msgs = (c.messages||[]).filter(m=>m && m.type!=='recap');
-  if(msgs.length < 2){ alert('聊天内容太少，先多聊几句再生成前情提要'); return; }
-  const whoName = c.remark || c.name || '对方';
-  const meName = meProfile.name || '我';
-  const lines = msgs.slice(-40).map(m=>{
-    const who = m.who==='me' ? meName : whoName;
-    let t = m.text||'';
-    if(m.type==='image') t = '[图片]';
-    else if(m.type==='voice'){ try{ const d=JSON.parse(m.text); t='[语音] '+(d.transcript||''); }catch(_){ t='[语音]'; } }
-    else if(m.type==='redpack') t = '[红包]';
-    else if(m.type==='transfer') t = '[转账]';
-    return who + '：' + String(t).slice(0,200);
-  }).join('\n');
-  setAIBusy(true);
-  try{
-    const raw = await callAI(
-      '你是剧情前情提要助手。根据私聊记录，用第三人称写一段「前情提要」：概括关系、已发生的关键事件、当前状态与未解决的张力。不要写成任何一方发出的聊天消息，不要用引号对话体堆砌，写成旁白提要。200~400字为宜。参考世界书常驻。',
-      `对象：${whoName}\n我：${meName}\n最近聊天：\n${lines}`,
-      1200
-    );
-    const text = (raw||'').trim();
-    if(!text || text.startsWith('【')){ alert(text || '生成失败'); return; }
-    // 单独气泡，不属于任何人
-    if(!c.messages) c.messages=[];
-    c.messages.push({ who: 'system', text, type: 'recap' });
-    c.last = '【前情提要】';
-    c.time = Date.now();
-    saveAll();
-    renderMessages();
-    const tools = $('chat-tools'); if(tools) tools.classList.remove('show');
-  } finally {
-    setAIBusy(false);
+  window._recapMode = !window._recapMode;
+  const input = $('chat-input');
+  const tools = $('chat-tools');
+  if(window._recapMode){
+    if(tools) tools.classList.remove('show');
+    if(input){
+      input.placeholder = '写下前情提要，发送后会作为旁白气泡…';
+      input.focus();
+    }
+    // 轻提示：按钮已切入前情提要发送模式
+    try{
+      const btn = document.querySelector('.chat-tool-btn[onclick*="generateChatRecap"]');
+      if(btn) btn.style.opacity = '1';
+    }catch(_e){}
+  } else {
+    if(input) input.placeholder = '输入消息…';
   }
+}
+function sendRecapBubble(text){
+  const c = conversations[currentChatId];
+  if(!c) return;
+  if(!c.messages) c.messages = [];
+  c.messages.push({ who: 'system', text: String(text||'').trim(), type: 'recap' });
+  c.last = '【前情提要】';
+  c.time = Date.now();
+  window._recapMode = false;
+  const input = $('chat-input');
+  if(input){ input.value = ''; input.placeholder = '输入消息…'; }
+  saveAll();
+  renderMessages();
+  updateReplyButton();
 }
 
 function renderDiaries(){
